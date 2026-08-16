@@ -1,0 +1,1 @@
+console.log("NexusCRM frontend loaded successfully.");
