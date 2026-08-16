@@ -2,36 +2,420 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NexusCRM</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
+    <meta name="description"
+          content="NexusCRM - Customer Relationship Management Platform">
+
+    <title>
+        {% block title %}NexusCRM{% endblock %}
+    </title>
+
+    <!-- Bootstrap -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
+    <!-- Bootstrap Icons -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <!-- Application CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/app.css' %}"
+    >
+
+    {% block extra_css %}
+    {% endblock %}
+
 </head>
 
 <body>
 
-    {% block body %}
+<div class="crm-wrapper">
 
-    {% endblock %}
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
+    <aside class="crm-sidebar" id="crmSidebar">
 
-    <script src="{% static 'js/app.js' %}"></script>
+        <!-- Brand -->
+
+        <div class="sidebar-brand">
+
+            <a href="/" class="brand-link">
+
+                <div class="brand-logo">
+                    N
+                </div>
+
+                <div class="brand-text">
+
+                    <span class="brand-name">
+                        Nexus
+                    </span>
+
+                    <span class="brand-subtitle">
+                        CRM PLATFORM
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- Workspace Navigation -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                WORKSPACE
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="/"
+                   class="sidebar-link {% if request.path == '/' %}active{% endif %}">
+
+                    <i class="bi bi-grid-1x2"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a href="/leads/"
+                   class="sidebar-link {% if '/leads/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-funnel"></i>
+
+                    <span>
+                        Leads
+                    </span>
+
+                    <span class="nav-badge">
+                        24
+                    </span>
+
+                </a>
+
+
+                <a href="/contacts/"
+                   class="sidebar-link {% if '/contacts/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-people"></i>
+
+                    <span>
+                        Contacts
+                    </span>
+
+                </a>
+
+
+                <a href="/companies/"
+                   class="sidebar-link {% if '/companies/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-building"></i>
+
+                    <span>
+                        Companies
+                    </span>
+
+                </a>
+
+
+                <a href="/deals/"
+                   class="sidebar-link {% if '/deals/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-briefcase"></i>
+
+                    <span>
+                        Deals
+                    </span>
+
+                </a>
+
+
+                <a href="/activities/"
+                   class="sidebar-link {% if '/activities/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-activity"></i>
+
+                    <span>
+                        Activities
+                    </span>
+
+                </a>
+
+
+                <a href="/tasks/"
+                   class="sidebar-link {% if '/tasks/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-check2-square"></i>
+
+                    <span>
+                        Tasks
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- Management -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                MANAGEMENT
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="/reports/"
+                   class="sidebar-link {% if '/reports/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-bar-chart"></i>
+
+                    <span>
+                        Reports
+                    </span>
+
+                </a>
+
+
+                <a href="/calendar/"
+                   class="sidebar-link {% if '/calendar/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <span>
+                        Calendar
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- System -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                SYSTEM
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="/settings/"
+                   class="sidebar-link {% if '/settings/' in request.path %}active{% endif %}">
+
+                    <i class="bi bi-sliders"></i>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+            </nav>
+
+        </div>
+
+
+        <!-- Sidebar bottom -->
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    ZA
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        Administrator
+                    </strong>
+
+                    <span>
+                        Admin account
+                    </span>
+
+                </div>
+
+                <button class="user-menu-button">
+                    <i class="bi bi-three-dots"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN AREA
+    ========================== -->
+
+    <main class="crm-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="crm-topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button">
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+
+                <div class="global-search">
+
+                    <i class="bi bi-search"></i>
+
+                    <input
+                        type="search"
+                        placeholder="Search customers, leads, deals..."
+                        aria-label="Global search"
+                    >
+
+                    <span class="search-shortcut">
+                        /
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <!-- Quick add -->
+
+                <button
+                    class="topbar-action"
+                    title="Quick add">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                </button>
+
+
+                <!-- Notifications -->
+
+                <button
+                    class="topbar-action notification-button"
+                    title="Notifications">
+
+                    <i class="bi bi-bell"></i>
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                <div class="topbar-divider"></div>
+
+
+                <!-- User -->
+
+                <button class="topbar-user">
+
+                    <div class="user-avatar small">
+                        ZA
+                    </div>
+
+                    <div class="topbar-user-info">
+
+                        <strong>
+                            Zeph
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                    <i class="bi bi-chevron-down"></i>
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+
+        <section class="crm-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- Mobile overlay -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay">
+</div>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- Application JS -->
+
+<script
+    src="{% static 'js/app.js' %}">
+</script>
+
+
+{% block extra_js %}
+{% endblock %}
 
 </body>
+
 </html>
