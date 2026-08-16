@@ -1,0 +1,633 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Dashboard · NexusCRM
+{% endblock %}
+
+
+{% block body %}
+
+<!-- PAGE HEADER -->
+
+<div class="page-header">
+
+    <div class="page-header-left">
+
+        <div class="page-eyebrow">
+            OVERVIEW
+        </div>
+
+        <h1 class="page-title">
+            Good morning, Zeph.
+        </h1>
+
+        <p class="page-description">
+            Here's what's happening across your sales workspace.
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <button class="btn btn-primary">
+
+            <i class="bi bi-plus-lg me-1"></i>
+
+            Add Lead
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- STATISTICS -->
+
+<div class="stat-grid">
+
+
+    <!-- Leads -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon purple">
+
+            <i class="bi bi-funnel"></i>
+
+        </div>
+
+        <div>
+
+            <span class="stat-label">
+                Total Leads
+            </span>
+
+            <span class="stat-value">
+                1,248
+            </span>
+
+            <span class="stat-trend">
+                ↑ 12.5% this month
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Contacts -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon blue">
+
+            <i class="bi bi-people"></i>
+
+        </div>
+
+        <div>
+
+            <span class="stat-label">
+                Total Contacts
+            </span>
+
+            <span class="stat-value">
+                892
+            </span>
+
+            <span class="stat-trend">
+                ↑ 8.2% this month
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Pipeline -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon green">
+
+            <i class="bi bi-currency-dollar"></i>
+
+        </div>
+
+        <div>
+
+            <span class="stat-label">
+                Pipeline Value
+            </span>
+
+            <span class="stat-value">
+                KSh 12.4M
+            </span>
+
+            <span class="stat-trend">
+                ↑ 18.7% this month
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Revenue -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon orange">
+
+            <i class="bi bi-trophy"></i>
+
+        </div>
+
+        <div>
+
+            <span class="stat-label">
+                Won Revenue
+            </span>
+
+            <span class="stat-value">
+                KSh 7.8M
+            </span>
+
+            <span class="stat-trend">
+                ↑ 24.1% this month
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN DASHBOARD -->
+
+<div class="row g-4">
+
+
+    <!-- Recent Leads -->
+
+    <div class="col-lg-8">
+
+        <div class="crm-card">
+
+            <div class="crm-card-header">
+
+                <div>
+
+                    <h5 class="crm-card-title">
+                        Recent Leads
+                    </h5>
+
+                    <div class="crm-card-subtitle">
+                        Latest prospects entering your pipeline
+                    </div>
+
+                </div>
+
+                <a
+                    href="/leads/"
+                    class="text-decoration-none small"
+                    style="color: var(--primary);">
+
+                    View all
+
+                    <i class="bi bi-arrow-right ms-1"></i>
+
+                </a>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="border-0">
+                                Lead
+                            </th>
+
+                            <th class="border-0">
+                                Company
+                            </th>
+
+                            <th class="border-0">
+                                Status
+                            </th>
+
+                            <th class="border-0">
+                                Value
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+
+                                <strong class="d-block small">
+                                    Amina Wanjiku
+                                </strong>
+
+                                <span class="text-muted"
+                                      style="font-size: 10px;">
+
+                                    amina@example.com
+
+                                </span>
+
+                            </td>
+
+                            <td class="small">
+                                Kifaru Logistics
+                            </td>
+
+                            <td>
+
+                                <span class="badge text-bg-success">
+                                    Qualified
+                                </span>
+
+                            </td>
+
+                            <td class="small fw-semibold">
+                                KSh 480,000
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+
+                                <strong class="d-block small">
+                                    Brian Otieno
+                                </strong>
+
+                                <span class="text-muted"
+                                      style="font-size: 10px;">
+
+                                    brian@example.com
+
+                                </span>
+
+                            </td>
+
+                            <td class="small">
+                                Northstar Foods
+                            </td>
+
+                            <td>
+
+                                <span class="badge text-bg-primary">
+                                    Contacted
+                                </span>
+
+                            </td>
+
+                            <td class="small fw-semibold">
+                                KSh 210,000
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+
+                                <strong class="d-block small">
+                                    Grace Njeri
+                                </strong>
+
+                                <span class="text-muted"
+                                      style="font-size: 10px;">
+
+                                    grace@example.com
+
+                                </span>
+
+                            </td>
+
+                            <td class="small">
+                                Acacia Health
+                            </td>
+
+                            <td>
+
+                                <span class="badge text-bg-warning">
+                                    New
+                                </span>
+
+                            </td>
+
+                            <td class="small fw-semibold">
+                                KSh 350,000
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+
+                                <strong class="d-block small">
+                                    Daniel Mwangi
+                                </strong>
+
+                                <span class="text-muted"
+                                      style="font-size: 10px;">
+
+                                    daniel@example.com
+
+                                </span>
+
+                            </td>
+
+                            <td class="small">
+                                Summit Finance
+                            </td>
+
+                            <td>
+
+                                <span class="badge text-bg-success">
+                                    Won
+                                </span>
+
+                            </td>
+
+                            <td class="small fw-semibold">
+                                KSh 720,000
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Tasks -->
+
+    <div class="col-lg-4">
+
+        <div class="crm-card">
+
+            <div class="crm-card-header">
+
+                <div>
+
+                    <h5 class="crm-card-title">
+                        My Tasks
+                    </h5>
+
+                    <div class="crm-card-subtitle">
+                        Things needing your attention
+                    </div>
+
+                </div>
+
+                <a
+                    href="/tasks/"
+                    class="text-decoration-none small"
+                    style="color: var(--primary);">
+
+                    All
+
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <div class="p-3 border-bottom">
+
+                    <div class="d-flex gap-2">
+
+                        <i class="bi bi-circle-fill text-danger"
+                           style="font-size: 7px; margin-top: 6px;">
+                        </i>
+
+                        <div>
+
+                            <strong
+                                class="d-block"
+                                style="font-size: 11px;">
+
+                                Follow up with Kifaru Logistics
+
+                            </strong>
+
+                            <span
+                                class="text-muted"
+                                style="font-size: 9px;">
+
+                                Due today
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="p-3 border-bottom">
+
+                    <div class="d-flex gap-2">
+
+                        <i class="bi bi-circle-fill text-warning"
+                           style="font-size: 7px; margin-top: 6px;">
+                        </i>
+
+                        <div>
+
+                            <strong
+                                class="d-block"
+                                style="font-size: 11px;">
+
+                                Send proposal to Northstar
+
+                            </strong>
+
+                            <span
+                                class="text-muted"
+                                style="font-size: 9px;">
+
+                                Due tomorrow
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="p-3">
+
+                    <div class="d-flex gap-2">
+
+                        <i class="bi bi-circle-fill text-success"
+                           style="font-size: 7px; margin-top: 6px;">
+                        </i>
+
+                        <div>
+
+                            <strong
+                                class="d-block"
+                                style="font-size: 11px;">
+
+                                Schedule discovery call
+
+                            </strong>
+
+                            <span
+                                class="text-muted"
+                                style="font-size: 9px;">
+
+                                Due Friday
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div class="row g-4 mt-1">
+
+
+    <div class="col-12">
+
+        <div class="crm-card">
+
+            <div class="crm-card-header">
+
+                <div>
+
+                    <h5 class="crm-card-title">
+                        Quick Actions
+                    </h5>
+
+                    <div class="crm-card-subtitle">
+                        Common CRM operations
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="crm-card-body">
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+
+                        <button class="btn btn-light w-100 py-3">
+
+                            <i class="bi bi-person-plus d-block fs-5 mb-1"></i>
+
+                            <span>
+                                Add Lead
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <button class="btn btn-light w-100 py-3">
+
+                            <i class="bi bi-person-add d-block fs-5 mb-1"></i>
+
+                            <span>
+                                Add Contact
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <button class="btn btn-light w-100 py-3">
+
+                            <i class="bi bi-briefcase d-block fs-5 mb-1"></i>
+
+                            <span>
+                                Create Deal
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <button class="btn btn-light w-100 py-3">
+
+                            <i class="bi bi-check2-square d-block fs-5 mb-1"></i>
+
+                            <span>
+                                Create Task
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
