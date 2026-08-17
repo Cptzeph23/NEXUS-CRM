@@ -133,3 +133,19 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/login/"
+
+
+# ==========================
+# SESSION SECURITY
+# ==========================
+
+SESSION_COOKIE_HTTPONLY = True
+
+CSRF_COOKIE_HTTPONLY = False
+
+SESSION_COOKIE_SAMESITE = "Lax"
+
+CSRF_COOKIE_SAMESITE = "Lax"
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
