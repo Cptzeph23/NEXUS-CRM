@@ -8,6 +8,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.dashboard, name="dashboard"),
 
+    # Authentication URLs
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
+
+    #Dashboard and Home URLs
     path("home/", views.home, name="home"),
 
     path("leads/", lambda request: views.module_placeholder(request,"Leads"), name="leads"),
