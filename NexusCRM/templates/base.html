@@ -250,24 +250,50 @@
             <div class="sidebar-user">
 
                 <div class="user-avatar">
-                    ZA
+
+                    {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+
                 </div>
 
                 <div class="user-info">
 
                     <strong>
-                        Administrator
+
+                        {% if request.user.get_full_name %}
+                        {{ request.user.get_full_name }}
+                        {% else %}
+                            {{ request.user.username }}
+                        {% endif %}
+
                     </strong>
 
                     <span>
-                        Admin account
-                    </span>
+
+                            {% if request.user.is_superuser %}
+                                Administrator
+                            {% elif request.user.profile %}
+        {{ request.user.profile.role_display }}
+    {% else %}
+        CRM User
+    {% endif %}
+
+</span>
 
                 </div>
 
-                <button class="user-menu-button">
-                    <i class="bi bi-three-dots"></i>
-                </button>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+
+                    <button 
+                        type="submit" 
+                        class="user-menu-button"
+                        title="Sign out">
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                    </button>
+
+                </form>
 
             </div>
 
@@ -352,17 +378,23 @@
                 <button class="topbar-user">
 
                     <div class="user-avatar small">
-                        ZA
+                        {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
                     </div>
 
                     <div class="topbar-user-info">
 
                         <strong>
-                            Zeph
+                            {{ request.user.first_name }} {{ request.user.last_name }}
                         </strong>
 
                         <span>
-                            Administrator
+                            {% if request.user.is_superuser %}
+                                Administrator
+                            {% elif request.user.profile %}
+                                {{ request.user.profile.role_display }}
+                            {% else %}
+                                CRM User
+                            {% endif %} 
                         </span>
 
                     </div>

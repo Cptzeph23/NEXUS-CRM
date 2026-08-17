@@ -18,7 +18,7 @@
         </div>
 
         <h1 class="page-title">
-            Good morning, Zeph.
+           Good morning, {{ request.user.first_name|default:request.user.username }}.
         </h1>
 
         <p class="page-description">
