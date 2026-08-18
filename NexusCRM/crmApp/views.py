@@ -10,6 +10,12 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Company, Contact
+from .permissions import (
+    can_create,
+    can_edit,
+    can_delete,
+)
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -197,6 +203,9 @@ def company_detail(request, pk):
 @login_required
 def company_create(request):
 
+    if not can_create(request.user):
+        raise PermissionDenied
+
     if request.method == "POST":
 
         name = request.POST.get("name", "").strip()
@@ -277,6 +286,9 @@ def company_edit(request, pk):
         Company,
         pk=pk
     )
+
+    if not can_edit(request.user, company):
+        raise PermissionDenied
 
     if request.method == "POST":
 
@@ -366,6 +378,9 @@ def company_delete(request, pk):
         Company,
         pk=pk
     )
+
+    if not can_delete(request.user, company):
+        raise PermissionDenied
 
     if request.method == "POST":
 
@@ -479,6 +494,9 @@ def contact_detail(request, pk):
 
 @login_required
 def contact_create(request):
+
+    if not can_create(request.user):
+        raise PermissionDenied
 
     company_id = request.GET.get(
         "company"
@@ -613,6 +631,9 @@ def contact_edit(request, pk):
         pk=pk
     )
 
+    if not can_edit(request.user, contact):
+        raise PermissionDenied
+
     if request.method == "POST":
 
         first_name = request.POST.get(
@@ -726,6 +747,10 @@ def contact_delete(request, pk):
         Contact,
         pk=pk
     )
+
+
+    if not can_delete(request.user, contact):
+        raise PermissionDenied
 
     if request.method == "POST":
 
