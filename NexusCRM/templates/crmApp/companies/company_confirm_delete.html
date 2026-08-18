@@ -1,0 +1,87 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+Delete {{ company.name }} | NexusCRM
+{% endblock %}
+
+{% block companies_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="crm-card">
+
+            <div class="crm-card-body text-center p-5">
+
+                <div
+                    class="mx-auto mb-3 d-flex align-items-center justify-content-center"
+                    style="
+                        width:56px;
+                        height:56px;
+                        border-radius:50%;
+                        background:#fef2f2;
+                        color:#dc2626;
+                        font-size:24px;
+                    "
+                >
+                    <i class="bi bi-trash3"></i>
+                </div>
+
+
+                <h5 class="fw-semibold">
+                    Delete company?
+                </h5>
+
+
+                <p class="text-muted small">
+
+                    You are about to delete
+
+                    <strong>
+                        {{ company.name }}
+                    </strong>.
+
+                    This action cannot be undone.
+
+                </p>
+
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+
+                        <a
+                            href="{% url 'company_detail' company.pk %}"
+                            class="btn btn-light border"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            Delete Company
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
