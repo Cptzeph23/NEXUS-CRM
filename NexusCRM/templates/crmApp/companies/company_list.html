@@ -1,0 +1,431 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+Companies | NexusCRM
+{% endblock %}
+
+{% block companies_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1 class="page-title">
+            Companies
+        </h1>
+
+        <div class="page-subtitle">
+            Manage organizations and customer accounts.
+        </div>
+    </div>
+
+
+    <a
+        href="{% url 'company_create' %}"
+        class="btn btn-crm-primary"
+    >
+        <i class="bi bi-plus-lg me-1"></i>
+        Add Company
+    </a>
+
+</div>
+
+
+<div class="crm-card">
+
+    <!-- FILTER BAR -->
+
+    <form
+        method="GET"
+        class="filter-bar"
+    >
+
+        <div class="filter-search">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                class="form-control crm-form-control"
+                placeholder="Search companies..."
+            >
+
+        </div>
+
+
+        <select
+            name="industry"
+            class="form-select crm-form-control"
+            style="max-width: 180px;"
+        >
+
+            <option value="">
+                All industries
+            </option>
+
+            {% for item in industries %}
+
+                <option
+                    value="{{ item }}"
+                    {% if selected_industry == item %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <select
+            name="country"
+            class="form-select crm-form-control"
+            style="max-width: 160px;"
+        >
+
+            <option value="">
+                All countries
+            </option>
+
+            {% for item in countries %}
+
+                <option
+                    value="{{ item }}"
+                    {% if selected_country == item %}
+                        selected
+                    {% endif %}
+                >
+                    {{ item }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="btn btn-outline-secondary"
+        >
+            Filter
+        </button>
+
+
+        {% if search or selected_industry or selected_country %}
+
+            <a
+                href="{% url 'company_list' %}"
+                class="btn btn-light"
+            >
+                Clear
+            </a>
+
+        {% endif %}
+
+    </form>
+
+
+    <!-- TABLE -->
+
+    {% if companies %}
+
+        <div class="table-responsive">
+
+            <table class="table crm-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Company
+                        </th>
+
+                        <th>
+                            Industry
+                        </th>
+
+                        <th>
+                            Contacts
+                        </th>
+
+                        <th>
+                            Location
+                        </th>
+
+                        <th>
+                            Owner
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for company in companies %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <div class="company-avatar">
+                                        {{ company.name|first|upper }}
+                                    </div>
+
+                                    <div>
+
+                                        <a
+                                            href="{% url 'company_detail' company.pk %}"
+                                            class="table-link"
+                                        >
+                                            {{ company.name }}
+                                        </a>
+
+                                        {% if company.email %}
+
+                                            <div class="text-muted small">
+                                                {{ company.email }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if company.industry %}
+                                    {{ company.industry }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ company.contacts.count }}
+                            </td>
+
+
+                            <td>
+
+                                {% if company.city %}
+                                    {{ company.city }}
+                                {% elif company.country %}
+                                    {{ company.country }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if company.owner %}
+
+                                    {{ company.owner.get_full_name|default:company.owner.username }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Unassigned
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{% url 'company_detail' company.pk %}"
+                                        class="table-action-btn"
+                                        title="View"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a
+                                        href="{% url 'company_edit' company.pk %}"
+                                        class="table-action-btn"
+                                        title="Edit"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <a
+                                        href="{% url 'company_delete' company.pk %}"
+                                        class="table-action-btn danger"
+                                        title="Delete"
+                                    >
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- PAGINATION -->
+
+        <div class="crm-pagination">
+
+            <div class="pagination-info">
+
+                Showing
+                {{ page_obj.start_index }}
+                –
+                {{ page_obj.end_index }}
+
+                of
+                {{ page_obj.paginator.count }}
+                companies
+
+            </div>
+
+
+            {% if page_obj.has_other_pages %}
+
+                <nav>
+
+                    <ul class="pagination mb-0">
+
+                        {% if page_obj.has_previous %}
+
+                            <li class="page-item">
+
+                                <a
+                                    class="page-link"
+                                    href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_industry %}&industry={{ selected_industry|urlencode }}{% endif %}{% if selected_country %}&country={{ selected_country|urlencode }}{% endif %}"
+                                >
+                                    Previous
+                                </a>
+
+                            </li>
+
+                        {% endif %}
+
+
+                        {% for num in page_obj.paginator.page_range %}
+
+                            {% if page_obj.number == num %}
+
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        {{ num }}
+                                    </span>
+                                </li>
+
+                            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_industry %}&industry={{ selected_industry|urlencode }}{% endif %}{% if selected_country %}&country={{ selected_country|urlencode }}{% endif %}"
+                                    >
+                                        {{ num }}
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                        {% if page_obj.has_next %}
+
+                            <li class="page-item">
+
+                                <a
+                                    class="page-link"
+                                    href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_industry %}&industry={{ selected_industry|urlencode }}{% endif %}{% if selected_country %}&country={{ selected_country|urlencode }}{% endif %}"
+                                >
+                                    Next
+                                </a>
+
+                            </li>
+
+                        {% endif %}
+
+                    </ul>
+
+                </nav>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-building"></i>
+
+            <h5>
+                No companies found
+            </h5>
+
+            <p>
+                {% if search or selected_industry or selected_country %}
+                    Try adjusting your filters.
+                {% else %}
+                    Add your first company to get started.
+                {% endif %}
+            </p>
+
+            {% if not search and not selected_industry and not selected_country %}
+
+                <a
+                    href="{% url 'company_create' %}"
+                    class="btn btn-crm-primary"
+                >
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Add Company
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
