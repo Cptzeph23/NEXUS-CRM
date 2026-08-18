@@ -134,6 +134,11 @@ LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/login/"
 
+# Require a fresh login when the browser session ends.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Prevent session expiry from being extended by every request.
+SESSION_SAVE_EVERY_REQUEST = False
 
 # ==========================
 # SESSION SECURITY
