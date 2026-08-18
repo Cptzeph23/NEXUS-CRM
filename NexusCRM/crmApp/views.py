@@ -454,7 +454,7 @@ def contact_detail(request, pk):
     contact = get_object_or_404(
         Contact.objects
         .select_related("company", "owner")
-        .prefetch_related("deals", "activities", "tasks", "notes"),
+        .prefetch_related("deals", "activities", "tasks", "contact_notes"),
         pk=pk
     )
 
@@ -463,7 +463,7 @@ def contact_detail(request, pk):
         "deals": contact.deals.all(),
         "activities": contact.activities.all()[:10],
         "tasks": contact.tasks.all()[:10],
-        "notes": contact.notes.all()[:10],
+        "notes": contact.contact_notes.all()[:10],
     }
 
     return render(
