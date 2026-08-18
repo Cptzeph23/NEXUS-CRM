@@ -18,7 +18,17 @@ urlpatterns = [
 
     path("leads/", lambda request: views.module_placeholder(request,"Leads"), name="leads"),
 
-    path("contacts/", lambda request: views.module_placeholder(request, "Contacts"), name="contacts"),
+    # Contacts
+
+    path("contacts/", views.contact_list, name="contact_list"),
+
+    path("contacts/create/", views.contact_create, name="contact_create"),
+
+    path("contacts/<int:pk>/",views.contact_detail, name="contact_detail"),
+
+    path("contacts/<int:pk>/edit/", views.contact_edit,name="contact_edit"),
+
+    path("contacts/<int:pk>/delete/", views.contact_delete,name="contact_delete"),
 
    # Companies
     path(
