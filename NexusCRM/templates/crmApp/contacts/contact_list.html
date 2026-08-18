@@ -1,0 +1,389 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+Contacts | NexusCRM
+{% endblock %}
+
+{% block contacts_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1 class="page-title">
+            Contacts
+        </h1>
+
+        <div class="page-subtitle">
+            Manage people and customer relationships.
+        </div>
+
+    </div>
+
+
+    <a
+        href="{% url 'contact_create' %}"
+        class="btn btn-crm-primary"
+    >
+        <i class="bi bi-plus-lg me-1"></i>
+        Add Contact
+    </a>
+
+</div>
+
+
+<div class="crm-card">
+
+    <form method="GET" class="filter-bar">
+
+        <div class="filter-search">
+
+            <i class="bi bi-search"></i>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                class="form-control crm-form-control"
+                placeholder="Search contacts..."
+            >
+
+        </div>
+
+
+        <select
+            name="company"
+            class="form-select crm-form-control"
+            style="max-width:220px;"
+        >
+
+            <option value="">
+                All companies
+            </option>
+
+            {% for company in companies %}
+
+                <option
+                    value="{{ company.pk }}"
+                    {% if selected_company == company.pk|stringformat:"s" %}
+                        selected
+                    {% endif %}
+                >
+                    {{ company.name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="btn btn-outline-secondary"
+        >
+            Filter
+        </button>
+
+
+        {% if search or selected_company %}
+
+            <a
+                href="{% url 'contact_list' %}"
+                class="btn btn-light"
+            >
+                Clear
+            </a>
+
+        {% endif %}
+
+    </form>
+
+
+    {% if contacts %}
+
+        <div class="table-responsive">
+
+            <table class="table crm-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Contact
+                        </th>
+
+                        <th>
+                            Company
+                        </th>
+
+                        <th>
+                            Job Title
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for contact in contacts %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <div class="contact-avatar person-avatar">
+                                        {{ contact.first_name|first|upper }}
+                                    </div>
+
+                                    <div>
+
+                                        <a
+                                            href="{% url 'contact_detail' contact.pk %}"
+                                            class="table-link"
+                                        >
+                                            {{ contact.full_name }}
+                                        </a>
+
+                                        {% if contact.email %}
+
+                                            <div class="text-muted small">
+                                                {{ contact.email }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if contact.company %}
+
+                                    <a
+                                        href="{% url 'company_detail' contact.company.pk %}"
+                                        class="text-decoration-none"
+                                    >
+                                        {{ contact.company.name }}
+                                    </a>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        No company
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ contact.job_title|default:"—" }}
+                            </td>
+
+
+                            <td>
+                                {{ contact.email|default:"—" }}
+                            </td>
+
+
+                            <td>
+                                {{ contact.phone|default:"—" }}
+                            </td>
+
+
+                            <td>
+
+                                <div class="table-actions">
+
+                                    <a
+                                        href="{% url 'contact_detail' contact.pk %}"
+                                        class="table-action-btn"
+                                        title="View"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+
+                                    <a
+                                        href="{% url 'contact_edit' contact.pk %}"
+                                        class="table-action-btn"
+                                        title="Edit"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <a
+                                        href="{% url 'contact_delete' contact.pk %}"
+                                        class="table-action-btn danger"
+                                        title="Delete"
+                                    >
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="crm-pagination">
+
+            <div class="pagination-info">
+
+                Showing
+                {{ page_obj.start_index }}
+                –
+                {{ page_obj.end_index }}
+
+                of
+                {{ page_obj.paginator.count }}
+                contacts
+
+            </div>
+
+
+            {% if page_obj.has_other_pages %}
+
+                <nav>
+
+                    <ul class="pagination mb-0">
+
+                        {% if page_obj.has_previous %}
+
+                            <li class="page-item">
+
+                                <a
+                                    class="page-link"
+                                    href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_company %}&company={{ selected_company|urlencode }}{% endif %}"
+                                >
+                                    Previous
+                                </a>
+
+                            </li>
+
+                        {% endif %}
+
+
+                        {% for num in page_obj.paginator.page_range %}
+
+                            {% if page_obj.number == num %}
+
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        {{ num }}
+                                    </span>
+                                </li>
+
+                            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_company %}&company={{ selected_company|urlencode }}{% endif %}"
+                                    >
+                                        {{ num }}
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                        {% if page_obj.has_next %}
+
+                            <li class="page-item">
+
+                                <a
+                                    class="page-link"
+                                    href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_company %}&company={{ selected_company|urlencode }}{% endif %}"
+                                >
+                                    Next
+                                </a>
+
+                            </li>
+
+                        {% endif %}
+
+                    </ul>
+
+                </nav>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <i class="bi bi-people"></i>
+
+            <h5>
+                No contacts found
+            </h5>
+
+            <p>
+                {% if search or selected_company %}
+                    Try adjusting your filters.
+                {% else %}
+                    Add your first contact to get started.
+                {% endif %}
+            </p>
+
+            {% if not search and not selected_company %}
+
+                <a
+                    href="{% url 'contact_create' %}"
+                    class="btn btn-crm-primary"
+                >
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Add Contact
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
