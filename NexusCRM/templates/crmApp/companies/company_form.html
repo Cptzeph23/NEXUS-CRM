@@ -1,0 +1,248 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+{% if company %}
+Edit Company
+{% else %}
+Add Company
+{% endif %}
+| NexusCRM
+{% endblock %}
+
+
+{% block companies_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1 class="page-title">
+
+            {% if company %}
+                Edit Company
+            {% else %}
+                Add Company
+            {% endif %}
+
+        </h1>
+
+        <div class="page-subtitle">
+
+            {% if company %}
+                Update company information.
+            {% else %}
+                Add a new organization to your CRM.
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<form method="POST">
+
+    {% csrf_token %}
+
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Company Information
+            </h6>
+
+        </div>
+
+
+        <div class="crm-card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-8">
+
+                    <label class="form-label small fw-semibold">
+                        Company Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control crm-form-control"
+                        value="{{ company.name|default:'' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label small fw-semibold">
+                        Industry
+                    </label>
+
+                    <input
+                        type="text"
+                        name="industry"
+                        class="form-control crm-form-control"
+                        value="{{ company.industry|default:'' }}"
+                        placeholder="e.g. Technology"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control crm-form-control"
+                        value="{{ company.email|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Phone
+                    </label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        class="form-control crm-form-control"
+                        value="{{ company.phone|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Website
+                    </label>
+
+                    <input
+                        type="url"
+                        name="website"
+                        class="form-control crm-form-control"
+                        value="{{ company.website|default:'' }}"
+                        placeholder="https://example.com"
+                    >
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="form-label small fw-semibold">
+                        City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="city"
+                        class="form-control crm-form-control"
+                        value="{{ company.city|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="form-label small fw-semibold">
+                        Country
+                    </label>
+
+                    <input
+                        type="text"
+                        name="country"
+                        class="form-control crm-form-control"
+                        value="{{ company.country|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label small fw-semibold">
+                        Address
+                    </label>
+
+                    <textarea
+                        name="address"
+                        class="form-control crm-form-control"
+                        rows="2"
+                    >{{ company.address|default:'' }}</textarea>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label small fw-semibold">
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        class="form-control crm-form-control"
+                        rows="4"
+                        placeholder="Add notes about this company..."
+                    >{{ company.description|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-end gap-2">
+
+        <a
+            href="{% if company %}{% url 'company_detail' company.pk %}{% else %}{% url 'company_list' %}{% endif %}"
+            class="btn btn-light border"
+        >
+            Cancel
+        </a>
+
+        <button
+            type="submit"
+            class="btn btn-crm-primary"
+        >
+            <i class="bi bi-check-lg me-1"></i>
+
+            {% if company %}
+                Save Changes
+            {% else %}
+                Create Company
+            {% endif %}
+
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}
