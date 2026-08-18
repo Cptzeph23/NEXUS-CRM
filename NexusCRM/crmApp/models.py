@@ -70,80 +70,89 @@ class Profile(models.Model):
 # ==========================================================
 
 class Company(models.Model):
+    INDUSTRY_CHOICES = [
+        ("technology", "Technology"),
+        ("finance", "Finance"),
+        ("healthcare", "Healthcare"),
+        ("education", "Education"),
+        ("retail", "Retail"),
+        ("manufacturing", "Manufacturing"),
+        ("real_estate", "Real Estate"),
+        ("hospitality", "Hospitality"),
+        ("other", "Other"),
+    ]
 
-    name = models.CharField(
-        max_length=200
-    )
-
+    name = models.CharField(max_length=200)
     industry = models.CharField(
-        max_length=100,
+        max_length=50,
+        choices=INDUSTRY_CHOICES,
         blank=True
     )
+    website = models.URLField(blank=True)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=50, blank=True)
 
-    website = models.URLField(
-        blank=True
-    )
+    address = models.TextField(blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)
 
-    email = models.EmailField(
-        blank=True
-    )
+    description = models.TextField(blank=True)
 
-    phone = models.CharField(
-        max_length=30,
-        blank=True
-    )
-
-    address = models.TextField(
-        blank=True
-    )
-
-    city = models.CharField(
-        max_length=100,
-        blank=True
-    )
-
-    country = models.CharField(
-        max_length=100,
-        blank=True
-    )
-
-    description = models.TextField(
-        blank=True
-    )
-
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="owned_companies"
-    )
-
-    tags = models.ManyToManyField(
-        "Tag",
-        blank=True,
-        related_name="companies"
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
-        indexes = [
-            models.Index(fields=["name"]),
-            models.Index(fields=["industry"]),
-            models.Index(fields=["country"]),
-        ]
 
     def __str__(self):
         return self.name
 
+
+class Contact(models.Model):
+    STATUS_CHOICES = [
+        ("lead", "Lead"),
+        ("prospect", "Prospect"),
+        ("customer", "Customer"),
+        ("inactive", "Inactive"),
+    ]
+
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="contacts"
+    )
+
+    job_title = models.CharField(max_length=150, blank=True)
+
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=50, blank=True)
+    mobile = models.CharField(max_length=50, blank=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="lead"
+    )
+
+    address = models.TextField(blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)
+
+    notes = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["first_name", "last_name"]
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 # ==========================================================
 # CONTACT
@@ -891,3 +900,22 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
