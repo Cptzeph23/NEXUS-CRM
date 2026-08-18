@@ -1,0 +1,370 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+{{ contact.full_name }} | NexusCRM
+{% endblock %}
+
+{% block contacts_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="d-flex align-items-center gap-2 mb-3">
+
+    <a
+        href="{% url 'contact_list' %}"
+        class="text-decoration-none text-muted small"
+    >
+        Contacts
+    </a>
+
+    {% if contact.company %}
+
+        <i class="bi bi-chevron-right text-muted small"></i>
+
+        <a
+            href="{% url 'company_detail' contact.company.pk %}"
+            class="text-decoration-none text-muted small"
+        >
+            {{ contact.company.name }}
+        </a>
+
+    {% endif %}
+
+    <i class="bi bi-chevron-right text-muted small"></i>
+
+    <span class="small">
+        {{ contact.full_name }}
+    </span>
+
+</div>
+
+
+<div class="detail-header">
+
+    <div class="d-flex justify-content-between align-items-start">
+
+        <div class="detail-identity">
+
+            <div class="detail-avatar">
+                {{ contact.first_name|first|upper }}
+            </div>
+
+            <div>
+
+                <div class="detail-name">
+                    {{ contact.full_name }}
+                </div>
+
+                <div class="detail-meta">
+
+                    {% if contact.job_title %}
+                        {{ contact.job_title }}
+                    {% endif %}
+
+                    {% if contact.job_title and contact.company %}
+                        ·
+                    {% endif %}
+
+                    {% if contact.company %}
+
+                        <a
+                            href="{% url 'company_detail' contact.company.pk %}"
+                            class="text-decoration-none"
+                        >
+                            {{ contact.company.name }}
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-actions">
+
+            <a
+                href="{% url 'contact_edit' contact.pk %}"
+                class="btn btn-outline-secondary btn-sm"
+            >
+                <i class="bi bi-pencil me-1"></i>
+                Edit
+            </a>
+
+            <a
+                href="{% url 'contact_delete' contact.pk %}"
+                class="btn btn-outline-danger btn-sm"
+            >
+                <i class="bi bi-trash3 me-1"></i>
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="crm-card mb-4">
+
+    <div class="crm-card-header">
+
+        <h6 class="mb-0 fw-semibold">
+            Contact Information
+        </h6>
+
+    </div>
+
+
+    <div class="crm-card-body">
+
+        <div class="info-grid">
+
+            <div>
+
+                <div class="info-label">
+                    Email
+                </div>
+
+                <div class="info-value">
+
+                    {% if contact.email %}
+
+                        <a href="mailto:{{ contact.email }}">
+                            {{ contact.email }}
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Phone
+                </div>
+
+                <div class="info-value">
+                    {{ contact.phone|default:"—" }}
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Mobile
+                </div>
+
+                <div class="info-value">
+                    {{ contact.mobile|default:"—" }}
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Company
+                </div>
+
+                <div class="info-value">
+
+                    {% if contact.company %}
+
+                        <a
+                            href="{% url 'company_detail' contact.company.pk %}"
+                        >
+                            {{ contact.company.name }}
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Location
+                </div>
+
+                <div class="info-value">
+
+                    {% if contact.city %}
+                        {{ contact.city }},
+                    {% endif %}
+
+                    {% if contact.country %}
+                        {{ contact.country }}
+                    {% endif %}
+
+                    {% if not contact.city and not contact.country %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Added
+                </div>
+
+                <div class="info-value">
+                    {{ contact.created_at|date:"d M Y" }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% if contact.address or contact.notes %}
+
+            <hr class="my-4">
+
+            {% if contact.address %}
+
+                <div class="mb-4">
+
+                    <div class="info-label">
+                        Address
+                    </div>
+
+                    <div class="info-value">
+                        {{ contact.address|linebreaksbr }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if contact.notes %}
+
+                <div>
+
+                    <div class="info-label">
+                        Notes
+                    </div>
+
+                    <div class="info-value">
+                        {{ contact.notes|linebreaksbr }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<div class="crm-card">
+
+    <div class="crm-card-header">
+
+        <h6 class="mb-0 fw-semibold">
+            Related Deals
+        </h6>
+
+    </div>
+
+
+    {% if deals %}
+
+        <div class="table-responsive">
+
+            <table class="table crm-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Deal</th>
+                        <th>Pipeline</th>
+                        <th>Stage</th>
+                        <th>Value</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for deal in deals %}
+
+                        <tr>
+
+                            <td>
+                                {{ deal.name }}
+                            </td>
+
+                            <td>
+                                {{ deal.pipeline.name }}
+                            </td>
+
+                            <td>
+                                {{ deal.stage.name }}
+                            </td>
+
+                            <td>
+                                {{ deal.amount|floatformat:2 }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state py-5">
+
+            <i class="bi bi-kanban"></i>
+
+            <h6>
+                No deals yet
+            </h6>
+
+            <p>
+                Deals associated with this contact will appear here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
