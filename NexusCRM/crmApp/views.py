@@ -383,3 +383,371 @@ def company_delete(request, pk):
         "crmApp/companies/company_confirm_delete.html",
         {"company": company}
     )
+
+# ==========================================================
+# CONTACT VIEWS
+# ==========================================================
+
+@login_required
+def contact_list(request):
+
+    contacts = Contact.objects.select_related(
+        "company",
+        "owner"
+    )
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    company_id = request.GET.get(
+        "company",
+        ""
+    ).strip()
+
+    if search:
+
+        contacts = contacts.filter(
+            Q(first_name__icontains=search)
+            | Q(last_name__icontains=search)
+            | Q(email__icontains=search)
+            | Q(phone__icontains=search)
+            | Q(company__name__icontains=search)
+        )
+
+    if company_id:
+
+        contacts = contacts.filter(
+            company_id=company_id
+        )
+
+    companies = Company.objects.all()
+
+    paginator = Paginator(
+        contacts,
+        10
+    )
+
+    page_obj = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    context = {
+        "contacts": page_obj.object_list,
+        "page_obj": page_obj,
+        "search": search,
+        "selected_company": company_id,
+        "companies": companies,
+    }
+
+    return render(
+        request,
+        "crmApp/contacts/contact_list.html",
+        context
+    )
+
+
+@login_required
+def contact_detail(request, pk):
+
+    contact = get_object_or_404(
+        Contact.objects
+        .select_related("company", "owner")
+        .prefetch_related("deals", "activities", "tasks", "notes"),
+        pk=pk
+    )
+
+    context = {
+        "contact": contact,
+        "deals": contact.deals.all(),
+        "activities": contact.activities.all()[:10],
+        "tasks": contact.tasks.all()[:10],
+        "notes": contact.notes.all()[:10],
+    }
+
+    return render(
+        request,
+        "crmApp/contacts/contact_detail.html",
+        context
+    )
+
+
+@login_required
+def contact_create(request):
+
+    company_id = request.GET.get(
+        "company"
+    )
+
+    initial_company = None
+
+    if company_id:
+
+        initial_company = Company.objects.filter(
+            pk=company_id
+        ).first()
+
+    if request.method == "POST":
+
+        first_name = request.POST.get(
+            "first_name",
+            ""
+        ).strip()
+
+        last_name = request.POST.get(
+            "last_name",
+            ""
+        ).strip()
+
+        if not first_name:
+
+            messages.error(
+                request,
+                "First name is required."
+            )
+
+            return render(
+                request,
+                "crmApp/contacts/contact_form.html",
+                {
+                    "contact": None,
+                    "companies": Company.objects.all(),
+                    "selected_company": initial_company,
+                }
+            )
+
+        company_id = request.POST.get(
+            "company"
+        )
+
+        company = None
+
+        if company_id:
+
+            company = Company.objects.filter(
+                pk=company_id
+            ).first()
+
+        contact = Contact.objects.create(
+
+            first_name=first_name,
+
+            last_name=last_name,
+
+            company=company,
+
+            job_title=request.POST.get(
+                "job_title",
+                ""
+            ).strip(),
+
+            email=request.POST.get(
+                "email",
+                ""
+            ).strip(),
+
+            phone=request.POST.get(
+                "phone",
+                ""
+            ).strip(),
+
+            mobile=request.POST.get(
+                "mobile",
+                ""
+            ).strip(),
+
+            address=request.POST.get(
+                "address",
+                ""
+            ).strip(),
+
+            city=request.POST.get(
+                "city",
+                ""
+            ).strip(),
+
+            country=request.POST.get(
+                "country",
+                ""
+            ).strip(),
+
+            notes=request.POST.get(
+                "notes",
+                ""
+            ).strip(),
+
+            owner=request.user
+        )
+
+        messages.success(
+            request,
+            f"{contact.full_name} was created successfully."
+        )
+
+        return redirect(
+            "contact_detail",
+            pk=contact.pk
+        )
+
+    return render(
+        request,
+        "crmApp/contacts/contact_form.html",
+        {
+            "contact": None,
+            "companies": Company.objects.all(),
+            "selected_company": initial_company,
+        }
+    )
+
+
+@login_required
+def contact_edit(request, pk):
+
+    contact = get_object_or_404(
+        Contact,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        first_name = request.POST.get(
+            "first_name",
+            ""
+        ).strip()
+
+        if not first_name:
+
+            messages.error(
+                request,
+                "First name is required."
+            )
+
+            return render(
+                request,
+                "crmApp/contacts/contact_form.html",
+                {
+                    "contact": contact,
+                    "companies": Company.objects.all(),
+                }
+            )
+
+        company_id = request.POST.get(
+            "company"
+        )
+
+        company = None
+
+        if company_id:
+
+            company = Company.objects.filter(
+                pk=company_id
+            ).first()
+
+        contact.first_name = first_name
+
+        contact.last_name = request.POST.get(
+            "last_name",
+            ""
+        ).strip()
+
+        contact.company = company
+
+        contact.job_title = request.POST.get(
+            "job_title",
+            ""
+        ).strip()
+
+        contact.email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        contact.phone = request.POST.get(
+            "phone",
+            ""
+        ).strip()
+
+        contact.mobile = request.POST.get(
+            "mobile",
+            ""
+        ).strip()
+
+        contact.address = request.POST.get(
+            "address",
+            ""
+        ).strip()
+
+        contact.city = request.POST.get(
+            "city",
+            ""
+        ).strip()
+
+        contact.country = request.POST.get(
+            "country",
+            ""
+        ).strip()
+
+        contact.notes = request.POST.get(
+            "notes",
+            ""
+        ).strip()
+
+        contact.save()
+
+        messages.success(
+            request,
+            f"{contact.full_name} was updated successfully."
+        )
+
+        return redirect(
+            "contact_detail",
+            pk=contact.pk
+        )
+
+    return render(
+        request,
+        "crmApp/contacts/contact_form.html",
+        {
+            "contact": contact,
+            "companies": Company.objects.all(),
+        }
+    )
+
+
+@login_required
+def contact_delete(request, pk):
+
+    contact = get_object_or_404(
+        Contact,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        name = contact.full_name
+
+        contact.delete()
+
+        messages.success(
+            request,
+            f"{name} was deleted successfully."
+        )
+
+        return redirect(
+            "contact_list"
+        )
+
+    return render(
+        request,
+        "crmApp/contacts/contact_confirm_delete.html",
+        {
+            "contact": contact
+        }
+    )
+
+
+
+
+
+
