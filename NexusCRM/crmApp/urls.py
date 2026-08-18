@@ -5,7 +5,7 @@ from crmApp import views
 
 urlpatterns = [
 
-    path("admin/", admin.site.urls),
+    
     path("", views.dashboard, name="dashboard"),
 
     # Authentication URLs
@@ -20,7 +20,19 @@ urlpatterns = [
 
     path("contacts/", lambda request: views.module_placeholder(request, "Contacts"), name="contacts"),
 
-    path("companies/", lambda request: views.module_placeholder(request, "Companies"), name="companies"),
+   # Companies
+    path(
+        "companies/", views.company_list, name="company_list"),
+
+    path("companies/create/", views.company_create, name="company_create"
+    ),
+
+    path("companies/<int:pk>/", views.company_detail, name="company_detail"),
+
+    path("companies/<int:pk>/edit/", views.company_edit,name="company_edit"),
+
+    path("companies/<int:pk>/delete/", views.company_delete,name="company_delete"),
+
 
     path("deals/", lambda request: views.module_placeholder(request,"Deals"), name="deals"),
 
