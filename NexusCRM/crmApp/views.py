@@ -18,6 +18,8 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
 
+    next_url = request.GET.get("next") or request.POST.get("next")
+
     if request.method == "POST":
 
         username = request.POST.get("username", "").strip()
@@ -32,19 +34,20 @@ def login_view(request):
         if user is not None:
 
             if not user.is_active:
+
                 messages.error(
                     request,
-                    "Your account has been disabled. Please contact an administrator."
+                    "Your account has been disabled. "
+                    "Please contact an administrator."
                 )
 
                 return render(
                     request,
-                    "auth/login.html"
+                    "auth/login.html",
+                    {"next": next_url}
                 )
 
             login(request, user)
-
-            next_url = request.POST.get("next")
 
             if next_url:
                 return redirect(next_url)
@@ -58,7 +61,8 @@ def login_view(request):
 
     return render(
         request,
-        "auth/login.html"
+        "auth/login.html",
+        {"next": next_url}
     )
 
 @login_required

@@ -33,17 +33,19 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
 
+    <!-- Application CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/app.css' %}"
+    >
 
-    <!-- NexusCRM CSS -->
-
+    <!-- NexusCRM CRM CSS -->
     <link
         rel="stylesheet"
         href="{% static 'crmApp/css/crm.css' %}"
     >
-
-
-    {% block extra_css %}
-    {% endblock %}
+        {% block extra_css %}
+        {% endblock %}
 
 </head>
 
@@ -620,12 +622,11 @@
 ></script>
 
 
-<!-- NexusCRM JS -->
+<!-- Application JS -->
+<script src="{% static 'js/app.js' %}"></script>
 
-<script
-    src="{% static 'crmApp/js/crm.js' %}"
-></script>
-
+<!-- NexusCRM CRM JS -->
+<script src="{% static 'crmApp/js/crm.js' %}"></script>
 
 {% block extra_js %}
 {% endblock %}

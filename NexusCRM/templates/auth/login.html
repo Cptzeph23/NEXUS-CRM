@@ -306,7 +306,7 @@
             <input
                 type="hidden"
                 name="next"
-                value="{{ request.GET.next }}"
+                value="{{ next|default:'' }}"
             >
 
 
