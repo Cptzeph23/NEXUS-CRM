@@ -1,0 +1,650 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+{{ company.name }} | NexusCRM
+{% endblock %}
+
+{% block companies_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="d-flex align-items-center gap-2 mb-3">
+
+    <a
+        href="{% url 'company_list' %}"
+        class="text-decoration-none text-muted small"
+    >
+        Companies
+    </a>
+
+    <i class="bi bi-chevron-right text-muted small"></i>
+
+    <span class="small">
+        {{ company.name }}
+    </span>
+
+</div>
+
+
+<!-- COMPANY HEADER -->
+
+<div class="detail-header">
+
+    <div class="d-flex justify-content-between align-items-start">
+
+        <div class="detail-identity">
+
+            <div class="detail-avatar">
+                {{ company.name|first|upper }}
+            </div>
+
+            <div>
+
+                <div class="detail-name">
+                    {{ company.name }}
+                </div>
+
+                <div class="detail-meta">
+
+                    {% if company.industry %}
+                        {{ company.industry }}
+                    {% endif %}
+
+                    {% if company.industry and company.country %}
+                        ·
+                    {% endif %}
+
+                    {% if company.country %}
+                        {{ company.country }}
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-actions">
+
+            <a
+                href="{% url 'company_edit' company.pk %}"
+                class="btn btn-outline-secondary btn-sm"
+            >
+                <i class="bi bi-pencil me-1"></i>
+                Edit
+            </a>
+
+            <a
+                href="{% url 'company_delete' company.pk %}"
+                class="btn btn-outline-danger btn-sm"
+            >
+                <i class="bi bi-trash3 me-1"></i>
+                Delete
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TABS -->
+
+<ul class="nav crm-tabs">
+
+    <li class="nav-item">
+
+        <a
+            class="nav-link active"
+            href="#overview"
+        >
+            Overview
+        </a>
+
+    </li>
+
+    <li class="nav-item">
+
+        <a
+            class="nav-link"
+            href="#contacts"
+        >
+            Contacts
+            <span class="badge bg-light text-dark ms-1">
+                {{ contacts.count }}
+            </span>
+        </a>
+
+    </li>
+
+    <li class="nav-item">
+
+        <a
+            class="nav-link"
+            href="#deals"
+        >
+            Deals
+            <span class="badge bg-light text-dark ms-1">
+                {{ deals.count }}
+            </span>
+        </a>
+
+    </li>
+
+    <li class="nav-item">
+
+        <a
+            class="nav-link"
+            href="#activity"
+        >
+            Activity
+        </a>
+
+    </li>
+
+</ul>
+
+
+<!-- OVERVIEW -->
+
+<div class="crm-card rounded-top-0 mb-4">
+
+    <div class="crm-card-body">
+
+        <h6 class="fw-semibold mb-4">
+            Company Information
+        </h6>
+
+
+        <div class="info-grid">
+
+            <div>
+
+                <div class="info-label">
+                    Email
+                </div>
+
+                <div class="info-value">
+
+                    {% if company.email %}
+
+                        <a href="mailto:{{ company.email }}">
+                            {{ company.email }}
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Phone
+                </div>
+
+                <div class="info-value">
+
+                    {% if company.phone %}
+                        {{ company.phone }}
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Website
+                </div>
+
+                <div class="info-value">
+
+                    {% if company.website %}
+
+                        <a
+                            href="{{ company.website }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {{ company.website }}
+                        </a>
+
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Owner
+                </div>
+
+                <div class="info-value">
+
+                    {% if company.owner %}
+                        {{ company.owner.get_full_name|default:company.owner.username }}
+                    {% else %}
+                        Unassigned
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Location
+                </div>
+
+                <div class="info-value">
+
+                    {% if company.city %}
+                        {{ company.city }},
+                    {% endif %}
+
+                    {% if company.country %}
+                        {{ company.country }}
+                    {% endif %}
+
+                    {% if not company.city and not company.country %}
+                        —
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="info-label">
+                    Added
+                </div>
+
+                <div class="info-value">
+                    {{ company.created_at|date:"d M Y" }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% if company.address or company.description %}
+
+            <hr class="my-4">
+
+
+            {% if company.address %}
+
+                <div class="mb-4">
+
+                    <div class="info-label">
+                        Address
+                    </div>
+
+                    <div class="info-value">
+                        {{ company.address|linebreaksbr }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if company.description %}
+
+                <div>
+
+                    <div class="info-label">
+                        Description
+                    </div>
+
+                    <div class="info-value">
+                        {{ company.description|linebreaksbr }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- CONTACTS -->
+
+<div
+    id="contacts"
+    class="crm-card mb-4"
+>
+
+    <div class="crm-card-header d-flex justify-content-between align-items-center">
+
+        <h6 class="mb-0 fw-semibold">
+            Contacts
+        </h6>
+
+        <a
+            href="{% url 'contact_create' %}?company={{ company.pk }}"
+            class="btn btn-sm btn-crm-primary"
+        >
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Contact
+        </a>
+
+    </div>
+
+
+    {% if contacts %}
+
+        <div class="table-responsive">
+
+            <table class="table crm-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Contact
+                        </th>
+
+                        <th>
+                            Job Title
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th></th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for contact in contacts %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <div class="contact-avatar person-avatar">
+                                        {{ contact.first_name|first|upper }}
+                                    </div>
+
+                                    <div>
+
+                                        <a
+                                            href="{% url 'contact_detail' contact.pk %}"
+                                            class="table-link"
+                                        >
+                                            {{ contact.full_name }}
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                {{ contact.job_title|default:"—" }}
+                            </td>
+
+
+                            <td>
+                                {{ contact.email|default:"—" }}
+                            </td>
+
+
+                            <td>
+                                {{ contact.phone|default:"—" }}
+                            </td>
+
+
+                            <td class="text-end">
+
+                                <a
+                                    href="{% url 'contact_detail' contact.pk %}"
+                                    class="table-action-btn d-inline-flex"
+                                >
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state py-5">
+
+            <i class="bi bi-person-plus"></i>
+
+            <h6>
+                No contacts yet
+            </h6>
+
+            <p>
+                Add the first contact for this company.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- DEALS -->
+
+<div
+    id="deals"
+    class="crm-card mb-4"
+>
+
+    <div class="crm-card-header">
+
+        <h6 class="mb-0 fw-semibold">
+            Deals
+        </h6>
+
+    </div>
+
+
+    {% if deals %}
+
+        <div class="table-responsive">
+
+            <table class="table crm-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Deal</th>
+                        <th>Pipeline</th>
+                        <th>Stage</th>
+                        <th>Value</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for deal in deals %}
+
+                        <tr>
+
+                            <td>
+                                {{ deal.name }}
+                            </td>
+
+                            <td>
+                                {{ deal.pipeline.name }}
+                            </td>
+
+                            <td>
+                                {{ deal.stage.name }}
+                            </td>
+
+                            <td>
+                                {{ deal.amount|floatformat:2 }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state py-5">
+
+            <i class="bi bi-kanban"></i>
+
+            <h6>
+                No deals yet
+            </h6>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- ACTIVITY -->
+
+<div
+    id="activity"
+    class="crm-card"
+>
+
+    <div class="crm-card-header">
+
+        <h6 class="mb-0 fw-semibold">
+            Recent Activity
+        </h6>
+
+    </div>
+
+
+    {% if activities %}
+
+        <div class="crm-card-body">
+
+            {% for activity in activities %}
+
+                <div
+                    class="d-flex gap-3 {% if not forloop.last %}mb-4{% endif %}"
+                >
+
+                    <div class="detail-avatar"
+                         style="width:38px;height:38px;font-size:15px;">
+
+                        {% if activity.activity_type == "call" %}
+                            <i class="bi bi-telephone"></i>
+                        {% elif activity.activity_type == "email" %}
+                            <i class="bi bi-envelope"></i>
+                        {% elif activity.activity_type == "meeting" %}
+                            <i class="bi bi-calendar-event"></i>
+                        {% else %}
+                            <i class="bi bi-activity"></i>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="fw-semibold small">
+                            {{ activity.subject }}
+                        </div>
+
+                        <div class="text-muted small">
+                            {{ activity.activity_date|date:"d M Y, H:i" }}
+                        </div>
+
+                        {% if activity.description %}
+
+                            <div class="small mt-1">
+                                {{ activity.description }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state py-5">
+
+            <i class="bi bi-clock-history"></i>
+
+            <h6>
+                No activity yet
+            </h6>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
