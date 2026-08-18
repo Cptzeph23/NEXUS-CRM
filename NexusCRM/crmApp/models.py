@@ -98,6 +98,14 @@ class Company(models.Model):
 
     description = models.TextField(blank=True)
 
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="owned_companies"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -108,6 +116,9 @@ class Company(models.Model):
         return self.name
 
 
+# ==========================================================
+# CONTACT
+# ==========================================================
 class Contact(models.Model):
     STATUS_CHOICES = [
         ("lead", "Lead"),
@@ -125,6 +136,14 @@ class Contact(models.Model):
         null=True,
         blank=True,
         related_name="contacts"
+    )
+
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="owned_contacts"
     )
 
     job_title = models.CharField(max_length=150, blank=True)
@@ -153,103 +172,6 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-# ==========================================================
-# CONTACT
-# ==========================================================
-
-class Contact(models.Model):
-
-    first_name = models.CharField(
-        max_length=100
-    )
-
-    last_name = models.CharField(
-        max_length=100
-    )
-
-    company = models.ForeignKey(
-        Company,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="contacts"
-    )
-
-    job_title = models.CharField(
-        max_length=150,
-        blank=True
-    )
-
-    email = models.EmailField(
-        blank=True
-    )
-
-    phone = models.CharField(
-        max_length=30,
-        blank=True
-    )
-
-    mobile = models.CharField(
-        max_length=30,
-        blank=True
-    )
-
-    address = models.TextField(
-        blank=True
-    )
-
-    city = models.CharField(
-        max_length=100,
-        blank=True
-    )
-
-    country = models.CharField(
-        max_length=100,
-        blank=True
-    )
-
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="owned_contacts"
-    )
-
-    tags = models.ManyToManyField(
-        "Tag",
-        blank=True,
-        related_name="contacts"
-    )
-
-    notes = models.TextField(
-        blank=True
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
-
-    class Meta:
-        ordering = ["first_name", "last_name"]
-        indexes = [
-            models.Index(fields=["last_name"]),
-            models.Index(fields=["email"]),
-            models.Index(fields=["phone"]),
-        ]
-
-    def __str__(self):
-        return self.full_name
-
-    @property
-    def full_name(self):
-        return f"{self.first_name} {self.last_name}".strip()
-
 
 # ==========================================================
 # LEAD

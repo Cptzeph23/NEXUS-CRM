@@ -20,19 +20,12 @@ from .models import (
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-
     list_display = (
         "name",
         "industry",
         "email",
         "phone",
-        "country",
-        "owner",
-        "created_at",
-    )
-
-    list_filter = (
-        "industry",
+        "city",
         "country",
         "created_at",
     )
@@ -41,13 +34,17 @@ class CompanyAdmin(admin.ModelAdmin):
         "name",
         "email",
         "phone",
-        "website",
+        "city",
+    )
+
+    list_filter = (
+        "industry",
+        "country",
     )
 
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-
     list_display = (
         "first_name",
         "last_name",
@@ -55,7 +52,8 @@ class ContactAdmin(admin.ModelAdmin):
         "job_title",
         "email",
         "phone",
-        "owner",
+        "status",
+        "created_at",
     )
 
     search_fields = (
@@ -67,11 +65,10 @@ class ContactAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
+        "status",
+        "company",
         "country",
-        "created_at",
     )
-
-
 @admin.register(Lead)
 class LeadAdmin(admin.ModelAdmin):
 
