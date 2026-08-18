@@ -1,0 +1,317 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+{% if contact %}
+Edit Contact
+{% else %}
+Add Contact
+{% endif %}
+| NexusCRM
+{% endblock %}
+
+
+{% block contacts_active %}
+active
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1 class="page-title">
+
+            {% if contact %}
+                Edit Contact
+            {% else %}
+                Add Contact
+            {% endif %}
+
+        </h1>
+
+        <div class="page-subtitle">
+            {% if contact %}
+                Update contact information.
+            {% else %}
+                Add a person to your CRM.
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+
+<form method="POST">
+
+    {% csrf_token %}
+
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Personal Information
+            </h6>
+
+        </div>
+
+
+        <div class="crm-card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        First Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        name="first_name"
+                        class="form-control crm-form-control"
+                        value="{{ contact.first_name|default:'' }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="last_name"
+                        class="form-control crm-form-control"
+                        value="{{ contact.last_name|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Company
+                    </label>
+
+                    <select
+                        name="company"
+                        class="form-select crm-form-control"
+                    >
+
+                        <option value="">
+                            No company
+                        </option>
+
+                        {% for company in companies %}
+
+                            <option
+                                value="{{ company.pk }}"
+                                {% if contact.company_id == company.pk %}
+                                    selected
+                                {% elif selected_company and selected_company.pk == company.pk %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ company.name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Job Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="job_title"
+                        class="form-control crm-form-control"
+                        value="{{ contact.job_title|default:'' }}"
+                        placeholder="e.g. Operations Manager"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="form-control crm-form-control"
+                        value="{{ contact.email|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="form-label small fw-semibold">
+                        Phone
+                    </label>
+
+                    <input
+                        type="text"
+                        name="phone"
+                        class="form-control crm-form-control"
+                        value="{{ contact.phone|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label class="form-label small fw-semibold">
+                        Mobile
+                    </label>
+
+                    <input
+                        type="text"
+                        name="mobile"
+                        class="form-control crm-form-control"
+                        value="{{ contact.mobile|default:'' }}"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Location & Notes
+            </h6>
+
+        </div>
+
+
+        <div class="crm-card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="city"
+                        class="form-control crm-form-control"
+                        value="{{ contact.city|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="form-label small fw-semibold">
+                        Country
+                    </label>
+
+                    <input
+                        type="text"
+                        name="country"
+                        class="form-control crm-form-control"
+                        value="{{ contact.country|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label small fw-semibold">
+                        Address
+                    </label>
+
+                    <textarea
+                        name="address"
+                        class="form-control crm-form-control"
+                        rows="2"
+                    >{{ contact.address|default:'' }}</textarea>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label small fw-semibold">
+                        Notes
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        class="form-control crm-form-control"
+                        rows="4"
+                        placeholder="Add internal notes..."
+                    >{{ contact.notes|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-end gap-2">
+
+        <a
+            href="{% if contact %}{% url 'contact_detail' contact.pk %}{% else %}{% url 'contact_list' %}{% endif %}"
+            class="btn btn-light border"
+        >
+            Cancel
+        </a>
+
+        <button
+            type="submit"
+            class="btn btn-crm-primary"
+        >
+            <i class="bi bi-check-lg me-1"></i>
+
+            {% if contact %}
+                Save Changes
+            {% else %}
+                Create Contact
+            {% endif %}
+
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}
