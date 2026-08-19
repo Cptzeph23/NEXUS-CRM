@@ -872,3 +872,50 @@ def lead_detail(request, pk):
         "crmApp/leads/detail.html",
         context
     )
+
+@login_required
+def lead_update(request, pk):
+
+    lead = get_object_or_404(
+        Lead.objects.select_related("owner"),
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        form = LeadForm(
+            request.POST,
+            instance=lead
+        )
+
+        if form.is_valid():
+
+            lead = form.save()
+
+            messages.success(
+                request,
+                f"Lead '{lead.first_name} {lead.last_name}' "
+                "was updated successfully."
+            )
+
+            return redirect(
+                "lead_detail",
+                pk=lead.pk
+            )
+
+    else:
+
+        form = LeadForm(
+            instance=lead
+        )
+
+    context = {
+        "form": form,
+        "lead": lead,
+    }
+
+    return render(
+        request,
+        "crmApp/leads/edit.html",
+        context
+    )
