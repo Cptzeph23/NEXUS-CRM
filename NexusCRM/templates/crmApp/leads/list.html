@@ -164,6 +164,7 @@
 
 
     <!-- LEAD TABLE -->
+    
 
     <div class="card border-0 shadow-sm">
 
@@ -316,6 +317,7 @@
 
 
         <!-- TABLE -->
+
         <div class="table-responsive">
 
             <table class="table table-hover align-middle mb-0">
@@ -583,7 +585,28 @@
 
         </div>
 
+
     </div>
+
+    </div>
+    <!--Lead count-->
+        <div class="d-flex justify-content-between mt-3 align-items-center mb-3">
+
+        <div>
+
+            <span class="text-muted">
+            Showing
+            </span>
+
+            <strong>
+            {{ leads|length }}
+            </strong>
+
+            <span class="text-muted">
+            lead{{ leads|length|pluralize }}
+            </span>
+
+        </div>
 
 </div>
 
