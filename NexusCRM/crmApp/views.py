@@ -16,7 +16,7 @@ from .permissions import (
     can_delete,
 )
 from django.core.exceptions import PermissionDenied
-
+from django.contrib.auth.models import User
 from django.db.models import Sum
 from .forms import LeadForm
 
@@ -795,11 +795,58 @@ def permission_denied(request, exception=None):
 
 @login_required
 def lead_list(request):
-
+    # Base queryset with query optimizations
     leads = Lead.objects.select_related(
-        "owner"
-    ).order_by("-created_at")
+        "owner",
+        "converted_company",
+        "converted_contact",
+    ).prefetch_related(
+        "tags"
+    )
 
+    # ==========================
+    # SEARCH
+    # ==========================
+    search = request.GET.get("search", "").strip()
+    if search:
+        leads = leads.filter(
+            Q(first_name__icontains=search)
+            | Q(last_name__icontains=search)
+            | Q(company_name__icontains=search)
+            | Q(email__icontains=search)
+            | Q(phone__icontains=search)
+        )
+
+    # ==========================
+    # STATUS FILTER
+    # ==========================
+    status = request.GET.get("status", "").strip()
+    if status:
+        leads = leads.filter(status=status)
+
+    # ==========================
+    # SOURCE FILTER
+    # ==========================
+    source = request.GET.get("source", "").strip()
+    if source:
+        leads = leads.filter(source=source)
+
+    # ==========================
+    # OWNER FILTER
+    # ==========================
+    owner = request.GET.get("owner", "").strip()
+    if owner:
+        leads = leads.filter(owner_id=owner)
+
+    # ==========================
+    # ORDERING
+    # ==========================
+    leads = leads.order_by("-created_at")
+
+    # ==========================
+    # METRICS & STATS
+    # ==========================
+    # Evaluated across the filtered set or global model depending on UI needs
     new_count = Lead.objects.filter(
         status=Lead.STATUS_NEW
     ).count()
@@ -812,11 +859,31 @@ def lead_list(request):
         total=Sum("estimated_value")
     )["total"] or 0
 
+    # ==========================
+    # CONTEXT
+    # ==========================
     context = {
         "leads": leads,
+        "search": search,
+        "selected_status": status,
+        "selected_source": source,
+        "selected_owner": owner,
+
+        # Metrics
         "new_count": new_count,
         "qualified_count": qualified_count,
         "pipeline_value": pipeline_value,
+
+        # Form Dropdown Choices
+        "status_choices": Lead.STATUS_CHOICES,
+        "source_choices": Lead.SOURCE_CHOICES,
+        "owners": User.objects.filter(
+            is_active=True
+        ).order_by(
+            "first_name",
+            "last_name",
+            "username"
+        ),
     }
 
     return render(
@@ -824,7 +891,6 @@ def lead_list(request):
         "crmApp/leads/list.html",
         context
     )
-
 
 @login_required
 def lead_create(request):
