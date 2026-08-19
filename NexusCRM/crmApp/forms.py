@@ -148,6 +148,22 @@ class LeadConversionForm(forms.Form):
         max_length=30,
         required=False
     )
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+
+            if name in [
+                "create_company",
+                "create_contact",
+            ]:
+
+                field.widget.attrs["class"] = "form-check-input"
+
+            else:
+
+                field.widget.attrs["class"] = "form-control"
 
 def clean(self):
 
