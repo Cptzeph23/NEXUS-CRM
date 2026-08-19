@@ -18,6 +18,7 @@ from .permissions import (
 from django.core.exceptions import PermissionDenied
 
 from django.db.models import Sum
+from .forms import LeadForm
 
 # Create your views here.
 
@@ -818,5 +819,38 @@ def lead_list(request):
     return render(
         request,
         "crmApp/leads/list.html",
+        context
+    )
+
+
+@login_required
+def lead_create(request):
+
+    if request.method == "POST":
+
+        form = LeadForm(request.POST)
+
+        if form.is_valid():
+
+            lead = form.save()
+
+            messages.success(
+                request,
+                f"Lead {lead.first_name} {lead.last_name} was created successfully."
+            )
+
+            return redirect("leads")
+
+    else:
+
+        form = LeadForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/leads/create.html",
         context
     )
