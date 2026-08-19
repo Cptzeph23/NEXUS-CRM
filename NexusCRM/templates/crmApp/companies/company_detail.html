@@ -68,23 +68,41 @@ active
         </div>
 
 
-        <div class="detail-actions">
+        <div class="d-flex gap-2">
 
             <a
-                href="{% url 'company_edit' company.pk %}"
-                class="btn btn-outline-secondary btn-sm"
-            >
+                href="{% url 'company_list' %}"
+                 class="btn btn-light"
+                >
+                    <i class="bi bi-arrow-left me-1"></i>
+                Back
+            </a>
+
+
+            {% if can_edit_all_records or company.owner_id == request.user.id %}
+
+            <a
+            href="{% url 'company_edit' company.pk %}"
+            class="btn btn-primary"
+                >
                 <i class="bi bi-pencil me-1"></i>
                 Edit
             </a>
 
+            {% endif %}
+
+
+            {% if can_delete_records or crm_role == "sales" and company.owner_id == request.user.id %}
+
             <a
                 href="{% url 'company_delete' company.pk %}"
-                class="btn btn-outline-danger btn-sm"
+                 class="btn btn-outline-danger"
             >
-                <i class="bi bi-trash3 me-1"></i>
+                <i class="bi bi-trash me-1"></i>
                 Delete
             </a>
+
+            {% endif %}
 
         </div>
 
