@@ -17,6 +17,7 @@ from .permissions import (
 )
 from django.core.exceptions import PermissionDenied
 
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -795,8 +796,23 @@ def lead_list(request):
         "owner"
     ).order_by("-created_at")
 
+    new_count = Lead.objects.filter(
+        status=Lead.STATUS_NEW
+    ).count()
+
+    qualified_count = Lead.objects.filter(
+        status=Lead.STATUS_QUALIFIED
+    ).count()
+
+    pipeline_value = Lead.objects.aggregate(
+        total=Sum("estimated_value")
+    )["total"] or 0
+
     context = {
         "leads": leads,
+        "new_count": new_count,
+        "qualified_count": qualified_count,
+        "pipeline_value": pipeline_value,
     }
 
     return render(

@@ -144,7 +144,7 @@
                             </p>
 
                             <h3 class="fw-bold mb-0">
-                                {{ pipeline_value|default:"0.00" }}
+                                KSh {{ pipeline_value|floatformat:2 }}
                             </h3>
                         </div>
 
@@ -441,7 +441,7 @@
 
                                 <td>
 
-                                    {{ lead.estimated_value }}
+                                    KSh {{ lead.estimated_value|floatformat:2 }}
 
                                 </td>
 
