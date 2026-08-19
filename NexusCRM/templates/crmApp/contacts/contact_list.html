@@ -26,13 +26,17 @@ active
     </div>
 
 
+    {% if can_create_records %}
+
     <a
         href="{% url 'contact_create' %}"
-        class="btn btn-crm-primary"
+        class="btn btn-primary"
     >
         <i class="bi bi-plus-lg me-1"></i>
         Add Contact
     </a>
+
+    {% endif %}
 
 </div>
 
@@ -230,21 +234,29 @@ active
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    <a
-                                        href="{% url 'contact_edit' contact.pk %}"
-                                        class="table-action-btn"
-                                        title="Edit"
-                                    >
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    {% if can_edit_all_records or contact.owner_id == request.user.id %}
 
                                     <a
-                                        href="{% url 'contact_delete' contact.pk %}"
-                                        class="table-action-btn danger"
-                                        title="Delete"
+                                        href="{% url 'contact_edit' contact.pk %}"
+                                         class="dropdown-item"
                                     >
-                                        <i class="bi bi-trash3"></i>
+                                    <i class="bi bi-pencil me-2"></i>
+                                        Edit
                                     </a>
+
+                                    {% endif %}
+
+                                    {% if can_delete_records or crm_role == "sales" and contact.owner_id == request.user.id %}
+
+                                    <a
+                                    href="{% url 'contact_delete' contact.pk %}"
+                                    class="dropdown-item text-danger"
+                                    >
+                                    <i class="bi bi-trash me-2"></i>
+                                    Delete
+                                    </a>
+
+                                    {% endif %}
 
                                 </div>
 

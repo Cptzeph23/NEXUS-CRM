@@ -1,0 +1,84 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Access Denied | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7 col-xl-6">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body p-5">
+
+                    <div
+                        class="mx-auto mb-4 d-flex align-items-center justify-content-center rounded-circle"
+                        style="
+                            width: 80px;
+                            height: 80px;
+                            background: rgba(220, 53, 69, 0.10);
+                        "
+                    >
+
+                        <i
+                            class="bi bi-shield-lock text-danger"
+                            style="font-size: 2.2rem;"
+                        ></i>
+
+                    </div>
+
+
+                    <div class="text-muted small fw-semibold mb-2">
+                        ERROR 403
+                    </div>
+
+
+                    <h1 class="h3 fw-bold mb-3">
+                        Access denied
+                    </h1>
+
+
+                    <p class="text-muted mb-4">
+
+                        You don't have permission to perform this action.
+
+                        If you believe you should have access,
+                        please contact your CRM administrator.
+
+                    </p>
+
+
+                    <div class="d-flex justify-content-center gap-2">
+
+                        <a
+                            href="{% url 'dashboard' %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-grid-1x2 me-1"></i>
+                            Back to Dashboard
+                        </a>
+
+
+                        <a
+                            href="javascript:history.back()"
+                            class="btn btn-light"
+                        >
+                            Go Back
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

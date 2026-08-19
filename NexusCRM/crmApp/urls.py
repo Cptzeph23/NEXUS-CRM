@@ -56,4 +56,6 @@ urlpatterns = [
 
     path("settings/", lambda request: views.module_placeholder(request, "Settings"), name="settings"),
 
+    
+
 ]

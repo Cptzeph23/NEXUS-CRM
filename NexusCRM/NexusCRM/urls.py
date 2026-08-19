@@ -7,3 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('crmApp.urls')),
 ]
+
+handler403 = "crmApp.views.permission_denied"
