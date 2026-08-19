@@ -854,3 +854,21 @@ def lead_create(request):
         "crmApp/leads/create.html",
         context
     )
+
+@login_required
+def lead_detail(request, pk):
+
+    lead = get_object_or_404(
+        Lead.objects.select_related("owner"),
+        pk=pk
+    )
+
+    context = {
+        "lead": lead,
+    }
+
+    return render(
+        request,
+        "crmApp/leads/detail.html",
+        context
+    )
