@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 
 # Register your models here.
 
@@ -16,7 +18,27 @@ from .models import (
     Task,
 )
 
+class ProfileInline(admin.StackedInline):
 
+    model = Profile
+
+    extra = 0
+
+    fields = (
+        "role",
+        "phone",
+        "job_title",
+        "avatar",
+    )
+
+class CustomUserAdmin(UserAdmin):
+
+    inlines = (
+        ProfileInline,
+    )
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
