@@ -15,8 +15,8 @@ urlpatterns = [
     #Dashboard and Home URLs
     path("home/", views.home, name="home"),
     
-
-    path("leads/", lambda request: views.module_placeholder(request,"Leads"), name="leads"),
+    # Leads
+    path("leads/", views.lead_list, name="leads"),
 
     # Contacts
 

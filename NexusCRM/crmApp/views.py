@@ -9,13 +9,14 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Company, Contact
+from .models import Company, Contact, Lead, Deal, Activity, Task, Note, Pipeline, PipelineStage, Tag    
 from .permissions import (
     can_create,
     can_edit,
     can_delete,
 )
 from django.core.exceptions import PermissionDenied
+
 
 # Create your views here.
 
@@ -783,6 +784,23 @@ def permission_denied(request, exception=None):
         status=403
     )
 
+# ==========================================================
+# LEAD VIEWS
+# ==========================================================
 
+@login_required
+def lead_list(request):
 
+    leads = Lead.objects.select_related(
+        "owner"
+    ).order_by("-created_at")
 
+    context = {
+        "leads": leads,
+    }
+
+    return render(
+        request,
+        "crmApp/leads/list.html",
+        context
+    )
