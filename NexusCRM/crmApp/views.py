@@ -20,6 +20,9 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 from .forms import LeadForm
 
+from django.db import transaction
+from .forms import LeadForm, LeadConversionForm
+
 # Create your views here.
 
 def login_view(request):
@@ -919,3 +922,141 @@ def lead_update(request, pk):
         "crmApp/leads/edit.html",
         context
     )
+
+@login_required
+def lead_convert(request, pk):
+
+    lead = get_object_or_404(
+        Lead.objects.select_related(
+            "converted_company",
+            "converted_contact"
+        ),
+        pk=pk
+    )
+
+    if lead.status == Lead.STATUS_CONVERTED:
+
+        messages.warning(
+            request,
+            "This lead has already been converted."
+        )
+
+        return redirect(
+            "lead_detail",
+            pk=lead.pk
+        )
+
+    if request.method == "POST":
+
+        form = LeadConversionForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            try:
+
+                with transaction.atomic():
+
+                    company = None
+                    contact = None
+
+                    # ==========================
+                    # CREATE COMPANY
+                    # ==========================
+
+                    if form.cleaned_data["create_company"]:
+
+                        company = Company.objects.create(
+                            name=form.cleaned_data["company_name"]
+                        )
+
+                    # ==========================
+                    # CREATE CONTACT
+                    # ==========================
+
+                    if form.cleaned_data["create_contact"]:
+
+                        contact = Contact.objects.create(
+                            first_name=form.cleaned_data[
+                                "contact_first_name"
+                            ],
+                            last_name=form.cleaned_data[
+                                "contact_last_name"
+                            ],
+                            email=form.cleaned_data[
+                                "email"
+                            ],
+                            phone=form.cleaned_data[
+                                "phone"
+                            ],
+                            company=company,
+                        )
+
+                    # ==========================
+                    # UPDATE LEAD
+                    # ==========================
+
+                    lead.converted_company = company
+                    lead.converted_contact = contact
+                    lead.status = Lead.STATUS_CONVERTED
+
+                    lead.save(
+                        update_fields=[
+                            "converted_company",
+                            "converted_contact",
+                            "status",
+                            "updated_at",
+                        ]
+                    )
+
+                messages.success(
+                    request,
+                    f"Lead '{lead.first_name} {lead.last_name}' "
+                    "was converted successfully."
+                )
+
+                return redirect(
+                    "lead_detail",
+                    pk=lead.pk
+                )
+
+            except Exception:
+
+                messages.error(
+                    request,
+                    "The lead could not be converted. "
+                    "No changes were saved."
+                )
+
+    else:
+
+        form = LeadConversionForm(
+            initial={
+                "company_name": lead.company_name,
+                "contact_first_name": lead.first_name,
+                "contact_last_name": lead.last_name,
+                "email": lead.email,
+                "phone": lead.phone,
+            }
+        )
+
+    return render(
+        request,
+        "crmApp/leads/convert.html",
+        {
+            "lead": lead,
+            "form": form,
+        }
+    )
+
+
+
+
+
+
+
+
+
+
+

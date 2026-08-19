@@ -20,6 +20,7 @@ urlpatterns = [
     path("leads/create/", views.lead_create, name="lead_create"),
     path("leads/<int:pk>/", views.lead_detail, name="lead_detail"),
     path("leads/<int:pk>/edit/", views.lead_update, name="lead_update"),
+    path("leads/<int:pk>/convert/", views.lead_convert,name="lead_convert"),
 
     # Contacts
 
