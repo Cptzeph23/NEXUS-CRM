@@ -1,0 +1,402 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    Edit {{ lead.first_name }} {{ lead.last_name }} | NexusCRM
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <!-- PAGE HEADER -->
+
+    <div class="mb-4">
+
+        <a
+            href="{% url 'lead_detail' lead.pk %}"
+            class="text-muted text-decoration-none small"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Lead
+        </a>
+
+        <h1 class="h3 fw-bold mt-3 mb-1">
+            Edit Lead
+        </h1>
+
+        <p class="text-muted mb-0">
+            Update information for
+            <strong>
+                {{ lead.first_name }} {{ lead.last_name }}
+            </strong>
+        </p>
+
+    </div>
+
+
+    <!-- FORM -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-semibold">
+                Lead Information
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form
+                method="POST"
+                novalidate
+            >
+
+                {% csrf_token %}
+
+
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger">
+
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <div class="row g-4">
+
+
+                    <!-- FIRST NAME -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.first_name.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            First Name
+                        </label>
+
+                        {{ form.first_name }}
+
+                        {% for error in form.first_name.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.last_name.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Last Name
+                        </label>
+
+                        {{ form.last_name }}
+
+                        {% for error in form.last_name.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- COMPANY -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.company_name.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Company
+                        </label>
+
+                        {{ form.company_name }}
+
+                        {% for error in form.company_name.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- JOB TITLE -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.job_title.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Job Title
+                        </label>
+
+                        {{ form.job_title }}
+
+                        {% for error in form.job_title.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.email.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Email
+                        </label>
+
+                        {{ form.email }}
+
+                        {% for error in form.email.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.phone.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Phone
+                        </label>
+
+                        {{ form.phone }}
+
+                        {% for error in form.phone.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- SOURCE -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.source.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Source
+                        </label>
+
+                        {{ form.source }}
+
+                        {% for error in form.source.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.status.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Status
+                        </label>
+
+                        {{ form.status }}
+
+                        {% for error in form.status.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- VALUE -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="{{ form.estimated_value.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Estimated Value
+                        </label>
+
+                        {{ form.estimated_value }}
+
+                        {% for error in form.estimated_value.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- OWNER -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.owner.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Lead Owner
+                        </label>
+
+                        {{ form.owner }}
+
+                        {% for error in form.owner.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- TAGS -->
+
+                    {% if form.tags %}
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="{{ form.tags.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Tags
+                        </label>
+
+                        {{ form.tags }}
+
+                        {% for error in form.tags.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="col-12">
+
+                        <label
+                            for="{{ form.description.id_for_label }}"
+                            class="form-label fw-semibold"
+                        >
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% for error in form.description.errors %}
+
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top">
+
+                    <a
+                        href="{% url 'lead_detail' lead.pk %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-check-lg me-1"></i>
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
