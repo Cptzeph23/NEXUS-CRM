@@ -356,10 +356,17 @@
 
                                             <div class="fw-semibold">
 
-                                                {{ lead.first_name }}
-                                                {{ lead.last_name }}
+                                                <a
+                                                    href="{% url 'lead_detail' lead.pk %}"
+                                                    class="text-decoration-none text-dark"
+                                                    >
 
-                                            </div>
+                                                        {{ lead.first_name }}
+                                                        {{ lead.last_name }}
+
+                                                </a>
+
+</div>
 
                                             {% if lead.email %}
 
