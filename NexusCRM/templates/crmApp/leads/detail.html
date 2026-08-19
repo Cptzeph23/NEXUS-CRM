@@ -1,0 +1,605 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    {{ lead.first_name }} {{ lead.last_name }} | NexusCRM
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+
+        <div>
+
+            <a
+                href="{% url 'leads' %}"
+                class="text-muted text-decoration-none small"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Leads
+            </a>
+
+            <div class="d-flex align-items-center mt-3">
+
+                <div
+                    class="rounded-circle bg-primary bg-opacity-10
+                           text-primary d-flex align-items-center
+                           justify-content-center me-3"
+                    style="width:56px;height:56px;font-size:18px;"
+                >
+
+                    {{ lead.first_name|first|upper }}{{ lead.last_name|first|upper }}
+
+                </div>
+
+                <div>
+
+                    <h1 class="h3 fw-bold mb-1">
+
+                        {{ lead.first_name }}
+                        {{ lead.last_name }}
+
+                    </h1>
+
+                    <p class="text-muted mb-0">
+
+                        {% if lead.job_title %}
+                            {{ lead.job_title }}
+                        {% endif %}
+
+                        {% if lead.job_title and lead.company_name %}
+                            ·
+                        {% endif %}
+
+                        {% if lead.company_name %}
+                            {{ lead.company_name }}
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="#"
+                class="btn btn-outline-secondary"
+            >
+                <i class="bi bi-pencil me-1"></i>
+                Edit
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATUS / VALUE SUMMARY -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted d-block mb-2">
+                        Lead Status
+                    </small>
+
+                    {% if lead.status == "new" %}
+
+                        <span class="badge text-bg-primary fs-6">
+                            New
+                        </span>
+
+                    {% elif lead.status == "contacted" %}
+
+                        <span class="badge text-bg-info fs-6">
+                            Contacted
+                        </span>
+
+                    {% elif lead.status == "qualified" %}
+
+                        <span class="badge text-bg-success fs-6">
+                            Qualified
+                        </span>
+
+                    {% elif lead.status == "unqualified" %}
+
+                        <span class="badge text-bg-secondary fs-6">
+                            Unqualified
+                        </span>
+
+                    {% elif lead.status == "converted" %}
+
+                        <span class="badge text-bg-dark fs-6">
+                            Converted
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted d-block mb-2">
+                        Lead Source
+                    </small>
+
+                    <div class="fw-semibold">
+
+                        {{ lead.get_source_display }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted d-block mb-2">
+                        Estimated Value
+                    </small>
+
+                    <div class="fw-bold fs-5">
+
+                        KSh {{ lead.estimated_value|floatformat:2 }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN -->
+
+        <div class="col-lg-8">
+
+
+            <!-- CONTACT INFORMATION -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Contact Information
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Full Name
+                            </small>
+
+                            <div class="fw-semibold">
+
+                                {{ lead.first_name }}
+                                {{ lead.last_name }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Job Title
+                            </small>
+
+                            <div>
+
+                                {% if lead.job_title %}
+                                    {{ lead.job_title }}
+                                {% else %}
+                                    <span class="text-muted">Not provided</span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Email
+                            </small>
+
+                            {% if lead.email %}
+
+                                <a href="mailto:{{ lead.email }}">
+                                    {{ lead.email }}
+                                </a>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Not provided
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block mb-1">
+                                Phone
+                            </small>
+
+                            {% if lead.phone %}
+
+                                <a href="tel:{{ lead.phone }}">
+                                    {{ lead.phone }}
+                                </a>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Not provided
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPANY -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Company
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if lead.company_name %}
+
+                        <div class="d-flex align-items-center">
+
+                            <div
+                                class="rounded bg-primary bg-opacity-10
+                                       text-primary d-flex align-items-center
+                                       justify-content-center me-3"
+                                style="width:44px;height:44px;"
+                            >
+
+                                <i class="bi bi-building"></i>
+
+                            </div>
+
+                            <div>
+
+                                <div class="fw-semibold">
+                                    {{ lead.company_name }}
+                                </div>
+
+                                <small class="text-muted">
+                                    Prospect company
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            No company information provided.
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Description
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if lead.description %}
+
+                        <div class="text-secondary"
+                             style="white-space: pre-line;">
+
+                            {{ lead.description }}
+
+                        </div>
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            No description has been added.
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- FUTURE ACTIVITY AREA -->
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Activity
+                    </h5>
+
+                </div>
+
+                <div class="card-body text-center py-5">
+
+                    <i class="bi bi-clock-history fs-1 text-muted"></i>
+
+                    <h6 class="mt-3">
+                        No activity yet
+                    </h6>
+
+                    <p class="text-muted mb-0">
+
+                        Calls, emails, meetings and other
+                        interactions will appear here.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT COLUMN -->
+
+        <div class="col-lg-4">
+
+
+            <!-- OWNER -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Lead Owner
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if lead.owner %}
+
+                        <div class="d-flex align-items-center">
+
+                            <div
+                                class="rounded-circle bg-primary
+                                       bg-opacity-10 text-primary
+                                       d-flex align-items-center
+                                       justify-content-center me-3"
+                                style="width:44px;height:44px;"
+                            >
+
+                                {{ lead.owner.first_name|first|upper }}{{ lead.owner.last_name|first|upper }}
+
+                            </div>
+
+                            <div>
+
+                                <div class="fw-semibold">
+
+                                    {{ lead.owner.get_full_name|default:lead.owner.username }}
+
+                                </div>
+
+                                {% if lead.owner.profile %}
+
+                                    <small class="text-muted">
+
+                                        {{ lead.owner.profile.role_display }}
+
+                                    </small>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-muted">
+                            No owner assigned.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- LEAD DETAILS -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Lead Details
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span class="text-muted">
+                            Source
+                        </span>
+
+                        <span class="fw-semibold">
+                            {{ lead.get_source_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span class="text-muted">
+                            Created
+                        </span>
+
+                        <span>
+                            {{ lead.created_at|date:"M d, Y" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between">
+
+                        <span class="text-muted">
+                            Updated
+                        </span>
+
+                        <span>
+                            {{ lead.updated_at|date:"M d, Y" }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONVERSION STATUS -->
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-semibold">
+                        Conversion
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if lead.converted_company or lead.converted_contact %}
+
+                        <div class="alert alert-success mb-0">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            This lead has been converted.
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="text-muted small">
+
+                            This lead has not yet been converted
+                            into a customer.
+
+                        </p>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary w-100"
+                            disabled
+                        >
+
+                            Convert Lead
+
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
