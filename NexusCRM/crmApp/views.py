@@ -810,12 +810,14 @@ def lead_list(request):
     search = request.GET.get("search", "").strip()
     if search:
         leads = leads.filter(
-            Q(first_name__icontains=search)
-            | Q(last_name__icontains=search)
-            | Q(company_name__icontains=search)
-            | Q(email__icontains=search)
-            | Q(phone__icontains=search)
-        )
+        Q(first_name__icontains=search)
+        | Q(last_name__icontains=search)
+        | Q(company_name__icontains=search)
+        | Q(email__icontains=search)
+        | Q(phone__icontains=search)
+        | Q(job_title__icontains=search)
+        | Q(description__icontains=search)
+    )
 
     # ==========================
     # STATUS FILTER

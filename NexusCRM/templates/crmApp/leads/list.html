@@ -164,7 +164,22 @@
 
 
     <!-- LEAD TABLE -->
-    
+    <!-- FILTER BAR/Search Results indicator -->
+    {% if search %}
+
+            <div class="mb-3">
+
+                <span class="text-muted">
+                    Search results for
+                </span>
+
+                    <strong>
+                    "{{ search }}"
+                    </strong>
+
+            </div>
+
+    {% endif %}
 
     <div class="card border-0 shadow-sm">
 
@@ -188,8 +203,9 @@
                             type="search"
                             name="search"
                             value="{{ search }}"
-                            class="form-control"
-                            placeholder="Search leads..."
+                             class="form-control"
+                            placeholder="Search name, company, email, phone..."
+                            autocomplete="off"
                         >
 
                     </div>
