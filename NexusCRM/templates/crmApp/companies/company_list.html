@@ -256,37 +256,68 @@ active
                                 {% endif %}
 
                             </td>
-                        
 
 
+                            <td class="text-end">
 
-                            <td>
+                                <div class="dropdown">
 
-                                <div class="table-actions">
-
-                                    <a
-                                        href="{% url 'company_detail' company.pk %}"
-                                        class="table-action-btn"
-                                        title="View"
+                                    <button
+                                        class="btn btn-sm btn-light"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
                                     >
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
 
-                                    <a
-                                        href="{% url 'company_edit' company.pk %}"
-                                        class="table-action-btn"
-                                        title="Edit"
-                                    >
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
 
-                                    <a
-                                        href="{% url 'company_delete' company.pk %}"
-                                        class="table-action-btn danger"
-                                        title="Delete"
-                                    >
-                                        <i class="bi bi-trash3"></i>
-                                    </a>
+                                        <li>
+                                            <a
+                                                class="dropdown-item"
+                                                href="{% url 'company_detail' company.pk %}"
+                                            >
+                                                <i class="bi bi-eye me-2"></i>
+                                                View
+                                            </a>
+                                        </li>
+
+
+                                        {% if can_edit_all_records or company.owner_id == request.user.id %}
+
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="{% url 'company_edit' company.pk %}"
+                                                >
+                                                    <i class="bi bi-pencil me-2"></i>
+                                                    Edit
+                                                </a>
+                                            </li>
+
+                                        {% endif %}
+
+
+                                        {% if can_delete_records or crm_role == "sales" and company.owner_id == request.user.id %}
+
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+
+                                            <li>
+                                                <a
+                                                    class="dropdown-item text-danger"
+                                                    href="{% url 'company_delete' company.pk %}"
+                                                >
+                                                    <i class="bi bi-trash me-2"></i>
+                                                    Delete
+                                                </a>
+                                            </li>
+
+                                        {% endif %}
+
+                                    </ul>
 
                                 </div>
 
@@ -419,7 +450,7 @@ active
                     <a
                         href="{% url 'company_create' %}"
                         class="btn btn-primary" 
-                        >
+                    >
                         <i class="bi bi-plus-lg me-1"></i>
                         Add Company
                     </a>
