@@ -1,0 +1,101 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Delete Lead | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-6 col-xl-5">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="text-center mb-4">
+
+                        <div
+                            class="d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger"
+                            style="width: 64px; height: 64px;"
+                        >
+                            <i class="bi bi-trash fs-3"></i>
+                        </div>
+
+                    </div>
+
+                    <h4 class="text-center mb-3">
+                        Delete Lead?
+                    </h4>
+
+                    <p class="text-center text-muted mb-4">
+
+                        Are you sure you want to delete
+
+                        <strong>
+                            {{ lead.first_name }} {{ lead.last_name }}
+                        </strong>?
+
+                        This action cannot be undone.
+
+                    </p>
+
+
+                    <div class="bg-light rounded p-3 mb-4">
+
+                        <div class="small text-muted mb-1">
+                            Lead
+                        </div>
+
+                        <div class="fw-semibold">
+                            {{ lead.first_name }} {{ lead.last_name }}
+                        </div>
+
+                        {% if lead.company_name %}
+
+                            <div class="small text-muted">
+                                {{ lead.company_name }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="d-flex gap-2 justify-content-end">
+
+                            <a
+                                href="{% url 'lead_detail' lead.pk %}"
+                                class="btn btn-light"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                <i class="bi bi-trash me-1"></i>
+                                Delete Lead
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

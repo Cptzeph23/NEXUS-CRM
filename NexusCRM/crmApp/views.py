@@ -1208,7 +1208,37 @@ def lead_convert(request, pk):
         }
     )
 
+@login_required
+def lead_delete(request, pk):
 
+    lead = get_object_or_404(
+        Lead,
+        pk=pk
+    )
+
+    if not can_delete(request.user, lead):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        lead_name = f"{lead.first_name} {lead.last_name}".strip()
+
+        lead.delete()
+
+        messages.success(
+            request,
+            f"Lead {lead_name} was deleted successfully."
+        )
+
+        return redirect("leads")
+
+    return render(
+        request,
+        "crmApp/leads/delete.html",
+        {
+            "lead": lead,
+        }
+    )
 
 
 

@@ -21,6 +21,7 @@ urlpatterns = [
     path("leads/<int:pk>/", views.lead_detail, name="lead_detail"),
     path("leads/<int:pk>/edit/", views.lead_update, name="lead_update"),
     path("leads/<int:pk>/convert/", views.lead_convert,name="lead_convert"),
+    path("leads/<int:pk>/delete/", views.lead_delete, name="lead_delete"),
 
     # Contacts
 
