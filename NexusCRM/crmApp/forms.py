@@ -3,9 +3,67 @@ import re
 from django import forms
 
 from .models import Lead
+from django.db.models import Q
 
 
+def normalize_phone(phone):
+    """
+    Normalize a phone number for duplicate comparison.
+    Keeps digits only.
+    """
+    if not phone:
+        return ""
+
+    return re.sub(r"\D", "", phone)
+
+def find_duplicate_leads(data, exclude_pk=None):
+    """
+    Find existing leads that may represent the same prospect.
+
+    Matching priority:
+    1. Email
+    2. Phone
+    3. First name + last name + company
+    """
+
+    queryset = Lead.objects.all()
+
+    if exclude_pk:
+        queryset = queryset.exclude(pk=exclude_pk)
+
+    email = (data.get("email") or "").strip().lower()
+    phone = normalize_phone(data.get("phone"))
+
+    first_name = (data.get("first_name") or "").strip().lower()
+    last_name = (data.get("last_name") or "").strip().lower()
+    company_name = (data.get("company_name") or "").strip().lower()
+
+    duplicates = Lead.objects.none()
+
+    if email:
+        duplicates = queryset.filter(
+            email__iexact=email
+        )
+
+    if phone:
+        for lead in queryset.exclude(phone=""):
+
+            if normalize_phone(lead.phone) == phone:
+                duplicates = duplicates | Lead.objects.filter(pk=lead.pk)
+
+    if first_name and last_name and company_name:
+
+        name_company_matches = queryset.filter(
+            first_name__iexact=first_name,
+            last_name__iexact=last_name,
+            company_name__iexact=company_name,
+        )
+
+        duplicates = duplicates | name_company_matches
+
+    return duplicates.distinct()
 class LeadForm(forms.ModelForm):
+    duplicate_leads = None
 
     class Meta:
 
@@ -113,6 +171,17 @@ class LeadForm(forms.ModelForm):
             "estimated_value": "Estimated Value",
             "owner": "Lead Owner",
         }
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        self.duplicate_leads = find_duplicate_leads(
+            cleaned_data,
+            exclude_pk=self.instance.pk if self.instance.pk else None
+        )
+
+        return cleaned_data
 
     def clean_estimated_value(self):
         value = self.cleaned_data.get("estimated_value")
