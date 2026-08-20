@@ -278,22 +278,36 @@
 
                     <select
                         name="owner"
-                        class="form-select"
-                    >
+                         class="form-select"
+                        >
 
-                        <option value="">
-                            All Owners
-                        </option>
+                            <option value="">
+                                All Owners
+                            </option>
 
-                        {% for owner in owners %}
+                            <option
+                                value="unassigned"
+                                {% if selected_owner == "unassigned" %}
+                                    selected
+                                {% endif %}
+                                >
+                                Unassigned
+                            </option>
+
+                            {% for owner in owners %}
 
                             <option
                                 value="{{ owner.pk }}"
                                 {% if selected_owner == owner.pk|stringformat:"s" %}
-                                    selected
+                                selected
                                 {% endif %}
                             >
-                                {{ owner.get_full_name|default:owner.username }}
+                                {% if owner.get_full_name %}
+                                    {{ owner.get_full_name }}
+                                {% else %}
+                                    {{ owner.username }}
+                                {% endif %}
+
                             </option>
 
                         {% endfor %}
@@ -330,6 +344,72 @@
             </div>
 
         </form>
+
+        <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    Total Leads
+                </div>
+
+                <div class="fs-3 fw-bold">
+                    {{ total_leads }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    Assigned
+                </div>
+
+                <div class="fs-3 fw-bold">
+                    {{ assigned_leads }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    Unassigned
+                </div>
+
+                <div class="fs-3 fw-bold">
+                    {{ unassigned_leads }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
         <!-- TABLE -->
@@ -474,7 +554,9 @@
 
 
                             <td>
+                                <span class="badge bg-light text-dark border">
                                 {{ lead.get_source_display }}
+                                </span>
                             </td>
 
 

@@ -795,6 +795,16 @@ def permission_denied(request, exception=None):
 
 @login_required
 def lead_list(request):
+    base_leads = Lead.objects.all()
+    total_leads = base_leads.count()
+
+    assigned_leads = base_leads.filter(
+    owner__isnull=False
+    ).count()
+
+    unassigned_leads = base_leads.filter(
+    owner__isnull=True
+    ).count()
     # Base queryset with query optimizations
     leads = Lead.objects.select_related(
         "owner",
@@ -837,9 +847,18 @@ def lead_list(request):
     # OWNER FILTER
     # ==========================
     owner = request.GET.get("owner", "").strip()
-    if owner:
-        leads = leads.filter(owner_id=owner)
 
+    if owner == "unassigned":
+
+        leads = leads.filter(
+        owner__isnull=True
+    )
+
+    elif owner:
+
+        leads = leads.filter(
+        owner_id=owner
+    )
     # ==========================
     # ORDERING
     # ==========================
@@ -870,6 +889,9 @@ def lead_list(request):
         "selected_status": status,
         "selected_source": source,
         "selected_owner": owner,
+        "total_leads": total_leads,
+        "assigned_leads": assigned_leads,
+        "unassigned_leads": unassigned_leads,
 
         # Metrics
         "new_count": new_count,
