@@ -879,6 +879,8 @@ def lead_list(request):
 
     page_obj = paginator.get_page(page_number)
 
+
+
     # ==========================
     # METRICS & STATS
     # ==========================
@@ -894,6 +896,11 @@ def lead_list(request):
     pipeline_value = Lead.objects.aggregate(
         total=Sum("estimated_value")
     )["total"] or 0
+
+    # PERMISSION ANNOTATIONS (PRESENTATION METADATA)
+    for lead in page_obj.object_list:
+        lead.user_can_edit = can_edit(request.user, lead)
+        lead.user_can_convert = can_edit(request.user, lead)
 
     # ==========================
     # CONTEXT
@@ -1006,9 +1013,13 @@ def lead_create(request):
 def lead_detail(request, pk):
 
     lead = get_object_or_404(
-        Lead.objects.select_related("owner"),
+        Lead.objects.select_related("owner", "converted_company", "converted_contact"),
         pk=pk
     )
+    # Attach presentation metadata for permission control
+    lead.user_can_edit = can_edit(request.user, lead)
+    lead.user_can_convert = can_edit(request.user, lead)
+    lead.user_can_delete = can_delete(request.user, lead)
 
     context = {
         "lead": lead,
@@ -1024,7 +1035,7 @@ def lead_detail(request, pk):
 def lead_update(request, pk):
 
     lead = get_object_or_404(
-        Lead.objects.select_related("owner"),
+        Lead.objects.select_related("owner", "converted_company", "converted_contact"),
         pk=pk
     )
 

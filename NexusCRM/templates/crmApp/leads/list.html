@@ -22,13 +22,9 @@
         <div>
             {% if can_create_lead %}
             <a href="{% url 'lead_create' %}" class="btn btn-primary">
-
                 <i class="bi bi-plus-lg me-1"></i>
-
                 Add Lead
-
             </a>
-
             {% endif %}
         </div>
 
@@ -166,7 +162,6 @@
 
 
     <!-- LEAD TABLE -->
-    <!-- FILTER BAR/Search Results indicator -->
     {% if search %}
 
             <div class="mb-3">
@@ -175,9 +170,9 @@
                     Search results for
                 </span>
 
-                    <strong>
+                <strong>
                     "{{ search }}"
-                    </strong>
+                </strong>
 
             </div>
 
@@ -185,168 +180,168 @@
 
     <div class="card border-0 shadow-sm">
 
-    <div class="card-body p-0">
+        <div class="card-body p-0">
 
-           <div class="row g-3 mb-4">
+            <div class="row g-3 p-3">
 
-    <div class="col-md-4">
+                <div class="col-md-4">
 
-        <div class="card border-0 shadow-sm">
+                    <div class="card border-0 shadow-sm bg-light">
 
-            <div class="card-body">
+                        <div class="card-body py-2">
 
-                <div class="text-muted small">
-                    Total Leads
-                </div>
+                            <div class="text-muted small">
+                                Total Leads
+                            </div>
 
-                <div class="fs-3 fw-bold">
-                    {{ total_leads }}
-                </div>
+                            <div class="fs-4 fw-bold">
+                                {{ total_leads }}
+                            </div>
 
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="col-md-4">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body">
-
-                <div class="text-muted small">
-                    Assigned
-                </div>
-
-                <div class="fs-3 fw-bold">
-                    {{ assigned_leads }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="col-md-4">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body">
-
-                <div class="text-muted small">
-                    Unassigned
-                </div>
-
-                <div class="fs-3 fw-bold">
-                    {{ unassigned_leads }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-        <!-- FILTER BAR -->
-        <form method="GET" class="p-3 border-bottom">
-
-            <div class="row g-2">
-
-                <!-- Search -->
-                <div class="col-md-3">
-
-                    <div class="input-group">
-
-                        <span class="input-group-text bg-white">
-                            <i class="bi bi-search"></i>
-                        </span>
-
-                        <input
-                            type="search"
-                            name="search"
-                            value="{{ search }}"
-                             class="form-control"
-                            placeholder="Search name, company, email, phone..."
-                            autocomplete="off"
-                        >
+                        </div>
 
                     </div>
 
                 </div>
 
 
-                <!-- Status -->
-                <div class="col-md-2">
+                <div class="col-md-4">
 
-                    <select
-                        name="status"
-                        class="form-select"
-                    >
+                    <div class="card border-0 shadow-sm bg-light">
 
-                        <option value="">
-                            All Statuses
-                        </option>
+                        <div class="card-body py-2">
 
-                        {% for value, label in status_choices %}
+                            <div class="text-muted small">
+                                Assigned
+                            </div>
 
-                            <option
-                                value="{{ value }}"
-                                {% if selected_status == value %}
-                                    selected
-                                {% endif %}
-                            >
-                                {{ label }}
-                            </option>
+                            <div class="fs-4 fw-bold">
+                                {{ assigned_leads }}
+                            </div>
 
-                        {% endfor %}
+                        </div>
 
-                    </select>
+                    </div>
 
                 </div>
 
 
-                <!-- Source -->
-                <div class="col-md-2">
+                <div class="col-md-4">
 
-                    <select
-                        name="source"
-                        class="form-select"
-                    >
+                    <div class="card border-0 shadow-sm bg-light">
 
-                        <option value="">
-                            All Sources
-                        </option>
+                        <div class="card-body py-2">
 
-                        {% for value, label in source_choices %}
+                            <div class="text-muted small">
+                                Unassigned
+                            </div>
 
-                            <option
-                                value="{{ value }}"
-                                {% if selected_source == value %}
-                                    selected
-                                {% endif %}
-                            >
-                                {{ label }}
-                            </option>
+                            <div class="fs-4 fw-bold">
+                                {{ unassigned_leads }}
+                            </div>
 
-                        {% endfor %}
+                        </div>
 
-                    </select>
+                    </div>
 
                 </div>
 
+            </div>
 
-                <!-- Owner -->
-                <div class="col-md-2">
+            <!-- FILTER BAR -->
+            <form method="GET" class="p-3 border-bottom border-top">
 
-                    <select
-                        name="owner"
-                         class="form-select"
+                <div class="row g-2">
+
+                    <!-- Search -->
+                    <div class="col-md-3">
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-white">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <input
+                                type="search"
+                                name="search"
+                                value="{{ search }}"
+                                class="form-control"
+                                placeholder="Search name, company, email, phone..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="col-md-2">
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Source -->
+                    <div class="col-md-2">
+
+                        <select
+                            name="source"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Sources
+                            </option>
+
+                            {% for value, label in source_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_source == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Owner -->
+                    <div class="col-md-2">
+
+                        <select
+                            name="owner"
+                            class="form-select"
                         >
 
                             <option value="">
@@ -358,244 +353,241 @@
                                 {% if selected_owner == "unassigned" %}
                                     selected
                                 {% endif %}
-                                >
+                            >
                                 Unassigned
                             </option>
 
                             {% for owner in owners %}
 
-                            <option
-                                value="{{ owner.pk }}"
-                                {% if selected_owner == owner.pk|stringformat:"s" %}
-                                selected
-                                {% endif %}
-                            >
-                                {% if owner.get_full_name %}
-                                    {{ owner.get_full_name }}
-                                {% else %}
-                                    {{ owner.username }}
-                                {% endif %}
+                                <option
+                                    value="{{ owner.pk }}"
+                                    {% if selected_owner == owner.pk|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {% if owner.get_full_name %}
+                                        {{ owner.get_full_name }}
+                                    {% else %}
+                                        {{ owner.username }}
+                                    {% endif %}
+                                </option>
 
-                            </option>
+                            {% endfor %}
 
-                        {% endfor %}
+                        </select>
 
-                    </select>
-
-                </div>
+                    </div>
 
 
-                <!-- Action Buttons -->
-                <div class="col-md-3 d-flex gap-1">
+                    <!-- Action Buttons -->
+                    <div class="col-md-3 d-flex gap-1">
 
-                    <button
-                        type="submit"
-                        class="btn btn-primary flex-grow-1"
-                    >
-                        <i class="bi bi-funnel me-1"></i>
-                        Filter
-                    </button>
-
-                    {% if search or selected_status or selected_source or selected_owner %}
-
-                        <a
-                            href="{% url 'leads' %}"
-                            class="btn btn-outline-secondary"
+                        <button
+                            type="submit"
+                            class="btn btn-primary flex-grow-1"
                         >
-                            Clear
-                        </a>
+                            <i class="bi bi-funnel me-1"></i>
+                            Filter
+                        </button>
 
-                    {% endif %}
+                        {% if search or selected_status or selected_source or selected_owner %}
+
+                            <a
+                                href="{% url 'leads' %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Clear
+                            </a>
+
+                        {% endif %}
+
+                    </div>
 
                 </div>
 
-            </div>
-
-        </form>
-
-     
+            </form>
 
 
-        <!-- TABLE -->
+            <!-- TABLE -->
 
-        <div class="table-responsive">
+            <div class="table-responsive">
 
-            <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0">
 
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th class="ps-4">
-                            Lead
-                        </th>
-
-                        <th>
-                            Company
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Source
-                        </th>
-
-                        <th>
-                            Estimated Value
-                        </th>
-
-                        <th>
-                            Owner
-                        </th>
-
-                        <th class="text-end pe-4">
-                            Actions
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    {% for lead in leads %}
+                    <thead class="table-light">
 
                         <tr>
 
-                            <td class="ps-4">
+                            <th class="ps-4">
+                                Lead
+                            </th>
 
-                                <div class="d-flex align-items-center">
+                            <th>
+                                Company
+                            </th>
 
-                                    <div
-                                        class="rounded-circle bg-primary bg-opacity-10
-                                               text-primary d-flex align-items-center
-                                               justify-content-center me-3"
-                                        style="width:40px;height:40px;"
-                                    >
-                                        {{ lead.first_name|first|upper }}{{ lead.last_name|first|upper }}
-                                    </div>
+                            <th>
+                                Status
+                            </th>
 
-                                    <div>
+                            <th>
+                                Source
+                            </th>
 
-                                        <div class="fw-semibold">
+                            <th>
+                                Estimated Value
+                            </th>
 
-                                            <a
-                                                href="{% url 'lead_detail' lead.pk %}"
-                                                class="text-decoration-none text-dark"
-                                            >
-                                                {{ lead.first_name }}
-                                                {{ lead.last_name }}
-                                            </a>
+                            <th>
+                                Owner
+                            </th>
+
+                            <th class="text-end pe-4">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for lead in leads %}
+
+                            <tr>
+
+                                <td class="ps-4">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div
+                                            class="rounded-circle bg-primary bg-opacity-10
+                                                   text-primary d-flex align-items-center
+                                                   justify-content-center me-3"
+                                            style="width:40px;height:40px;"
+                                        >
+                                            {{ lead.first_name|first|upper }}{{ lead.last_name|first|upper }}
+                                        </div>
+
+                                        <div>
+
+                                            <div class="fw-semibold">
+
+                                                <a
+                                                    href="{% url 'lead_detail' lead.pk %}"
+                                                    class="text-decoration-none text-dark"
+                                                >
+                                                    {{ lead.first_name }}
+                                                    {{ lead.last_name }}
+                                                </a>
+
+                                            </div>
+
+                                            {% if lead.email %}
+
+                                                <small class="text-muted">
+                                                    {{ lead.email }}
+                                                </small>
+
+                                            {% endif %}
 
                                         </div>
 
-                                        {% if lead.email %}
-
-                                            <small class="text-muted">
-                                                {{ lead.email }}
-                                            </small>
-
-                                        {% endif %}
-
                                     </div>
 
-                                </div>
-
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                {% if lead.company_name %}
-                                    {{ lead.company_name }}
-                                {% else %}
-                                    <span class="text-muted">
-                                        —
+                                    {% if lead.company_name %}
+                                        {{ lead.company_name }}
+                                    {% else %}
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if lead.status == "new" %}
+
+                                        <span class="badge text-bg-primary">
+                                            New
+                                        </span>
+
+                                    {% elif lead.status == "contacted" %}
+
+                                        <span class="badge text-bg-info">
+                                            Contacted
+                                        </span>
+
+                                    {% elif lead.status == "qualified" %}
+
+                                        <span class="badge text-bg-success">
+                                            Qualified
+                                        </span>
+
+                                    {% elif lead.status == "unqualified" %}
+
+                                        <span class="badge text-bg-secondary">
+                                            Unqualified
+                                        </span>
+
+                                    {% elif lead.status == "converted" %}
+
+                                        <span class="badge text-bg-dark">
+                                            Converted
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ lead.get_source_display }}
                                     </span>
-                                {% endif %}
-
-                            </td>
+                                </td>
 
 
-                            <td>
-
-                                {% if lead.status == "new" %}
-
-                                    <span class="badge text-bg-primary">
-                                        New
-                                    </span>
-
-                                {% elif lead.status == "contacted" %}
-
-                                    <span class="badge text-bg-info">
-                                        Contacted
-                                    </span>
-
-                                {% elif lead.status == "qualified" %}
-
-                                    <span class="badge text-bg-success">
-                                        Qualified
-                                    </span>
-
-                                {% elif lead.status == "unqualified" %}
-
-                                    <span class="badge text-bg-secondary">
-                                        Unqualified
-                                    </span>
-
-                                {% elif lead.status == "converted" %}
-
-                                    <span class="badge text-bg-dark">
-                                        Converted
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
+                                <td>
+                                    KSh {{ lead.estimated_value|floatformat:2 }}
+                                </td>
 
 
-                            <td>
-                                <span class="badge bg-light text-dark border">
-                                {{ lead.get_source_display }}
-                                </span>
-                            </td>
+                                <td>
 
+                                    {% if lead.owner %}
 
-                            <td>
-                                KSh {{ lead.estimated_value|floatformat:2 }}
-                            </td>
+                                        <div class="d-flex align-items-center gap-2">
 
+                                            <div class="user-avatar small">
 
-                            <td>
-
-                                {% if lead.owner %}
-
-                                            <div class="d-flex align-items-center gap-2">
-
-                                                    <div class="user-avatar small">
-
-                                                            {% if lead.owner.first_name %}
-                                                            {{ lead.owner.first_name|first|upper }}
-                                                            {% else %}
-                                                            {{ lead.owner.username|first|upper }}
-                                                            {% endif %}
-
-                                                    </div>
-
-                                                <span>
-
-                                                        {% if lead.owner.get_full_name %}
-                                                            {{ lead.owner.get_full_name }}
-                                                        {% else %}
-                                                            {{ lead.owner.username }}
-                                                        {% endif %}
-
-                                                </span>
+                                                {% if lead.owner.first_name %}
+                                                    {{ lead.owner.first_name|first|upper }}
+                                                {% else %}
+                                                    {{ lead.owner.username|first|upper }}
+                                                {% endif %}
 
                                             </div>
+
+                                            <span>
+
+                                                {% if lead.owner.get_full_name %}
+                                                    {{ lead.owner.get_full_name }}
+                                                {% else %}
+                                                    {{ lead.owner.username }}
+                                                {% endif %}
+
+                                            </span>
+
+                                        </div>
 
                                     {% else %}
 
@@ -603,126 +595,138 @@
                                             Unassigned
                                         </span>
 
-                                {% endif %}
-
-                            </td>
-
-
-                            <td class="text-end pe-4">
-
-                                <div class="dropdown">
-
-                                    <button
-                                        class="btn btn-sm btn-light"
-                                        data-bs-toggle="dropdown"
-                                    >
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end">
-
-                                        <li>
-
-                                            <a
-                                                class="dropdown-item"
-                                                href="{% url 'lead_detail' lead.pk %}"
-                                            >
-                                                <i class="bi bi-eye me-2"></i>
-                                                View
-                                            </a>
-
-                                        </li>
-
-                                        <li>
-
-                                            <a
-                                                class="dropdown-item"
-                                                href="#"
-                                            >
-                                                <i class="bi bi-pencil me-2"></i>
-                                                Edit
-                                            </a>
-
-                                        </li>
-
-                                    </ul>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    {% empty %}
-
-                        <tr>
-
-                            <td
-                                colspan="7"
-                                class="text-center py-5"
-                            >
-
-                                <div class="text-muted">
-
-                                    <i class="bi bi-funnel fs-1 d-block mb-3"></i>
-
-                                    <h5>
-                                        No leads found
-                                    </h5>
-
-                                    <p class="mb-3">
-                                        {% if search or selected_status or selected_source or selected_owner %}
-                                            Try adjusting or clearing your filters.
-                                        {% else %}
-                                            Start building your sales pipeline by adding your first lead.
-                                        {% endif %}
-                                    </p>
-
-                                    {% if search or selected_status or selected_source or selected_owner %}
-
-                                        <a
-                                            href="{% url 'leads' %}"
-                                            class="btn btn-outline-secondary btn-sm"
-                                        >
-                                            Clear Filters
-                                        </a>
-
-                                    {% else %}
-
-                                        <a
-                                            href="{% url 'lead_create' %}"
-                                            class="btn btn-primary"
-                                        >
-                                            <i class="bi bi-plus-lg me-1"></i>
-                                            Add Lead
-                                        </a>
-
                                     {% endif %}
 
-                                </div>
+                                </td>
 
-                            </td>
 
-                        </tr>
+                                <td class="text-end pe-4">
 
-                    {% endfor %}
+                                    <div class="dropdown">
 
-                </tbody>
+                                        <button
+                                            class="btn btn-sm btn-light"
+                                            data-bs-toggle="dropdown"
+                                        >
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
 
-            </table>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="{% url 'lead_detail' lead.pk %}"
+                                                >
+                                                    <i class="bi bi-eye me-2"></i>
+                                                    View
+                                                </a>
+                                            </li>
+
+                                            {% if lead.user_can_edit %}
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{% url 'lead_update' lead.pk %}"
+                                                    >
+                                                        <i class="bi bi-pencil me-2"></i>
+                                                        Edit
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if lead.user_can_convert and lead.status != "converted" %}
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item text-success"
+                                                        href="{% url 'lead_convert' lead.pk %}"
+                                                    >
+                                                        <i class="bi bi-arrow-right-circle me-2"></i>
+                                                        Convert
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+
+                                        </ul>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="text-center py-5"
+                                >
+
+                                    <div class="text-muted">
+
+                                        <i class="bi bi-funnel fs-1 d-block mb-3"></i>
+
+                                        <h5>
+                                            No leads found
+                                        </h5>
+
+                                        <p class="mb-3">
+                                            {% if search or selected_status or selected_source or selected_owner %}
+                                                Try adjusting or clearing your filters.
+                                            {% else %}
+                                                Start building your sales pipeline by adding your first lead.
+                                            {% endif %}
+                                        </p>
+
+                                        {% if search or selected_status or selected_source or selected_owner %}
+
+                                            <a
+                                                href="{% url 'leads' %}"
+                                                class="btn btn-outline-secondary btn-sm"
+                                            >
+                                                Clear Filters
+                                            </a>
+
+                                        {% else %}
+
+                                            {% if can_create_lead %}
+                                                <a
+                                                    href="{% url 'lead_create' %}"
+                                                    class="btn btn-primary"
+                                                >
+                                                    <i class="bi bi-plus-lg me-1"></i>
+                                                    Add Lead
+                                                </a>
+                                            {% endif %}
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
-
     </div>
 
-    </div>
-    <!--Lead count-->
-        <div class="d-flex justify-content-between mt-3 align-items-center mb-3">
+    <!-- LEAD COUNT & PAGINATION CONTROLS -->
+    <div class="d-flex justify-content-between mt-3 align-items-center mb-3">
 
-            <div>
+        <div>
 
-                {% if page_obj.paginator.count > 0 %}
+            {% if page_obj.paginator.count > 0 %}
 
                 <span class="text-muted">
                     Showing
@@ -752,123 +756,102 @@
                     leads
                 </span>
 
-                </span>
-
-                {% else %}
+            {% else %}
 
                 <span class="text-muted">
                     Showing 0 leads
-                </span>
-
                 </span>
 
             {% endif %}
 
         </div>
 
-        <!--Pagination controls-->
         {% if page_obj.has_other_pages %}
 
-        <nav aria-label="Lead pagination mt-3">
+            <nav aria-label="Lead pagination">
 
-            <ul class="pagination justify-content-end mb-4">
+                <ul class="pagination justify-content-end mb-0">
 
-        {% if page_obj.has_previous %}
+                    {% if page_obj.has_previous %}
 
-            <li class="page-item">
+                        <li class="page-item">
+                            <a
+                                class="page-link"
+                                href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
+                            >
+                                <i class="bi bi-chevron-left"></i>
+                                Previous
+                            </a>
+                        </li>
 
-                <a
-                    class="page-link"
-                    href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
-                >
-                    <i class="bi bi-chevron-left"></i>
-                    Previous
-                </a>
+                    {% else %}
 
-            </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="bi bi-chevron-left"></i>
+                                Previous
+                            </span>
+                        </li>
 
-        {% else %}
-
-            <li class="page-item disabled">
-
-                <span class="page-link">
-                    <i class="bi bi-chevron-left"></i>
-                    Previous
-                </span>
-
-            </li>
-
-        {% endif %}
+                    {% endif %}
 
 
-        {% for num in page_obj.paginator.page_range %}
+                    {% for num in page_obj.paginator.page_range %}
 
-            {% if page_obj.number == num %}
+                        {% if page_obj.number == num %}
 
-                <li class="page-item active">
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    {{ num }}
+                                </span>
+                            </li>
 
-                    <span class="page-link">
-                        {{ num }}
-                    </span>
+                        {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
 
-                </li>
+                            <li class="page-item">
+                                <a
+                                    class="page-link"
+                                    href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
+                                >
+                                    {{ num }}
+                                </a>
+                            </li>
 
-            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+                        {% endif %}
 
-                <li class="page-item">
-
-                    <a
-                        class="page-link"
-                        href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
-                    >
-                        {{ num }}
-                    </a>
-
-                </li>
-
-            {% endif %}
-
-        {% endfor %}
+                    {% endfor %}
 
 
-        {% if page_obj.has_next %}
+                    {% if page_obj.has_next %}
 
-            <li class="page-item">
+                        <li class="page-item">
+                            <a
+                                class="page-link"
+                                href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
+                            >
+                                Next
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
 
-                <a
-                    class="page-link"
-                    href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
-                >
-                    Next
-                    <i class="bi bi-chevron-right"></i>
-                </a>
+                    {% else %}
 
-            </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                Next
+                                <i class="bi bi-chevron-right"></i>
+                            </span>
+                        </li>
 
-        {% else %}
+                    {% endif %}
 
-            <li class="page-item disabled">
+                </ul>
 
-                <span class="page-link">
-                    Next
-                    <i class="bi bi-chevron-right"></i>
-                </span>
-
-            </li>
+            </nav>
 
         {% endif %}
 
-            </ul>
-
-        </nav>
-
-        {% endif %}
-
-
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
