@@ -486,11 +486,37 @@
                             <td>
 
                                 {% if lead.owner %}
-                                    {{ lead.owner.get_full_name|default:lead.owner.username }}
-                                {% else %}
-                                    <span class="text-muted">
-                                        Unassigned
-                                    </span>
+
+                                            <div class="d-flex align-items-center gap-2">
+
+                                                    <div class="user-avatar small">
+
+                                                            {% if lead.owner.first_name %}
+                                                            {{ lead.owner.first_name|first|upper }}
+                                                            {% else %}
+                                                            {{ lead.owner.username|first|upper }}
+                                                            {% endif %}
+
+                                                    </div>
+
+                                                <span>
+
+                                                        {% if lead.owner.get_full_name %}
+                                                            {{ lead.owner.get_full_name }}
+                                                        {% else %}
+                                                            {{ lead.owner.username }}
+                                                        {% endif %}
+
+                                                </span>
+
+                                            </div>
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            Unassigned
+                                        </span>
+
                                 {% endif %}
 
                             </td>
