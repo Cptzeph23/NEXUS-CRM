@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 
 from .models import Lead
@@ -6,6 +8,7 @@ from .models import Lead
 class LeadForm(forms.ModelForm):
 
     class Meta:
+
         model = Lead
 
         fields = [
@@ -110,6 +113,41 @@ class LeadForm(forms.ModelForm):
             "estimated_value": "Estimated Value",
             "owner": "Lead Owner",
         }
+
+    def clean_estimated_value(self):
+        value = self.cleaned_data.get("estimated_value")
+
+        if value is not None and value < 0:
+            raise forms.ValidationError(
+                "Estimated value cannot be negative."
+            )
+
+        return value
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone", "").strip()
+
+        if not phone:
+            return phone
+
+        allowed_pattern = r"^[0-9+\-\(\)\s\.]+$"
+
+        if not re.match(allowed_pattern, phone):
+            raise forms.ValidationError(
+                "Enter a valid phone number."
+            )
+
+        digits = re.sub(r"\D", "", phone)
+
+        if len(digits) < 7:
+            raise forms.ValidationError(
+                "Phone number is too short."
+            )
+
+        return phone
+
+
+    
 
 class LeadConversionForm(forms.Form):
 
