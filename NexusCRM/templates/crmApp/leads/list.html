@@ -185,6 +185,72 @@
 
     <div class="card-body p-0">
 
+           <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    Total Leads
+                </div>
+
+                <div class="fs-3 fw-bold">
+                    {{ total_leads }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    Assigned
+                </div>
+
+                <div class="fs-3 fw-bold">
+                    {{ assigned_leads }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="text-muted small">
+                    Unassigned
+                </div>
+
+                <div class="fs-3 fw-bold">
+                    {{ unassigned_leads }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
         <!-- FILTER BAR -->
         <form method="GET" class="p-3 border-bottom">
 
@@ -345,71 +411,7 @@
 
         </form>
 
-        <div class="row g-3 mb-4">
-
-    <div class="col-md-4">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body">
-
-                <div class="text-muted small">
-                    Total Leads
-                </div>
-
-                <div class="fs-3 fw-bold">
-                    {{ total_leads }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="col-md-4">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body">
-
-                <div class="text-muted small">
-                    Assigned
-                </div>
-
-                <div class="fs-3 fw-bold">
-                    {{ assigned_leads }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="col-md-4">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body">
-
-                <div class="text-muted small">
-                    Unassigned
-                </div>
-
-                <div class="fs-3 fw-bold">
-                    {{ unassigned_leads }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
+     
 
 
         <!-- TABLE -->
