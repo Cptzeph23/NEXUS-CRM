@@ -932,6 +932,38 @@ def lead_list(request):
 @login_required
 def lead_create(request):
 
+    if not can_create(request.user):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = LeadForm(request.POST)
+
+        if form.is_valid():
+
+            lead = form.save()
+
+            messages.success(
+                request,
+                f"Lead {lead.first_name} {lead.last_name} was created successfully."
+            )
+
+            return redirect("leads")
+
+    else:
+
+        form = LeadForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/leads/create.html",
+        context
+    )
+
     if request.method == "POST":
 
         form = LeadForm(request.POST)
@@ -986,6 +1018,9 @@ def lead_update(request, pk):
         Lead.objects.select_related("owner"),
         pk=pk
     )
+
+    if not can_edit(request.user, lead):
+        raise PermissionDenied
 
     if request.method == "POST":
 

@@ -66,7 +66,10 @@ def is_viewer(user):
 
 def can_create(user):
     """
-    Determine whether a CRM user can create records.
+    Determine whether a CRM user can create CRM records.
+
+    Admin, Manager and Sales can create records.
+    Support and Viewer are read-only.
     """
 
     role = get_user_role(user)
@@ -75,7 +78,6 @@ def can_create(user):
         ROLE_ADMIN,
         ROLE_MANAGER,
         ROLE_SALES,
-        ROLE_SUPPORT,
     }
 
 
@@ -86,6 +88,15 @@ def can_create(user):
 def can_edit(user, obj):
     """
     Determine whether a user can edit a particular CRM object.
+
+    Admin and Manager:
+        Can edit any record.
+
+    Sales:
+        Can edit records they own.
+
+    Support and Viewer:
+        Read-only.
     """
 
     role = get_user_role(user)
@@ -93,7 +104,6 @@ def can_edit(user, obj):
     if role in {
         ROLE_ADMIN,
         ROLE_MANAGER,
-        ROLE_SUPPORT,
     }:
         return True
 
@@ -110,21 +120,16 @@ def can_edit(user, obj):
 def can_delete(user, obj):
     """
     Determine whether a user can delete a particular CRM object.
+
+    Only Admin and Manager can delete records.
     """
 
     role = get_user_role(user)
 
-    if role in {
+    return role in {
         ROLE_ADMIN,
         ROLE_MANAGER,
-    }:
-        return True
-
-    if role == ROLE_SALES:
-        return obj.owner_id == user.id
-
-    return False
-
+    }
 
 # ==========================================================
 # DECORATORS
