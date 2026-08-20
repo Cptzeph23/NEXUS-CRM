@@ -51,7 +51,7 @@
                             </p>
 
                             <h3 class="fw-bold mb-0">
-                                {{ leads|length }}
+                                {{ total_leads }}
                             </h3>
                         </div>
 
@@ -718,21 +718,153 @@
     <!--Lead count-->
         <div class="d-flex justify-content-between mt-3 align-items-center mb-3">
 
-        <div>
+            <div>
 
-            <span class="text-muted">
-            Showing
-            </span>
+                {% if page_obj.paginator.count > 0 %}
 
-            <strong>
-            {{ leads|length }}
-            </strong>
+                <span class="text-muted">
+                    Showing
+                </span>
 
-            <span class="text-muted">
-            lead{{ leads|length|pluralize }}
-            </span>
+                <strong>
+                    {{ page_obj.start_index }}
+                </strong>
+
+                <span class="text-muted">
+                    –
+                </span>
+
+                <strong>
+                    {{ page_obj.end_index }}
+                </strong>
+
+                <span class="text-muted">
+                    of
+                </span>
+
+                <strong>
+                    {{ page_obj.paginator.count }}
+                </strong>
+
+                <span class="text-muted">
+                    leads
+                </span>
+
+                </span>
+
+                {% else %}
+
+                <span class="text-muted">
+                    Showing 0 leads
+                </span>
+
+                </span>
+
+            {% endif %}
 
         </div>
+
+        <!--Pagination controls-->
+        {% if page_obj.has_other_pages %}
+
+        <nav aria-label="Lead pagination mt-3">
+
+            <ul class="pagination justify-content-end mb-4">
+
+        {% if page_obj.has_previous %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
+                >
+                    <i class="bi bi-chevron-left"></i>
+                    Previous
+                </a>
+
+            </li>
+
+        {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+                    <i class="bi bi-chevron-left"></i>
+                    Previous
+                </span>
+
+            </li>
+
+        {% endif %}
+
+
+        {% for num in page_obj.paginator.page_range %}
+
+            {% if page_obj.number == num %}
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+                        {{ num }}
+                    </span>
+
+                </li>
+
+            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ num }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
+                    >
+                        {{ num }}
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}{% if selected_status %}&status={{ selected_status|urlencode }}{% endif %}{% if selected_source %}&source={{ selected_source|urlencode }}{% endif %}{% if selected_owner %}&owner={{ selected_owner|urlencode }}{% endif %}"
+                >
+                    Next
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+
+            </li>
+
+        {% else %}
+
+            <li class="page-item disabled">
+
+                <span class="page-link">
+                    Next
+                    <i class="bi bi-chevron-right"></i>
+                </span>
+
+            </li>
+
+        {% endif %}
+
+            </ul>
+
+        </nav>
+
+        {% endif %}
+
+
+
+</div>
 
 </div>
 

@@ -1,6 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from django.http import request
+from django.http import request
 from django.shortcuts import redirect, render
 
 from django.contrib import messages
@@ -865,6 +868,15 @@ def lead_list(request):
     leads = leads.order_by("-created_at")
 
     # ==========================
+    # PAGINATION
+    # ==========================
+    paginator = Paginator(leads, 10)
+
+    page_number = request.GET.get("page")
+
+    page_obj = paginator.get_page(page_number)
+
+    # ==========================
     # METRICS & STATS
     # ==========================
     # Evaluated across the filtered set or global model depending on UI needs
@@ -884,7 +896,8 @@ def lead_list(request):
     # CONTEXT
     # ==========================
     context = {
-        "leads": leads,
+        "leads": page_obj.object_list,
+        "page_obj": page_obj,
         "search": search,
         "selected_status": status,
         "selected_source": source,
