@@ -17,6 +17,9 @@ from .permissions import (
     can_create,
     can_edit,
     can_delete,
+    is_sales,
+    is_support,
+    is_viewer,
 )
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
@@ -941,7 +944,12 @@ def lead_create(request):
 
         if form.is_valid():
 
-            lead = form.save()
+            lead = form.save(commit=False)
+
+        if is_sales(request.user):
+            lead.owner = request.user
+
+            lead.save()
 
             messages.success(
                 request,
