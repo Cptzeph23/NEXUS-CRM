@@ -924,6 +924,7 @@ def lead_list(request):
             "last_name",
             "username"
         ),
+        "can_create_lead": can_create(request.user),
     }
 
     return render(

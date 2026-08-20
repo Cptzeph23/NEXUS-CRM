@@ -20,14 +20,16 @@
         </div>
 
         <div>
-            <a href="{% url 'lead_create' %}"
-               class="btn btn-primary">
+            {% if can_create_lead %}
+            <a href="{% url 'lead_create' %}" class="btn btn-primary">
 
                 <i class="bi bi-plus-lg me-1"></i>
 
                 Add Lead
 
             </a>
+
+            {% endif %}
         </div>
 
     </div>
