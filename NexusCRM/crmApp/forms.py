@@ -110,6 +110,8 @@ class LeadForm(forms.ModelForm):
 
     class Meta:
 
+
+
         model = Lead
 
         fields = [
@@ -214,6 +216,28 @@ class LeadForm(forms.ModelForm):
             "estimated_value": "Estimated Value",
             "owner": "Lead Owner",
         }
+
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # Only restrict status choices when editing
+        # an existing Lead.
+        if self.instance and self.instance.pk:
+
+            current_status = self.instance.status
+
+            allowed_statuses = get_allowed_lead_statuses(
+                current_status
+            )
+
+        self.fields["status"].choices = [
+            (value, label)
+            for value, label in Lead.STATUS_CHOICES
+            if value in allowed_statuses
+        ]
+
 
     def clean(self):
 
