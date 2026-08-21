@@ -2,3 +2,4 @@ crm
 .venv
 .idea
 pycache
+shell.py
