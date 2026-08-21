@@ -248,7 +248,34 @@ class LeadForm(forms.ModelForm):
             exclude_pk=self.instance.pk if self.instance.pk else None
         )
 
+        # ---------------------------------
+        # STATUS TRANSITION VALIDATION
+        # ---------------------------------
+
+        if self.instance and self.instance.pk:
+
+            current_status = self.instance.status
+            new_status = cleaned_data.get("status")
+
+            allowed_statuses = get_allowed_lead_statuses(
+                current_status
+            )
+
+            if (
+                new_status
+                and new_status not in allowed_statuses
+            ):
+
+                self.add_error(
+                    "status",
+                    "This lead cannot transition "
+                    f"from {self.instance.get_status_display()} "
+                    f"to {dict(Lead.STATUS_CHOICES).get(new_status, new_status)}."
+                )
+
         return cleaned_data
+
+       
 
     def clean_estimated_value(self):
         value = self.cleaned_data.get("estimated_value")
