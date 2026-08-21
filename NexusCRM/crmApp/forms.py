@@ -222,8 +222,10 @@ class LeadForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        # Only restrict status choices when editing
-        # an existing Lead.
+        # Default to allowing all choices (e.g. when creating a new lead)
+        allowed_statuses = [choice[0] for choice in Lead.STATUS_CHOICES]
+
+        # Restrict status choices when editing an existing Lead
         if self.instance and self.instance.pk:
 
             current_status = self.instance.status
