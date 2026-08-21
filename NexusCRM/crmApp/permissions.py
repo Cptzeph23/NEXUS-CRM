@@ -132,6 +132,87 @@ def can_delete(user, obj):
     }
 
 # ==========================================================
+# DEAL PERMISSIONS
+# ==========================================================
+
+def can_manage_deals(user):
+    """
+    Determine whether a user can manage deals.
+
+    Admin and Manager can manage all deals.
+    Sales can manage deals they own.
+    Support and Viewer are read-only.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+    }
+
+
+def can_edit_deal(user, deal):
+    """
+    Determine whether a user can edit a particular deal.
+
+    Admin and Manager:
+        Can edit any deal.
+
+    Sales:
+        Can edit deals they own.
+
+    Support and Viewer:
+        Read-only.
+    """
+
+    return can_edit(user, deal)
+
+
+def can_delete_deal(user, deal):
+    """
+    Determine whether a user can delete a particular deal.
+
+    Only Admin and Manager can delete deals.
+    """
+
+    return can_delete(user, deal)
+
+
+def can_change_deal_stage(user, deal):
+    """
+    Determine whether a user can change the stage of a deal.
+
+    Admin and Manager:
+        Any deal.
+
+    Sales:
+        Their own deals.
+
+    Support and Viewer:
+        Cannot change stages.
+    """
+
+    return can_edit_deal(user, deal)
+
+
+def can_manage_pipelines(user):
+    """
+    Determine whether a user can create, edit, or delete
+    pipelines and pipeline stages.
+
+    Only Admin and Manager can manage pipeline configuration.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }
+
+# ==========================================================
 # DECORATORS
 # ==========================================================
 
