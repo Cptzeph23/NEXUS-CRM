@@ -952,16 +952,44 @@ def lead_create(request):
 
         if form.is_valid():
 
+            # ---------------------------------
+            # DUPLICATE CHECK
+            # ---------------------------------
+
+            if (
+                form.duplicate_leads.exists()
+                and request.POST.get("confirm_duplicate") != "1"
+            ):
+
+                context = {
+                    "form": form,
+                    "duplicate_leads": form.duplicate_leads,
+                    "duplicate_warning": True,
+                }
+
+                return render(
+                    request,
+                    "crmApp/leads/create.html",
+                    context
+                )
+
+            # ---------------------------------
+            # CREATE LEAD
+            # ---------------------------------
+
             lead = form.save(commit=False)
 
-        if is_sales(request.user):
-            lead.owner = request.user
+            if is_sales(request.user):
+                lead.owner = request.user
 
             lead.save()
 
+            form.save_m2m()
+
             messages.success(
                 request,
-                f"Lead {lead.first_name} {lead.last_name} was created successfully."
+                f"Lead {lead.first_name} {lead.last_name} "
+                "was created successfully."
             )
 
             return redirect("leads")
@@ -980,34 +1008,6 @@ def lead_create(request):
         context
     )
 
-    if request.method == "POST":
-
-        form = LeadForm(request.POST)
-
-        if form.is_valid():
-
-            lead = form.save()
-
-            messages.success(
-                request,
-                f"Lead {lead.first_name} {lead.last_name} was created successfully."
-            )
-
-            return redirect("leads")
-
-    else:
-
-        form = LeadForm()
-
-    context = {
-        "form": form,
-    }
-
-    return render(
-        request,
-        "crmApp/leads/create.html",
-        context
-    )
 
 @login_required
 def lead_detail(request, pk):
