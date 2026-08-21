@@ -20,7 +20,12 @@ from .permissions import (
     is_sales,
     is_support,
     is_viewer,
-)
+    can_manage_deals,
+    can_edit_deal,
+    can_delete_deal,
+    can_change_deal_stage,
+    can_manage_pipelines,
+    )
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -28,6 +33,17 @@ from .forms import LeadForm
 
 from django.db import transaction
 from .forms import LeadForm, LeadConversionForm
+
+from django.contrib.auth.models import User
+from .forms import DealForm
+from .models import (
+    Lead,
+    Deal,
+    Pipeline,
+    PipelineStage,
+    Company,
+    Contact,
+)
 
 # Create your views here.
 
@@ -1261,7 +1277,51 @@ def lead_delete(request, pk):
         }
     )
 
+@login_required
+def deal_create(request):
 
+    if not can_manage_deals(request.user):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = DealForm(request.POST)
+
+        if form.is_valid():
+
+            deal = form.save(commit=False)
+
+            # Sales users automatically own deals they create.
+            if is_sales(request.user):
+                deal.owner = request.user
+
+            deal.save()
+
+            form.save_m2m()
+
+            messages.success(
+                request,
+                f"Deal '{deal.name}' was created successfully."
+            )
+
+            return redirect(
+                "deal_detail",
+                pk=deal.pk
+            )
+
+    else:
+
+        form = DealForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/deals/create.html",
+        context
+    )
 
 
 
