@@ -62,6 +62,49 @@ def find_duplicate_leads(data, exclude_pk=None):
         duplicates = duplicates | name_company_matches
 
     return duplicates.distinct()
+
+def get_allowed_lead_statuses(current_status):
+    """
+    Return the statuses that a lead is allowed to transition to.
+
+    A lead may also remain in its current status.
+    """
+
+    transitions = {
+        Lead.STATUS_NEW: [
+            Lead.STATUS_NEW,
+            Lead.STATUS_CONTACTED,
+            Lead.STATUS_UNQUALIFIED,
+        ],
+
+        Lead.STATUS_CONTACTED: [
+            Lead.STATUS_CONTACTED,
+            Lead.STATUS_QUALIFIED,
+            Lead.STATUS_UNQUALIFIED,
+        ],
+
+        Lead.STATUS_QUALIFIED: [
+            Lead.STATUS_QUALIFIED,
+            Lead.STATUS_CONVERTED,
+            Lead.STATUS_UNQUALIFIED,
+        ],
+
+        Lead.STATUS_UNQUALIFIED: [
+            Lead.STATUS_UNQUALIFIED,
+            Lead.STATUS_NEW,
+        ],
+
+        Lead.STATUS_CONVERTED: [
+            Lead.STATUS_CONVERTED,
+        ],
+    }
+
+    return transitions.get(
+        current_status,
+        [current_status]
+    )
+
+
 class LeadForm(forms.ModelForm):
     duplicate_leads = None
 
