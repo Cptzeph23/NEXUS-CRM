@@ -3,6 +3,15 @@ import re
 from django import forms
 from .models import Lead, Deal, Pipeline, PipelineStage, Company, Contact
 from django.db.models import Q
+from django.contrib.auth.models import User
+from .models import (
+    Lead,
+    Deal,
+    Pipeline,
+    PipelineStage,
+    Company,
+    Contact,
+)
 
 
 def normalize_phone(phone):
