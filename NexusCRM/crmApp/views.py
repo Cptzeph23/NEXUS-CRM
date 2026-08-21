@@ -1092,17 +1092,38 @@ def lead_convert(request, pk):
         pk=pk
     )
 
+
+        # ==========================================
+        # CONVERSION STATUS VALIDATION
+        # ==========================================
+
     if lead.status == Lead.STATUS_CONVERTED:
 
         messages.warning(
-            request,
-            "This lead has already been converted."
+        request,
+        "This lead has already been converted."
         )
 
         return redirect(
             "lead_detail",
             pk=lead.pk
         )
+
+
+    if lead.status != Lead.STATUS_QUALIFIED:
+
+        messages.warning(
+            request,
+            "Only qualified leads can be converted. "
+            "Please qualify this lead before converting it."
+        )
+
+        return redirect(
+            "lead_detail",
+            pk=lead.pk
+        )
+
+       
 
     if request.method == "POST":
 
