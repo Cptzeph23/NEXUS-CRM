@@ -1,8 +1,7 @@
 import re
 
 from django import forms
-
-from .models import Lead
+from .models import Lead, Deal, Pipeline, PipelineStage, Company, Contact
 from django.db.models import Q
 
 
@@ -396,3 +395,192 @@ def clean(self):
         )
 
     return cleaned_data       
+
+
+class DealForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Deal
+
+        fields = [
+            "name",
+            "company",
+            "contact",
+            "pipeline",
+            "stage",
+            "amount",
+            "expected_close_date",
+            "owner",
+            "description",
+            "tags",
+        ]
+
+        widgets = {
+
+            "name": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Deal name",
+                }
+            ),
+
+            "company": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "contact": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "pipeline": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "stage": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "amount": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "0.00",
+                    "step": "0.01",
+                    "min": "0",
+                }
+            ),
+
+            "expected_close_date": forms.DateInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "date",
+                }
+            ),
+
+            "owner": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Add additional information about this deal...",
+                }
+            ),
+
+            "tags": forms.SelectMultiple(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+        }
+
+        labels = {
+            "name": "Deal Name",
+            "company": "Company",
+            "contact": "Contact",
+            "pipeline": "Pipeline",
+            "stage": "Stage",
+            "amount": "Deal Amount",
+            "expected_close_date": "Expected Close Date",
+            "owner": "Deal Owner",
+            "description": "Description",
+            "tags": "Tags",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # --------------------------------------------------
+        # DEFAULT QUERYSETS
+        # --------------------------------------------------
+
+        self.fields["company"].queryset = (
+            Company.objects.order_by("name")
+        )
+
+        self.fields["contact"].queryset = (
+            Contact.objects.select_related("company")
+            .order_by("first_name", "last_name")
+        )
+
+        self.fields["pipeline"].queryset = (
+            Pipeline.objects.filter(
+                is_active=True
+            ).order_by("name")
+        )
+
+        self.fields["owner"].queryset = (
+            User.objects.filter(
+                is_active=True
+            ).order_by(
+                "first_name",
+                "last_name",
+                "username"
+            )
+        )
+
+        # --------------------------------------------------
+        # STAGE QUERYSET
+        # --------------------------------------------------
+
+        pipeline_id = None
+
+        # Existing deal
+        if self.instance and self.instance.pk:
+            pipeline_id = self.instance.pipeline_id
+
+        # Submitted pipeline during create/edit
+        if self.is_bound:
+            submitted_pipeline = self.data.get(
+                self.add_prefix("pipeline")
+            )
+
+            if submitted_pipeline:
+                try:
+                    pipeline_id = int(submitted_pipeline)
+                except (TypeError, ValueError):
+                    pass
+
+        if pipeline_id:
+            self.fields["stage"].queryset = (
+                PipelineStage.objects.filter(
+                    pipeline_id=pipeline_id
+                ).order_by("order")
+            )
+        else:
+            self.fields["stage"].queryset = (
+                PipelineStage.objects.none()
+            )
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        pipeline = cleaned_data.get("pipeline")
+        stage = cleaned_data.get("stage")
+
+        if pipeline and stage:
+
+            if stage.pipeline_id != pipeline.id:
+
+                self.add_error(
+                    "stage",
+                    "The selected stage does not belong to "
+                    "the selected pipeline."
+                )
+
+        return cleaned_data
+
