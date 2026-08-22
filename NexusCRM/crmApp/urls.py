@@ -50,6 +50,7 @@ urlpatterns = [
 
     # Deals
     path("deals/", views.deal_list, name="deals"),
+    path("deals/create/", views.deal_create, name="deal_create"),
 
     path("activities/", lambda request: views.module_placeholder(request, "Activities"), name="activities"),
 
