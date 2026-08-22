@@ -1558,4 +1558,43 @@ def deal_edit(request, pk):
         context
     )
 
+@login_required
+def deal_delete(request, pk):
+
+    deal = get_object_or_404(
+        Deal.objects.select_related(
+            "company",
+            "contact",
+            "pipeline",
+            "stage",
+            "owner",
+        ),
+        pk=pk,
+    )
+
+    if not can_delete_deal(request.user, deal):
+        raise PermissionDenied
+
+    deal_name = deal.name
+
+    if request.method == "POST":
+
+        deal.delete()
+
+        messages.success(
+            request,
+            f"Deal '{deal_name}' was deleted successfully."
+        )
+
+        return redirect("deals")
+
+    context = {
+        "deal": deal,
+    }
+
+    return render(
+        request,
+        "crmApp/deals/delete.html",
+        context
+    )
 
