@@ -239,10 +239,14 @@
 
                             <tr>
 
-                                <td>
-                                    <strong>
-                                        {{ deal.name }}
-                                    </strong>
+                                 <td>
+                                    <a
+                                        href="{% url 'deal_detail' deal.pk %}"
+                                         class="text-decoration-none fw-semibold"
+                                    >
+                                            {{ deal.name }}
+                                        <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                    </a>
                                 </td>
 
                                 <td>
