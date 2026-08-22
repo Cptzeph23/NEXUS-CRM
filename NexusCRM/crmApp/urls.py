@@ -48,8 +48,8 @@ urlpatterns = [
 
     path("companies/<int:pk>/delete/", views.company_delete,name="company_delete"),
 
-
-    path("deals/", lambda request: views.module_placeholder(request,"Deals"), name="deals"),
+    # Deals
+    path("deals/", views.deal_list, name="deals"),
 
     path("activities/", lambda request: views.module_placeholder(request, "Activities"), name="activities"),
 
