@@ -1,0 +1,450 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}{{ deal.name }} | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-2 mb-1">
+
+                <h1 class="h3 fw-bold mb-0">
+                    {{ deal.name }}
+                </h1>
+
+                {% if deal.stage.is_won %}
+
+                    <span class="badge bg-success">
+                        Won
+                    </span>
+
+                {% elif deal.stage.is_closed %}
+
+                    <span class="badge bg-danger">
+                        Lost
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-primary">
+                        Open
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <p class="text-muted mb-0">
+                Deal details and sales opportunity information.
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="{% url 'deals' %}"
+                class="btn btn-outline-secondary"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Deals
+            </a>
+
+            {% if can_edit %}
+
+                <a
+                    href="{% url 'deal_edit' deal.pk %}"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Edit
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- MAIN DETAILS -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Deal Information
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Deal Name
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ deal.name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Amount
+                            </div>
+
+                            <div class="fw-semibold fs-5">
+                                KSh {{ deal.amount|floatformat:2 }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Pipeline
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ deal.pipeline.name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Current Stage
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ deal.stage.name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Probability
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ deal.stage.probability }}%
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Expected Close Date
+                            </div>
+
+                            <div class="fw-semibold">
+
+                                {% if deal.expected_close_date %}
+                                    {{ deal.expected_close_date }}
+                                {% else %}
+                                    <span class="text-muted">
+                                        Not specified
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Description
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    {% if deal.description %}
+
+                        <p class="mb-0">
+                            {{ deal.description|linebreaksbr }}
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No description provided.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- TAGS -->
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Tags
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    {% if deal.tags.all %}
+
+                        {% for tag in deal.tags.all %}
+
+                            <span class="badge bg-light text-dark border me-1">
+                                {{ tag.name }}
+                            </span>
+
+                        {% empty %}
+
+                            <span class="text-muted">
+                                No tags assigned.
+                            </span>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            No tags assigned.
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+
+        <div class="col-lg-4">
+
+            <!-- COMPANY -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Company
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    {% if deal.company %}
+
+                        <a
+                            href="{% url 'company_detail' deal.company.pk %}"
+                            class="fw-semibold text-decoration-none"
+                        >
+                            {{ deal.company.name }}
+                        </a>
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            No company assigned.
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- CONTACT -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Contact
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    {% if deal.contact %}
+
+                        <a
+                            href="{% url 'contact_detail' deal.contact.pk %}"
+                            class="fw-semibold text-decoration-none"
+                        >
+                            {{ deal.contact.full_name }}
+                        </a>
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            No contact assigned.
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- OWNER -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Deal Owner
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    {% if deal.owner %}
+
+                        <div class="fw-semibold">
+                            {{ deal.owner.get_full_name|default:deal.owner.username }}
+                        </div>
+
+                        <div class="text-muted small">
+                            @{{ deal.owner.username }}
+                        </div>
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            No owner assigned.
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- STAGE -->
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-0 pt-4 px-4">
+
+                    <h5 class="fw-bold mb-0">
+                        Pipeline Stage
+                    </h5>
+
+                </div>
+
+                <div class="card-body px-4">
+
+                    <div class="fw-semibold mb-1">
+                        {{ deal.stage.name }}
+                    </div>
+
+                    <div class="text-muted small mb-3">
+                        {{ deal.stage.probability }}% probability
+                    </div>
+
+                    {% if can_change_stage %}
+
+                        <div class="small text-muted">
+                            Stage changes will be available through the
+                            deal workflow.
+                        </div>
+
+                    {% elif deal.stage.is_closed %}
+
+                        <div class="small text-muted">
+                            This deal is closed.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- DELETE -->
+
+            {% if can_delete %}
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <a
+                            href="{% url 'deal_delete' deal.pk %}"
+                            class="btn btn-outline-danger w-100"
+                        >
+                            <i class="bi bi-trash me-1"></i>
+                            Delete Deal
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
