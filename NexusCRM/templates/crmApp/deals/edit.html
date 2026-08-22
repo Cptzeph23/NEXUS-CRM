@@ -1,0 +1,258 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Edit Deal | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="h3 fw-bold mb-1">
+                Edit Deal
+            </h1>
+
+            <p class="text-muted mb-0">
+                Update {{ deal.name }}.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'deal_detail' deal.pk %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Deal
+        </a>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+
+                <div class="row g-3">
+
+                    <!-- Deal Name -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Deal Name
+                        </label>
+
+                        {{ form.name }}
+
+                        {% for error in form.name.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Amount -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Deal Amount
+                        </label>
+
+                        {{ form.amount }}
+
+                        {% for error in form.amount.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Company -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Company
+                        </label>
+
+                        {{ form.company }}
+
+                        {% for error in form.company.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Contact -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Contact
+                        </label>
+
+                        {{ form.contact }}
+
+                        {% for error in form.contact.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Pipeline -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Pipeline
+                        </label>
+
+                        {{ form.pipeline }}
+
+                        {% for error in form.pipeline.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Stage -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Stage
+                        </label>
+
+                        {{ form.stage }}
+
+                        {% for error in form.stage.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Expected Close Date -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Expected Close Date
+                        </label>
+
+                        {{ form.expected_close_date }}
+
+                        {% for error in form.expected_close_date.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Owner -->
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Deal Owner
+                        </label>
+
+                        {{ form.owner }}
+
+                        {% for error in form.owner.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Description -->
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% for error in form.description.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Tags -->
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Tags
+                        </label>
+
+                        {{ form.tags }}
+
+                        {% for error in form.tags.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a
+                        href="{% url 'deal_detail' deal.pk %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-check-lg me-1"></i>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
