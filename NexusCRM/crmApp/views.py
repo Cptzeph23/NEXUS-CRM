@@ -1494,5 +1494,68 @@ def deal_detail(request, pk):
         context
     )
 
+@login_required
+def deal_edit(request, pk):
+
+    deal = get_object_or_404(
+        Deal.objects.select_related(
+            "company",
+            "contact",
+            "pipeline",
+            "stage",
+            "owner",
+        ).prefetch_related("tags"),
+        pk=pk,
+    )
+
+    if not can_edit_deal(request.user, deal):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = DealForm(
+            request.POST,
+            instance=deal
+        )
+
+        if form.is_valid():
+
+            updated_deal = form.save(commit=False)
+
+            # Sales users retain ownership of their own deals.
+            # They must not be able to reassign ownership.
+            if is_sales(request.user):
+                updated_deal.owner = request.user
+
+            updated_deal.save()
+
+            form.save_m2m()
+
+            messages.success(
+                request,
+                f"Deal '{updated_deal.name}' was updated successfully."
+            )
+
+            return redirect(
+                "deal_detail",
+                pk=updated_deal.pk
+            )
+
+    else:
+
+        form = DealForm(
+            instance=deal
+        )
+
+    context = {
+        "form": form,
+        "deal": deal,
+    }
+
+    return render(
+        request,
+        "crmApp/deals/edit.html",
+        context
+    )
 
 
