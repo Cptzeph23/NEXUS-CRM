@@ -1323,7 +1323,134 @@ def deal_create(request):
         context
     )
 
+@login_required
+def deal_list(request):
 
+    deals = Deal.objects.select_related(
+        "company",
+        "contact",
+        "pipeline",
+        "stage",
+        "owner",
+    ).prefetch_related(
+        "tags"
+    )
+
+    # ==========================================================
+    # SEARCH
+    # ==========================================================
+
+    search = request.GET.get("search", "").strip()
+
+    if search:
+        deals = deals.filter(
+            Q(name__icontains=search)
+            | Q(company__name__icontains=search)
+            | Q(contact__first_name__icontains=search)
+            | Q(contact__last_name__icontains=search)
+        )
+
+    # ==========================================================
+    # FILTERS
+    # ==========================================================
+
+    pipeline_id = request.GET.get("pipeline", "").strip()
+    stage_id = request.GET.get("stage", "").strip()
+    owner_id = request.GET.get("owner", "").strip()
+
+    if pipeline_id:
+        deals = deals.filter(
+            pipeline_id=pipeline_id
+        )
+
+    if stage_id:
+        deals = deals.filter(
+            stage_id=stage_id
+        )
+
+    if owner_id:
+        deals = deals.filter(
+            owner_id=owner_id
+        )
+
+    # ==========================================================
+    # STATISTICS
+    # ==========================================================
+
+    total_deals = deals.count()
+
+    open_deals = deals.filter(
+        stage__is_closed=False
+    ).count()
+
+    won_deals = deals.filter(
+        stage__is_won=True
+    ).count()
+
+    lost_deals = deals.filter(
+        stage__is_closed=True,
+        stage__is_won=False
+    ).count()
+
+    pipeline_value = deals.filter(
+        stage__is_closed=False
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+    weighted_pipeline_value = sum(
+        (
+            deal.amount *
+            deal.stage.probability /
+            100
+        )
+        for deal in deals.filter(
+            stage__is_closed=False
+        ).select_related("stage")
+    )
+
+    context = {
+        "deals": deals,
+
+        "total_deals": total_deals,
+        "open_deals": open_deals,
+        "won_deals": won_deals,
+        "lost_deals": lost_deals,
+        "pipeline_value": pipeline_value,
+        "weighted_pipeline_value": weighted_pipeline_value,
+
+        "pipelines": Pipeline.objects.filter(
+            is_active=True
+        ).order_by("name"),
+
+        "stages": PipelineStage.objects.select_related(
+            "pipeline"
+        ).order_by(
+            "pipeline",
+            "order"
+        ),
+
+        "owners": User.objects.filter(
+            is_active=True
+        ).order_by(
+            "first_name",
+            "last_name",
+            "username"
+        ),
+
+        "selected_pipeline": pipeline_id,
+        "selected_stage": stage_id,
+        "selected_owner": owner_id,
+        "search": search,
+
+        "can_create_deal": can_manage_deals(request.user),
+    }
+
+    return render(
+        request,
+        "crmApp/deals/list.html",
+        context
+    )
 
 
 
