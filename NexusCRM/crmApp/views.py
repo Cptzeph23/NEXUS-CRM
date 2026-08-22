@@ -1452,7 +1452,47 @@ def deal_list(request):
         context
     )
 
+@login_required
+def deal_detail(request, pk):
 
+    deal = get_object_or_404(
+        Deal.objects.select_related(
+            "company",
+            "contact",
+            "pipeline",
+            "stage",
+            "owner",
+        ).prefetch_related(
+            "tags",
+            "activities",
+        ),
+        pk=pk,
+    )
+
+    context = {
+        "deal": deal,
+
+        "can_edit": can_edit_deal(
+            request.user,
+            deal
+        ),
+
+        "can_delete": can_delete_deal(
+            request.user,
+            deal
+        ),
+
+        "can_change_stage": can_change_deal_stage(
+            request.user,
+            deal
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/deals/detail.html",
+        context
+    )
 
 
 
