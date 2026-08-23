@@ -1560,6 +1560,18 @@ def activity_list(request):
         activities = activities.filter(
             assigned_to_id=assigned_to
         )
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
+
+    if date_from:
+        activities = activities.filter(
+            activity_date__date__gte=date_from
+        )
+
+    if date_to:
+        activities = activities.filter(
+            activity_date__date__lte=date_to
+        )
 
     # ==========================================================
     # STATISTICS
@@ -1582,6 +1594,13 @@ def activity_list(request):
     upcoming_activities = activities.filter(
         activity_date__gte=timezone.now()
     ).count()
+    SMS = activities.filter(
+        activity_type=Activity.TYPE_SMS
+    ).count()
+    other = activities.filter(
+        activity_type=Activity.TYPE_OTHER
+    ).count()
+
 
     paginator = Paginator(activities, 10)
 
@@ -1603,7 +1622,8 @@ def activity_list(request):
         "emails": emails,
         "meetings": meetings,
         "upcoming_activities": upcoming_activities,
-
+        "SMS": SMS,
+        "other": other,
         "activity_types": Activity.TYPE_CHOICES,
 
         "users": User.objects.filter(
