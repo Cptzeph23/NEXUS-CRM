@@ -1,0 +1,75 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Edit Activity | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">
+            Edit Activity
+        </h1>
+
+        <p class="text-muted mb-0">
+            Update activity information.
+        </p>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                {% for field in form %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Save Changes
+                    </button>
+
+                    <a
+                        href="{% url 'activity_detail' activity.pk %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
