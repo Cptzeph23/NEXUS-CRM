@@ -1707,6 +1707,42 @@ def activity_edit(request, pk):
 
 
 @login_required
+def activity_delete(request, pk):
+
+    activity = get_object_or_404(
+        Activity,
+        pk=pk
+    )
+
+    if not can_delete_activity(
+        request.user,
+        activity
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        subject = activity.subject
+
+        activity.delete()
+
+        messages.success(
+            request,
+            f"Activity '{subject}' was deleted successfully."
+        )
+
+        return redirect("activities")
+
+    return render(
+        request,
+        "crmApp/activities/delete.html",
+        {
+            "activity": activity,
+        }
+    )
+
+
+@login_required
 def deal_detail(request, pk):
 
     deal = get_object_or_404(
