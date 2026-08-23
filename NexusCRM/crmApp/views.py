@@ -26,6 +26,10 @@ from .permissions import (
     can_change_deal_stage,
     can_manage_pipelines,
     can_manage_activities,
+    can_delete_activity,
+    can_edit_activity,
+    can_view_activity,
+    
     )
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
