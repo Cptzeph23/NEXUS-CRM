@@ -285,7 +285,12 @@
                                     <td class="px-4">
 
                                         <div class="fw-semibold">
-                                            {{ activity.subject }}
+                                            <a
+                                                href="{% url 'activity_detail' activity.pk %}"
+                                                 class="text-decoration-none fw-semibold"
+                                            >
+                                                {{ activity.subject }}
+                                            </a>
                                         </div>
 
                                         {% if activity.description %}

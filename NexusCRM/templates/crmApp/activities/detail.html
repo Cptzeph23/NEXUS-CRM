@@ -36,7 +36,7 @@ Activity Details | NexusCRM
 
             {% if can_edit %}
                 <a
-                    href="#"
+                    href="{% url 'activity_edit' activity.pk %}"
                     class="btn btn-outline-primary"
                 >
                     <i class="bi bi-pencil me-1"></i>
@@ -46,7 +46,7 @@ Activity Details | NexusCRM
 
             {% if can_delete %}
                 <a
-                    href="#"
+                    href="{% url 'activity_delete' activity.pk %}"
                     class="btn btn-outline-danger"
                 >
                     <i class="bi bi-trash me-1"></i>
