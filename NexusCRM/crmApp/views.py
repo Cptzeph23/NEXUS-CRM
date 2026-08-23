@@ -1801,7 +1801,7 @@ def deal_detail(request, pk):
 
     context = {
         "deal": deal,
-
+        "activities": deal.activities.all(),
         "can_edit": can_edit_deal(
             request.user,
             deal
@@ -1811,12 +1811,15 @@ def deal_detail(request, pk):
             request.user,
             deal
         ),
-
         "can_change_stage": can_change_deal_stage(
             request.user,
             deal
         ),
+        "can_create_activity": can_manage_activities(
+            request.user
+        ),
     }
+
 
     return render(
         request,
