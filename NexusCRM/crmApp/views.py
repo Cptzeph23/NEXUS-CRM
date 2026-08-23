@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from django.core import paginator
 from django.http import request
 from django.http import request
 from django.shortcuts import redirect, render
@@ -1416,7 +1417,14 @@ def deal_list(request):
         ).select_related("stage")
     )
 
+    paginator = Paginator(deals, 10)
+
+    page_number = request.GET.get("page")
+
+    page_obj = paginator.get_page(page_number)
+
     context = {
+        "page_obj": page_obj,
         "deals": deals,
 
         "total_deals": total_deals,
@@ -1575,13 +1583,21 @@ def activity_list(request):
         activity_date__gte=timezone.now()
     ).count()
 
+    paginator = Paginator(activities, 10)
+
+    page_number = request.GET.get("page")
+
+    page_obj = paginator.get_page(page_number)
+
+
+
     # ==========================================================
     # CONTEXT
     # ==========================================================
 
     context = {
+        "page_obj": page_obj,
         "activities": activities,
-
         "total_activities": total_activities,
         "calls": calls,
         "emails": emails,
