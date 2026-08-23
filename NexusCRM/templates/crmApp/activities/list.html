@@ -1,0 +1,447 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Activities | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="h3 fw-bold mb-1">
+                Activities
+            </h1>
+
+            <p class="text-muted mb-0">
+                Track calls, emails, meetings and other customer interactions.
+            </p>
+        </div>
+
+        {% if can_create_activity %}
+            <a
+                href="#"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-plus-lg me-1"></i>
+                Add Activity
+            </a>
+        {% endif %}
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Total Activities
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ total_activities }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Calls
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ calls }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Emails
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ emails }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Upcoming
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ upcoming_activities }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    <div class="col-md-5">
+
+                        <label class="form-label">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search activities..."
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Activity Type
+                        </label>
+
+                        <select
+                            name="activity_type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Types
+                            </option>
+
+                            {% for value, label in activity_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_activity_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Assigned To
+                        </label>
+
+                        <select
+                            name="assigned_to"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Everyone
+                            </option>
+
+                            {% for user in users %}
+
+                                <option
+                                    value="{{ user.pk }}"
+                                    {% if selected_assigned_to == user.pk|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ user.get_full_name|default:user.username }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-1 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            <i class="bi bi-search"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVITY LIST -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-0">
+
+            {% if activities %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    Activity
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Related To
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Assigned To
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for activity in activities %}
+
+                                <tr>
+
+                                    <td class="px-4">
+
+                                        <div class="fw-semibold">
+                                            {{ activity.subject }}
+                                        </div>
+
+                                        {% if activity.description %}
+
+                                            <div class="text-muted small">
+                                                {{ activity.description|truncatechars:80 }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if activity.activity_type == "call" %}
+
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-telephone me-1"></i>
+                                                Call
+                                            </span>
+
+                                        {% elif activity.activity_type == "email" %}
+
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-envelope me-1"></i>
+                                                Email
+                                            </span>
+
+                                        {% elif activity.activity_type == "meeting" %}
+
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-calendar-event me-1"></i>
+                                                Meeting
+                                            </span>
+
+                                        {% elif activity.activity_type == "sms" %}
+
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-chat me-1"></i>
+                                                SMS
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-secondary">
+                                                Other
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if activity.deal %}
+
+                                            <div>
+                                                <i class="bi bi-briefcase me-1"></i>
+                                                {{ activity.deal.name }}
+                                            </div>
+
+                                        {% elif activity.lead %}
+
+                                            <div>
+                                                <i class="bi bi-person-plus me-1"></i>
+                                                {{ activity.lead.first_name }}
+                                                {{ activity.lead.last_name }}
+                                            </div>
+
+                                        {% elif activity.contact %}
+
+                                            <div>
+                                                <i class="bi bi-person me-1"></i>
+                                                {{ activity.contact.first_name }}
+                                                {{ activity.contact.last_name }}
+                                            </div>
+
+                                        {% elif activity.company %}
+
+                                            <div>
+                                                <i class="bi bi-building me-1"></i>
+                                                {{ activity.company.name }}
+                                            </div>
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ activity.activity_date|date:"d M Y" }}
+
+                                        <div class="text-muted small">
+                                            {{ activity.activity_date|date:"H:i" }}
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if activity.assigned_to %}
+
+                                            {{ activity.assigned_to.get_full_name|default:activity.assigned_to.username }}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                Unassigned
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-activity fs-1 text-muted"></i>
+
+                    <h5 class="mt-3">
+                        No activities found
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Activities will appear here once they are created.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
