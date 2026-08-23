@@ -1679,11 +1679,7 @@ def activity_detail(request, pk):
         ),
     }
 
-    return render(
-        request,
-        "crmApp/activities/detail.html",
-        context
-    )
+    return render(request, "crmApp/activities/detail.html", context)
 
 @login_required
 def activity_edit(request, pk):
@@ -1779,41 +1775,6 @@ def activity_delete(request, pk):
         {
             "activity": activity,
         }
-    )
-
-@login_required
-def activity_detail(request, pk):
-
-    activity = get_object_or_404(
-        Activity.objects.select_related(
-            "company",
-            "contact",
-            "lead",
-            "deal",
-            "assigned_to",
-            "created_by",
-        ),
-        pk=pk,
-    )
-
-    context = {
-        "activity": activity,
-
-        "can_edit": can_edit_activity(
-            request.user,
-            activity
-        ),
-
-        "can_delete": can_delete_activity(
-            request.user,
-            activity
-        ),
-    }
-
-    return render(
-        request,
-        "crmApp/activities/detail.html",
-        context
     )
 
 
