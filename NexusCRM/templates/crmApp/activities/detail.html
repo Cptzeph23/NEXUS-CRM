@@ -1,0 +1,340 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+Activity Details | NexusCRM
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <div class="mb-2">
+                <a
+                    href="{% url 'activities' %}"
+                    class="text-decoration-none text-muted"
+                >
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Back to Activities
+                </a>
+            </div>
+
+            <h1 class="h3 fw-bold mb-1">
+                {{ activity.subject }}
+            </h1>
+
+            <p class="text-muted mb-0">
+                Activity details and related CRM records.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            {% if can_edit %}
+                <a
+                    href="#"
+                    class="btn btn-outline-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Edit
+                </a>
+            {% endif %}
+
+            {% if can_delete %}
+                <a
+                    href="#"
+                    class="btn btn-outline-danger"
+                >
+                    <i class="bi bi-trash me-1"></i>
+                    Delete
+                </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- MAIN DETAILS -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-4">
+                        Activity Information
+                    </h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Subject
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ activity.subject }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Activity Type
+                            </div>
+
+                            <div>
+                                <span class="badge bg-primary-subtle text-primary">
+                                    {{ activity.get_activity_type_display }}
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Activity Date
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ activity.activity_date|date:"d M Y, H:i" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small mb-1">
+                                Assigned To
+                            </div>
+
+                            <div class="fw-semibold">
+
+                                {% if activity.assigned_to %}
+                                    {{ activity.assigned_to.get_full_name|default:activity.assigned_to.username }}
+                                {% else %}
+                                    <span class="text-muted">
+                                        Unassigned
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        Description
+                    </h5>
+
+                    {% if activity.description %}
+
+                        <div class="text-muted" style="white-space: pre-line;">
+                            {{ activity.description }}
+                        </div>
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No description was provided for this activity.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RELATED RECORDS -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-4">
+                        Related Records
+                    </h5>
+
+
+                    {% if activity.company %}
+
+                        <div class="mb-4">
+
+                            <div class="text-muted small mb-1">
+                                Company
+                            </div>
+
+                            <a
+                                href="{% url 'company_detail' activity.company.pk %}"
+                                class="fw-semibold text-decoration-none"
+                            >
+                                {{ activity.company.name }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if activity.contact %}
+
+                        <div class="mb-4">
+
+                            <div class="text-muted small mb-1">
+                                Contact
+                            </div>
+
+                            <a
+                                href="{% url 'contact_detail' activity.contact.pk %}"
+                                class="fw-semibold text-decoration-none"
+                            >
+                                {{ activity.contact.first_name }}
+                                {{ activity.contact.last_name }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if activity.lead %}
+
+                        <div class="mb-4">
+
+                            <div class="text-muted small mb-1">
+                                Lead
+                            </div>
+
+                            <a
+                                href="{% url 'lead_detail' activity.lead.pk %}"
+                                class="fw-semibold text-decoration-none"
+                            >
+                                {{ activity.lead.first_name }}
+                                {{ activity.lead.last_name }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if activity.deal %}
+
+                        <div class="mb-4">
+
+                            <div class="text-muted small mb-1">
+                                Deal
+                            </div>
+
+                            <a
+                                href="{% url 'deal_detail' activity.deal.pk %}"
+                                class="fw-semibold text-decoration-none"
+                            >
+                                {{ activity.deal.name }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if not activity.company and not activity.contact and not activity.lead and not activity.deal %}
+
+                        <p class="text-muted mb-0">
+                            No related CRM records.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- CREATION INFO -->
+
+            <div class="card border-0 shadow-sm mt-4">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold mb-3">
+                        Record Information
+                    </h6>
+
+                    <div class="small">
+
+                        <div class="d-flex justify-content-between mb-2">
+
+                            <span class="text-muted">
+                                Created by
+                            </span>
+
+                            <span class="fw-semibold">
+
+                                {% if activity.created_by %}
+                                    {{ activity.created_by.get_full_name|default:activity.created_by.username }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-between">
+
+                            <span class="text-muted">
+                                Created
+                            </span>
+
+                            <span class="fw-semibold">
+                                {{ activity.created_at|date:"d M Y, H:i" }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
