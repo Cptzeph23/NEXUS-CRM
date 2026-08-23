@@ -1594,7 +1594,7 @@ def activity_list(request):
     upcoming_activities = activities.filter(
         activity_date__gte=timezone.now()
     ).count()
-    SMS = activities.filter(
+    sms = activities.filter(
         activity_type=Activity.TYPE_SMS
     ).count()
     other = activities.filter(
@@ -1616,13 +1616,13 @@ def activity_list(request):
 
     context = {
         "page_obj": page_obj,
-        "activities": activities,
+        "activities": page_obj.object_list,
         "total_activities": total_activities,
         "calls": calls,
         "emails": emails,
         "meetings": meetings,
         "upcoming_activities": upcoming_activities,
-        "SMS": SMS,
+        "sms": sms,
         "other": other,
         "activity_types": Activity.TYPE_CHOICES,
 
