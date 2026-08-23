@@ -25,6 +25,7 @@ from .permissions import (
     can_delete_deal,
     can_change_deal_stage,
     can_manage_pipelines,
+    can_manage_activities,
     )
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
@@ -44,6 +45,8 @@ from .models import (
     Company,
     Contact,
 )
+
+from django.utils import timezone
 
 # Create your views here.
 
@@ -1451,6 +1454,122 @@ def deal_list(request):
         "crmApp/deals/list.html",
         context
     )
+
+@login_required
+def activity_list(request):
+
+    activities = Activity.objects.select_related(
+        "company",
+        "contact",
+        "lead",
+        "deal",
+        "assigned_to",
+        "created_by",
+    )
+
+    # ==========================================================
+    # SEARCH
+    # ==========================================================
+
+    search = request.GET.get("search", "").strip()
+
+    if search:
+        activities = activities.filter(
+            Q(subject__icontains=search)
+            | Q(description__icontains=search)
+            | Q(company__name__icontains=search)
+            | Q(contact__first_name__icontains=search)
+            | Q(contact__last_name__icontains=search)
+            | Q(lead__first_name__icontains=search)
+            | Q(lead__last_name__icontains=search)
+            | Q(deal__name__icontains=search)
+        )
+
+    # ==========================================================
+    # FILTERS
+    # ==========================================================
+
+    activity_type = request.GET.get(
+        "activity_type",
+        ""
+    ).strip()
+
+    assigned_to = request.GET.get(
+        "assigned_to",
+        ""
+    ).strip()
+
+    if activity_type:
+        activities = activities.filter(
+            activity_type=activity_type
+        )
+
+    if assigned_to:
+        activities = activities.filter(
+            assigned_to_id=assigned_to
+        )
+
+    # ==========================================================
+    # STATISTICS
+    # ==========================================================
+
+    total_activities = activities.count()
+
+    calls = activities.filter(
+        activity_type=Activity.TYPE_CALL
+    ).count()
+
+    emails = activities.filter(
+        activity_type=Activity.TYPE_EMAIL
+    ).count()
+
+    meetings = activities.filter(
+        activity_type=Activity.TYPE_MEETING
+    ).count()
+
+    upcoming_activities = activities.filter(
+        activity_date__gte=timezone.now()
+    ).count()
+
+    # ==========================================================
+    # CONTEXT
+    # ==========================================================
+
+    context = {
+        "activities": activities,
+
+        "total_activities": total_activities,
+        "calls": calls,
+        "emails": emails,
+        "meetings": meetings,
+        "upcoming_activities": upcoming_activities,
+
+        "activity_types": Activity.TYPE_CHOICES,
+
+        "users": User.objects.filter(
+            is_active=True
+        ).order_by(
+            "first_name",
+            "last_name",
+            "username"
+        ),
+
+        "selected_activity_type": activity_type,
+        "selected_assigned_to": assigned_to,
+        "search": search,
+
+        "can_create_activity": can_manage_activities(
+            request.user
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/activities/list.html",
+        context
+    )
+
+
 
 @login_required
 def deal_detail(request, pk):
