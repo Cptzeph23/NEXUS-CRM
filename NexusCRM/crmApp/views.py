@@ -1462,7 +1462,7 @@ def deal_list(request):
 @login_required
 def activity_create(request):
 
-    if not can_manage_deals(request.user):
+    if not can_manage_activities(request.user):
         raise PermissionDenied
 
     if request.method == "POST":

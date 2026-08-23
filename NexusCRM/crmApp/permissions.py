@@ -299,21 +299,21 @@ def can_delete_activity(user, activity):
         ROLE_MANAGER,
     }
 
-def can_manage_activities(user):
-    """
-    Determine whether a user can create activities.
+# def can_manage_activities(user):
+#     """
+#     Determine whether a user can create activities.
 
-    Admin, Manager and Sales can create activities.
-    Support and Viewer are read-only.
-    """
+#     Admin, Manager and Sales can create activities.
+#     Support and Viewer are read-only.
+#     """
 
-    role = get_user_role(user)
+#     role = get_user_role(user)
 
-    return role in {
-        ROLE_ADMIN,
-        ROLE_MANAGER,
-        ROLE_SALES,
-    }
+#     return role in {
+#         ROLE_ADMIN,
+#         ROLE_MANAGER,
+#         ROLE_SALES,
+#     }
 
 
 def can_edit_activity(user, activity):
