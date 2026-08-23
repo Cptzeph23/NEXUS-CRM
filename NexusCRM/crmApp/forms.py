@@ -593,3 +593,163 @@ class DealForm(forms.ModelForm):
 
         return cleaned_data
 
+
+
+class ActivityForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Activity
+
+        fields = [
+            "subject",
+            "activity_type",
+            "description",
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+            "activity_date",
+        ]
+
+        widgets = {
+
+            "subject": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Activity subject",
+                }
+            ),
+
+            "activity_type": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Describe the activity...",
+                }
+            ),
+
+            "company": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "contact": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "lead": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "deal": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "assigned_to": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "activity_date": forms.DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+        }
+
+        labels = {
+            "subject": "Subject",
+            "activity_type": "Activity Type",
+            "description": "Description",
+            "company": "Company",
+            "contact": "Contact",
+            "lead": "Lead",
+            "deal": "Deal",
+            "assigned_to": "Assigned To",
+            "activity_date": "Activity Date",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["company"].queryset = (
+            Company.objects.order_by("name")
+        )
+
+        self.fields["contact"].queryset = (
+            Contact.objects.select_related("company")
+            .order_by("first_name", "last_name")
+        )
+
+        self.fields["lead"].queryset = (
+            Lead.objects.order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["deal"].queryset = (
+            Deal.objects.select_related(
+                "pipeline",
+                "stage"
+            ).order_by("name")
+        )
+
+        self.fields["assigned_to"].queryset = (
+            User.objects.filter(
+                is_active=True
+            ).order_by(
+                "first_name",
+                "last_name",
+                "username"
+            )
+        )
+
+        self.fields["company"].required = False
+        self.fields["contact"].required = False
+        self.fields["lead"].required = False
+        self.fields["deal"].required = False
+        self.fields["assigned_to"].required = False
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        company = cleaned_data.get("company")
+        contact = cleaned_data.get("contact")
+        lead = cleaned_data.get("lead")
+        deal = cleaned_data.get("deal")
+
+        related_objects = [
+            company,
+            contact,
+            lead,
+            deal,
+        ]
+
+        if not any(related_objects):
+            raise forms.ValidationError(
+                "An activity must be linked to at least one "
+                "company, contact, lead, or deal."
+            )
+
+        return cleaned_data
+
