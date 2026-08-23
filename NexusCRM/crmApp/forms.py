@@ -595,7 +595,6 @@ class DealForm(forms.ModelForm):
         return cleaned_data
 
 
-
 class ActivityForm(forms.ModelForm):
 
     class Meta:
@@ -633,7 +632,7 @@ class ActivityForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "rows": 4,
-                    "placeholder": "Describe the activity...",
+                    "placeholder": "Add activity details...",
                 }
             ),
 
@@ -697,7 +696,10 @@ class ActivityForm(forms.ModelForm):
 
         self.fields["contact"].queryset = (
             Contact.objects.select_related("company")
-            .order_by("first_name", "last_name")
+            .order_by(
+                "first_name",
+                "last_name"
+            )
         )
 
         self.fields["lead"].queryset = (
@@ -709,8 +711,9 @@ class ActivityForm(forms.ModelForm):
 
         self.fields["deal"].queryset = (
             Deal.objects.select_related(
+                "company",
                 "pipeline",
-                "stage"
+                "stage",
             ).order_by("name")
         )
 
@@ -724,12 +727,6 @@ class ActivityForm(forms.ModelForm):
             )
         )
 
-        self.fields["company"].required = False
-        self.fields["contact"].required = False
-        self.fields["lead"].required = False
-        self.fields["deal"].required = False
-        self.fields["assigned_to"].required = False
-
     def clean(self):
 
         cleaned_data = super().clean()
@@ -739,18 +736,16 @@ class ActivityForm(forms.ModelForm):
         lead = cleaned_data.get("lead")
         deal = cleaned_data.get("deal")
 
-        related_objects = [
+        if not any([
             company,
             contact,
             lead,
             deal,
-        ]
+        ]):
 
-        if not any(related_objects):
             raise forms.ValidationError(
                 "An activity must be linked to at least one "
                 "company, contact, lead, or deal."
             )
 
         return cleaned_data
-

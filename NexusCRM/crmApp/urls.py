@@ -49,14 +49,15 @@ urlpatterns = [
     path("companies/<int:pk>/delete/", views.company_delete,name="company_delete"),
 
     # Deals
-    # Deals
+    
     path("deals/", views.deal_list, name="deals"),
     path("deals/create/", views.deal_create, name="deal_create"),
     path("deals/<int:pk>/", views.deal_detail, name="deal_detail"),
     path("deals/<int:pk>/edit/", views.deal_edit, name="deal_edit"),
     path("deals/<int:pk>/delete/", views.deal_delete, name="deal_delete"),
 
-    path("activities/", lambda request: views.module_placeholder(request, "Activities"), name="activities"),
+    # Activities
+    path("activities/", views.activity_list, name="activities"),
 
     path("tasks/", lambda request: views.module_placeholder( request,"Tasks"), name="tasks"),
 
