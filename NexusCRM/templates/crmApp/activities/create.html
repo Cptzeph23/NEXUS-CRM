@@ -1,0 +1,244 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Log Activity | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="h3 fw-bold mb-1">
+                Log Activity
+            </h1>
+
+            <p class="text-muted mb-0">
+                Record a customer interaction or sales activity.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'activities' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Activities
+        </a>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger">
+
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- BASIC INFORMATION -->
+
+                <h5 class="fw-bold mb-3">
+                    Activity Information
+                </h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-8">
+
+                        <label class="form-label">
+                            Subject
+                        </label>
+
+                        {{ form.subject }}
+
+                        {% for error in form.subject.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Activity Type
+                        </label>
+
+                        {{ form.activity_type }}
+
+                        {% for error in form.activity_type.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% for error in form.description.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- CRM RELATIONSHIPS -->
+
+                <h5 class="fw-bold mb-3">
+                    Related CRM Records
+                </h5>
+
+                <p class="text-muted small">
+                    Link this activity to at least one company,
+                    contact, lead, or deal.
+                </p>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Company
+                        </label>
+
+                        {{ form.company }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Contact
+                        </label>
+
+                        {{ form.contact }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Lead
+                        </label>
+
+                        {{ form.lead }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Deal
+                        </label>
+
+                        {{ form.deal }}
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- ASSIGNMENT -->
+
+                <h5 class="fw-bold mb-3">
+                    Assignment
+                </h5>
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Assigned To
+                        </label>
+
+                        {{ form.assigned_to }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Activity Date
+                        </label>
+
+                        {{ form.activity_date }}
+
+                        {% for error in form.activity_date.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a
+                        href="{% url 'activities' %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-check-lg me-1"></i>
+                        Log Activity
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

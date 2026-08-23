@@ -594,7 +594,6 @@ class DealForm(forms.ModelForm):
 
         return cleaned_data
 
-
 class ActivityForm(forms.ModelForm):
 
     class Meta:
@@ -695,8 +694,9 @@ class ActivityForm(forms.ModelForm):
         )
 
         self.fields["contact"].queryset = (
-            Contact.objects.select_related("company")
-            .order_by(
+            Contact.objects.select_related(
+                "company"
+            ).order_by(
                 "first_name",
                 "last_name"
             )
@@ -710,11 +710,7 @@ class ActivityForm(forms.ModelForm):
         )
 
         self.fields["deal"].queryset = (
-            Deal.objects.select_related(
-                "company",
-                "pipeline",
-                "stage",
-            ).order_by("name")
+            Deal.objects.order_by("name")
         )
 
         self.fields["assigned_to"].queryset = (
@@ -727,25 +723,12 @@ class ActivityForm(forms.ModelForm):
             )
         )
 
-    def clean(self):
+        # --------------------------------------------------
+        # OPTIONAL RELATIONSHIPS
+        # --------------------------------------------------
 
-        cleaned_data = super().clean()
-
-        company = cleaned_data.get("company")
-        contact = cleaned_data.get("contact")
-        lead = cleaned_data.get("lead")
-        deal = cleaned_data.get("deal")
-
-        if not any([
-            company,
-            contact,
-            lead,
-            deal,
-        ]):
-
-            raise forms.ValidationError(
-                "An activity must be linked to at least one "
-                "company, contact, lead, or deal."
-            )
-
-        return cleaned_data
+        self.fields["company"].required = False
+        self.fields["contact"].required = False
+        self.fields["lead"].required = False
+        self.fields["deal"].required = False
+        self.fields["assigned_to"].required = False

@@ -36,7 +36,7 @@ from django.db import transaction
 from .forms import LeadForm, LeadConversionForm
 
 from django.contrib.auth.models import User
-from .forms import DealForm
+from .forms import DealForm, ActivityForm
 from .models import (
     Lead,
     Deal,
@@ -1454,6 +1454,46 @@ def deal_list(request):
         "crmApp/deals/list.html",
         context
     )
+
+@login_required
+def activity_create(request):
+
+    if not can_manage_deals(request.user):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = ActivityForm(request.POST)
+
+        if form.is_valid():
+
+            activity = form.save(commit=False)
+
+            activity.created_by = request.user
+
+            activity.save()
+
+            messages.success(
+                request,
+                f"Activity '{activity.subject}' was logged successfully."
+            )
+
+            return redirect("activities")
+
+    else:
+
+        form = ActivityForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/activities/create.html",
+        context
+    )
+
 
 @login_required
 def activity_list(request):

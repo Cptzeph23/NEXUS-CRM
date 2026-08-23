@@ -58,6 +58,9 @@ urlpatterns = [
 
     # Activities
     path("activities/", views.activity_list, name="activities"),
+    path("activities/create/", views.activity_create, name="activity_create"),
+
+    
 
     path("tasks/", lambda request: views.module_placeholder( request,"Tasks"), name="tasks"),
 
