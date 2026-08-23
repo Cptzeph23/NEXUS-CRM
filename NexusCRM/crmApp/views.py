@@ -1645,6 +1645,65 @@ def activity_detail(request, pk):
         context
     )
 
+@login_required
+def activity_edit(request, pk):
+
+    activity = get_object_or_404(
+        Activity.objects.select_related(
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+            "created_by",
+        ),
+        pk=pk,
+    )
+
+    if not can_edit_activity(
+        request.user,
+        activity
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = ActivityForm(
+            request.POST,
+            instance=activity
+        )
+
+        if form.is_valid():
+
+            updated_activity = form.save()
+
+            messages.success(
+                request,
+                f"Activity '{updated_activity.subject}' "
+                "was updated successfully."
+            )
+
+            return redirect(
+                "activity_detail",
+                pk=updated_activity.pk
+            )
+
+    else:
+
+        form = ActivityForm(
+            instance=activity
+        )
+
+    context = {
+        "form": form,
+        "activity": activity,
+    }
+
+    return render(
+        request,
+        "crmApp/activities/edit.html",
+        context
+    )
 
 
 @login_required
