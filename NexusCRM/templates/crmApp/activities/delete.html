@@ -1,0 +1,52 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}Delete Activity | NexusCRM{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h1 class="h4 fw-bold mb-3">
+                Delete Activity
+            </h1>
+
+            <p>
+                Are you sure you want to delete
+                <strong>{{ activity.subject }}</strong>?
+            </p>
+
+            <div class="alert alert-warning">
+                This action cannot be undone.
+            </div>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                >
+                    Delete Activity
+                </button>
+
+                <a
+                    href="{% url 'activity_detail' activity.pk %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
