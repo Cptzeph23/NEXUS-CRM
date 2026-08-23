@@ -11,6 +11,7 @@ from .models import (
     PipelineStage,
     Company,
     Contact,
+    Activity,
 )
 
 
