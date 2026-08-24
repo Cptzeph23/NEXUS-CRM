@@ -1,0 +1,374 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    Edit {{ task.title }} | Tasks
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+
+            <a
+                href="{% url 'task_detail' task.pk %}"
+                class="text-decoration-none text-muted small"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Task
+            </a>
+
+            <h4 class="mt-2 mb-1 fw-semibold">
+                Edit Task
+            </h4>
+
+            <div class="text-muted small">
+                {{ task.title }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FORM -->
+    <div class="row">
+
+        <div class="col-xl-8 col-lg-10">
+
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Task Information
+                    </h6>
+
+                </div>
+
+
+                <div class="crm-card-body">
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {% for error in form.non_field_errors %}
+
+                                    <div>
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- TITLE -->
+                        <div class="mb-3">
+
+                            <label
+                                for="{{ form.title.id_for_label }}"
+                                class="form-label fw-semibold"
+                            >
+                                {{ form.title.label }}
+                            </label>
+
+                            {{ form.title }}
+
+                            {% for error in form.title.errors %}
+
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+                        <div class="mb-3">
+
+                            <label
+                                for="{{ form.description.id_for_label }}"
+                                class="form-label fw-semibold"
+                            >
+                                {{ form.description.label }}
+                            </label>
+
+                            {{ form.description }}
+
+                            {% for error in form.description.errors %}
+
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- RELATED RECORDS -->
+                        <div class="border rounded p-3 mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                Related Records
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.company.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.company.label }}
+                                    </label>
+
+                                    {{ form.company }}
+
+                                    {% for error in form.company.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.contact.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.contact.label }}
+                                    </label>
+
+                                    {{ form.contact }}
+
+                                    {% for error in form.contact.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.lead.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.lead.label }}
+                                    </label>
+
+                                    {{ form.lead }}
+
+                                    {% for error in form.lead.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.deal.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.deal.label }}
+                                    </label>
+
+                                    {{ form.deal }}
+
+                                    {% for error in form.deal.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ASSIGNMENT -->
+                        <div class="border rounded p-3 mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                Assignment & Scheduling
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.assigned_to.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.assigned_to.label }}
+                                    </label>
+
+                                    {{ form.assigned_to }}
+
+                                    {% for error in form.assigned_to.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.due_date.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.due_date.label }}
+                                    </label>
+
+                                    {{ form.due_date }}
+
+                                    {% for error in form.due_date.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+                        <div class="border rounded p-3 mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                Task Status
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.priority.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.priority.label }}
+                                    </label>
+
+                                    {{ form.priority }}
+
+                                    {% for error in form.priority.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="{{ form.status.id_for_label }}"
+                                        class="form-label"
+                                    >
+                                        {{ form.status.label }}
+                                    </label>
+
+                                    {{ form.status }}
+
+                                    {% for error in form.status.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+                        <div class="d-flex flex-wrap justify-content-between gap-2">
+
+                            <a
+                                href="{% url 'task_detail' task.pk %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-check-lg me-1"></i>
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
