@@ -64,7 +64,7 @@ urlpatterns = [
     path("activities/<int:pk>/delete/",views.activity_delete,name="activity_delete"),
 
     
-
+    #
     path("tasks/", lambda request: views.module_placeholder( request,"Tasks"), name="tasks"),
 
     path("reports/", lambda request: views.module_placeholder(request,"Reports"), name="reports"),
