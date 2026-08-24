@@ -413,6 +413,89 @@ def crm_can_create(view_func):
 
     return wrapper
 
+# ==========================================================
+# TASK PERMISSIONS
+# ==========================================================
+
+def can_manage_tasks(user):
+    """
+    Determine whether a user can create tasks.
+
+    Admin, Manager and Sales can create tasks.
+    Support and Viewer are read-only.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+    }
+
+
+def can_view_task(user, task):
+    """
+    Determine whether a user can view a task.
+
+    All authenticated CRM roles can view tasks.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+        ROLE_SUPPORT,
+        ROLE_VIEWER,
+    }
+
+
+def can_edit_task(user, task):
+    """
+    Determine whether a user can edit a task.
+
+    Admin and Manager:
+        Can edit any task.
+
+    Sales:
+        Can edit tasks they created or are assigned to.
+
+    Support and Viewer:
+        Read-only.
+    """
+
+    role = get_user_role(user)
+
+    if role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }:
+        return True
+
+    if role == ROLE_SALES:
+        return (
+            task.created_by_id == user.id
+            or task.assigned_to_id == user.id
+        )
+
+    return False
+
+
+def can_delete_task(user, task):
+    """
+    Determine whether a user can delete a task.
+
+    Only Admin and Manager can delete tasks.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }
 
 
 
