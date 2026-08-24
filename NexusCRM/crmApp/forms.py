@@ -888,3 +888,117 @@ class TaskForm(forms.ModelForm):
         self.fields["deal"].required = False
         self.fields["assigned_to"].required = False
         self.fields["due_date"].required = False
+
+
+
+# ==========================================================
+# NOTE FORM
+# ==========================================================
+
+class NoteForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Note
+
+        fields = [
+            "title",
+            "content",
+            "company",
+            "contact",
+            "lead",
+            "deal",
+        ]
+
+        widgets = {
+
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Note title",
+                }
+            ),
+
+            "content": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 7,
+                    "placeholder": "Write your note...",
+                }
+            ),
+
+            "company": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "contact": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "lead": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "deal": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+        }
+
+        labels = {
+            "title": "Note Title",
+            "content": "Content",
+            "company": "Company",
+            "contact": "Contact",
+            "lead": "Lead",
+            "deal": "Deal",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # --------------------------------------------------
+        # RELATED CRM RECORDS
+        # --------------------------------------------------
+
+        self.fields["company"].queryset = (
+            Company.objects.order_by("name")
+        )
+
+        self.fields["contact"].queryset = (
+            Contact.objects.select_related(
+                "company"
+            ).order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["lead"].queryset = (
+            Lead.objects.order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["deal"].queryset = (
+            Deal.objects.order_by("name")
+        )
+
+        # --------------------------------------------------
+        # OPTIONAL RELATIONSHIPS
+        # --------------------------------------------------
+
+        self.fields["title"].required = False
+        self.fields["company"].required = False
+        self.fields["contact"].required = False
+        self.fields["lead"].required = False
+        self.fields["deal"].required = False
