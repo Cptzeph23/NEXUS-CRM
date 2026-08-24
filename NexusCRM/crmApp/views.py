@@ -1047,6 +1047,10 @@ def lead_detail(request, pk):
 
     context = {
         "lead": lead,
+        "activities": lead.activities.all(),
+        "can_create_activity": can_manage_activities(
+            request.user
+        ),
     }
 
     return render(
