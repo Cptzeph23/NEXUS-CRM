@@ -497,6 +497,86 @@ def can_delete_task(user, task):
         ROLE_MANAGER,
     }
 
+# ==========================================================
+# NOTE PERMISSIONS
+# ==========================================================
+
+def can_manage_notes(user):
+    """
+    Determine whether a user can create notes.
+
+    Admin, Manager and Sales can create notes.
+    Support and Viewer are read-only.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+    }
+
+
+def can_view_note(user, note):
+    """
+    Determine whether a user can view a note.
+
+    All authenticated CRM roles can view notes.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+        ROLE_SUPPORT,
+        ROLE_VIEWER,
+    }
+
+
+def can_edit_note(user, note):
+    """
+    Determine whether a user can edit a note.
+
+    Admin and Manager:
+        Can edit any note.
+
+    Sales:
+        Can edit notes they created.
+
+    Support and Viewer:
+        Read-only.
+    """
+
+    role = get_user_role(user)
+
+    if role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }:
+        return True
+
+    if role == ROLE_SALES:
+        return note.created_by_id == user.id
+
+    return False
+
+
+def can_delete_note(user, note):
+    """
+    Determine whether a user can delete a note.
+
+    Only Admin and Manager can delete notes.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }
 
 
 
