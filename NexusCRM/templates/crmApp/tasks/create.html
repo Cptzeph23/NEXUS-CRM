@@ -1,0 +1,417 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    Create Task | NexusCRM
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- ======================================================
+         PAGE HEADER
+    ======================================================= -->
+
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-center
+                gap-3 mb-4">
+
+        <div>
+
+            <h4 class="fw-semibold mb-1">
+                Create Task
+            </h4>
+
+            <p class="text-muted mb-0">
+                Create and assign a new CRM task.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'tasks' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Tasks
+        </a>
+
+    </div>
+
+
+    <!-- ======================================================
+         FORM
+    ======================================================= -->
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-xl-9">
+
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Task Information
+                    </h6>
+
+                </div>
+
+
+                <div class="crm-card-body">
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {% for error in form.non_field_errors %}
+
+                                    <div>
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- ==================================================
+                             BASIC INFORMATION
+                        =================================================== -->
+
+                        <div class="mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                Basic Information
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-12">
+
+                                    <label
+                                        for="{{ form.title.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.title.label }}
+                                    </label>
+
+                                    {{ form.title }}
+
+                                    {% for error in form.title.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-12">
+
+                                    <label
+                                        for="{{ form.description.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.description.label }}
+                                    </label>
+
+                                    {{ form.description }}
+
+                                    {% for error in form.description.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             CRM RELATIONSHIPS
+                        =================================================== -->
+
+                        <div class="mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                CRM Relationships
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.company.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.company.label }}
+                                    </label>
+
+                                    {{ form.company }}
+
+                                    {% for error in form.company.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.contact.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.contact.label }}
+                                    </label>
+
+                                    {{ form.contact }}
+
+                                    {% for error in form.contact.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.lead.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.lead.label }}
+                                    </label>
+
+                                    {{ form.lead }}
+
+                                    {% for error in form.lead.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.deal.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.deal.label }}
+                                    </label>
+
+                                    {{ form.deal }}
+
+                                    {% for error in form.deal.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             ASSIGNMENT & SCHEDULING
+                        =================================================== -->
+
+                        <div class="mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                Assignment & Scheduling
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.assigned_to.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.assigned_to.label }}
+                                    </label>
+
+                                    {{ form.assigned_to }}
+
+                                    {% for error in form.assigned_to.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.due_date.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.due_date.label }}
+                                    </label>
+
+                                    {{ form.due_date }}
+
+                                    {% for error in form.due_date.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             STATUS & PRIORITY
+                        =================================================== -->
+
+                        <div class="mb-4">
+
+                            <h6 class="fw-semibold mb-3">
+                                Status & Priority
+                            </h6>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.priority.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.priority.label }}
+                                    </label>
+
+                                    {{ form.priority }}
+
+                                    {% for error in form.priority.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <div class="col-12 col-md-6">
+
+                                    <label
+                                        for="{{ form.status.id_for_label }}"
+                                        class="form-label fw-semibold"
+                                    >
+                                        {{ form.status.label }}
+                                    </label>
+
+                                    {{ form.status }}
+
+                                    {% for error in form.status.errors %}
+
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==================================================
+                             ACTIONS
+                        =================================================== -->
+
+                        <div class="border-top pt-3">
+
+                            <div class="d-flex
+                                        flex-column flex-sm-row
+                                        justify-content-end
+                                        gap-2">
+
+                                <a
+                                    href="{% url 'tasks' %}"
+                                    class="btn btn-outline-secondary"
+                                >
+                                    Cancel
+                                </a>
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    Create Task
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
