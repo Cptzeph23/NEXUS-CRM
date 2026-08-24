@@ -732,3 +732,156 @@ class ActivityForm(forms.ModelForm):
         self.fields["lead"].required = False
         self.fields["deal"].required = False
         self.fields["assigned_to"].required = False
+
+
+class TaskForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Task
+
+        fields = [
+            "title",
+            "description",
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+            "due_date",
+            "priority",
+            "status",
+        ]
+
+        widgets = {
+
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Task title",
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Add task details...",
+                }
+            ),
+
+            "company": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "contact": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "lead": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "deal": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "assigned_to": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "due_date": forms.DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+
+            "priority": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "status": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+        }
+
+        labels = {
+            "title": "Task Title",
+            "description": "Description",
+            "company": "Company",
+            "contact": "Contact",
+            "lead": "Lead",
+            "deal": "Deal",
+            "assigned_to": "Assigned To",
+            "due_date": "Due Date",
+            "priority": "Priority",
+            "status": "Status",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        # --------------------------------------------------
+        # RELATED CRM RECORDS
+        # --------------------------------------------------
+
+        self.fields["company"].queryset = (
+            Company.objects.order_by("name")
+        )
+
+        self.fields["contact"].queryset = (
+            Contact.objects.select_related(
+                "company"
+            ).order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["lead"].queryset = (
+            Lead.objects.order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["deal"].queryset = (
+            Deal.objects.order_by("name")
+        )
+
+        self.fields["assigned_to"].queryset = (
+            User.objects.filter(
+                is_active=True
+            ).order_by(
+                "first_name",
+                "last_name",
+                "username"
+            )
+        )
+
+        # --------------------------------------------------
+        # OPTIONAL RELATIONSHIPS
+        # --------------------------------------------------
+
+        self.fields["company"].required = False
+        self.fields["contact"].required = False
+        self.fields["lead"].required = False
+        self.fields["deal"].required = False
+        self.fields["assigned_to"].required = False
+        self.fields["due_date"].required = False
