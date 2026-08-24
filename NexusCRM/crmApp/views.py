@@ -2191,3 +2191,143 @@ def task_list(request):
         context
     )
 
+@login_required
+def task_detail(request, pk):
+
+    task = get_object_or_404(
+        Task.objects.select_related(
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+            "created_by",
+        ),
+        pk=pk,
+    )
+
+    if not can_view_task(
+        request.user,
+        task
+    ):
+        raise PermissionDenied
+
+    context = {
+        "task": task,
+
+        "can_edit": can_edit_task(
+            request.user,
+            task
+        ),
+
+        "can_delete": can_delete_task(
+            request.user,
+            task
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/tasks/detail.html",
+        context
+    )
+
+
+@login_required
+def task_edit(request, pk):
+
+    task = get_object_or_404(
+        Task.objects.select_related(
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+            "created_by",
+        ),
+        pk=pk,
+    )
+
+    if not can_edit_task(
+        request.user,
+        task
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = TaskForm(
+            request.POST,
+            instance=task
+        )
+
+        if form.is_valid():
+
+            updated_task = form.save()
+
+            messages.success(
+                request,
+                f"Task '{updated_task.title}' "
+                "was updated successfully."
+            )
+
+            return redirect(
+                "task_detail",
+                pk=updated_task.pk
+            )
+
+    else:
+
+        form = TaskForm(
+            instance=task
+        )
+
+    context = {
+        "form": form,
+        "task": task,
+    }
+
+    return render(
+        request,
+        "crmApp/tasks/edit.html",
+        context
+    )
+
+
+@login_required
+def task_delete(request, pk):
+
+    task = get_object_or_404(
+        Task,
+        pk=pk
+    )
+
+    if not can_delete_task(
+        request.user,
+        task
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        title = task.title
+
+        task.delete()
+
+        messages.success(
+            request,
+            f"Task '{title}' was deleted successfully."
+        )
+
+        return redirect(
+            "tasks"
+        )
+
+    return render(
+        request,
+        "crmApp/tasks/delete.html",
+        {
+            "task": task,
+        }
+    )
+
