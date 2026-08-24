@@ -39,7 +39,7 @@ from .permissions import (
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Sum
-from .forms import LeadForm
+from .forms import LeadForm, TaskForm
 
 from django.db import transaction
 from .forms import LeadForm, LeadConversionForm
@@ -1937,6 +1937,257 @@ def deal_delete(request, pk):
     return render(
         request,
         "crmApp/deals/delete.html",
+        context
+    )
+
+@login_required
+def task_create(request):
+
+    if not can_manage_tasks(request.user):
+        raise PermissionDenied
+
+    # ------------------------------------------------------
+    # CONTEXTUAL RELATIONSHIPS
+    # ------------------------------------------------------
+
+    company_id = request.GET.get("company")
+    contact_id = request.GET.get("contact")
+    lead_id = request.GET.get("lead")
+    deal_id = request.GET.get("deal")
+
+    initial = {}
+
+    if company_id:
+        initial["company"] = company_id
+
+    if contact_id:
+        initial["contact"] = contact_id
+
+    if lead_id:
+        initial["lead"] = lead_id
+
+    if deal_id:
+        initial["deal"] = deal_id
+
+    # ------------------------------------------------------
+    # FORM
+    # ------------------------------------------------------
+
+    if request.method == "POST":
+
+        form = TaskForm(request.POST)
+
+        if form.is_valid():
+
+            task = form.save(commit=False)
+
+            task.created_by = request.user
+
+            task.save()
+
+            messages.success(
+                request,
+                f"Task '{task.title}' was created successfully."
+            )
+
+            return redirect(
+                "task_detail",
+                pk=task.pk
+            )
+
+    else:
+
+        form = TaskForm(
+            initial=initial
+        )
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/tasks/create.html",
+        context
+    )
+
+@login_required
+def task_list(request):
+
+    tasks = Task.objects.select_related(
+        "company",
+        "contact",
+        "lead",
+        "deal",
+        "assigned_to",
+        "created_by",
+    )
+
+    # ======================================================
+    # SEARCH
+    # ======================================================
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    if search:
+
+        tasks = tasks.filter(
+            Q(title__icontains=search)
+            | Q(description__icontains=search)
+            | Q(company__name__icontains=search)
+            | Q(contact__first_name__icontains=search)
+            | Q(contact__last_name__icontains=search)
+            | Q(lead__first_name__icontains=search)
+            | Q(lead__last_name__icontains=search)
+            | Q(deal__name__icontains=search)
+        )
+
+    # ======================================================
+    # FILTERS
+    # ======================================================
+
+    status = request.GET.get(
+        "status",
+        ""
+    ).strip()
+
+    priority = request.GET.get(
+        "priority",
+        ""
+    ).strip()
+
+    assigned_to = request.GET.get(
+        "assigned_to",
+        ""
+    ).strip()
+
+    if status:
+        tasks = tasks.filter(
+            status=status
+        )
+
+    if priority:
+        tasks = tasks.filter(
+            priority=priority
+        )
+
+    if assigned_to:
+        tasks = tasks.filter(
+            assigned_to_id=assigned_to
+        )
+
+    # ======================================================
+    # DATE FILTERS
+    # ======================================================
+
+    date_from = request.GET.get(
+        "date_from",
+        ""
+    ).strip()
+
+    date_to = request.GET.get(
+        "date_to",
+        ""
+    ).strip()
+
+    if date_from:
+        tasks = tasks.filter(
+            due_date__date__gte=date_from
+        )
+
+    if date_to:
+        tasks = tasks.filter(
+            due_date__date__lte=date_to
+        )
+
+    # ======================================================
+    # STATISTICS
+    # ======================================================
+
+    total_tasks = tasks.count()
+
+    pending_tasks = tasks.filter(
+        status=Task.STATUS_PENDING
+    ).count()
+
+    in_progress_tasks = tasks.filter(
+        status=Task.STATUS_IN_PROGRESS
+    ).count()
+
+    completed_tasks = tasks.filter(
+        status=Task.STATUS_COMPLETED
+    ).count()
+
+    overdue_tasks = tasks.filter(
+        due_date__lt=timezone.now()
+    ).exclude(
+        status__in=[
+            Task.STATUS_COMPLETED,
+            Task.STATUS_CANCELLED,
+        ]
+    ).count()
+
+    # ======================================================
+    # PAGINATION
+    # ======================================================
+
+    paginator = Paginator(
+        tasks,
+        10
+    )
+
+    page_number = request.GET.get(
+        "page"
+    )
+
+    page_obj = paginator.get_page(
+        page_number
+    )
+
+    # ======================================================
+    # CONTEXT
+    # ======================================================
+
+    context = {
+        "page_obj": page_obj,
+        "tasks": page_obj.object_list,
+
+        "total_tasks": total_tasks,
+        "pending_tasks": pending_tasks,
+        "in_progress_tasks": in_progress_tasks,
+        "completed_tasks": completed_tasks,
+        "overdue_tasks": overdue_tasks,
+
+        "users": User.objects.filter(
+            is_active=True
+        ).order_by(
+            "first_name",
+            "last_name",
+            "username"
+        ),
+
+        "status_choices": Task.STATUS_CHOICES,
+        "priority_choices": Task.PRIORITY_CHOICES,
+
+        "selected_status": status,
+        "selected_priority": priority,
+        "selected_assigned_to": assigned_to,
+
+        "date_from": date_from,
+        "date_to": date_to,
+        "search": search,
+
+        "can_create_task": can_manage_tasks(
+            request.user
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/tasks/list.html",
         context
     )
 
