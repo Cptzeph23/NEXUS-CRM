@@ -290,7 +290,7 @@
                                     href="{% url 'contact_detail' task.contact.pk %}"
                                     class="text-decoration-none fw-semibold"
                                 >
-                                    {{ task.contact.full_name }}
+                                    {{ task.contact.first_name }} {{ task.contact.last_name }}
                                 </a>
 
                             </div>
