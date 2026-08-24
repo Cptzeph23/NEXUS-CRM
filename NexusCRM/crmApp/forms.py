@@ -12,6 +12,7 @@ from .models import (
     Company,
     Contact,
     Activity,
+    Task,
 )
 
 

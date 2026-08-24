@@ -30,6 +30,10 @@ from .permissions import (
     can_delete_activity,
     can_edit_activity,
     can_view_activity,
+    can_manage_tasks,
+    can_delete_task,
+    can_edit_task,
+    can_view_task,
     
     )
 from django.core.exceptions import PermissionDenied
@@ -49,6 +53,10 @@ from .models import (
     PipelineStage,
     Company,
     Contact,
+    Activity,
+    Task,
+    Note,
+    Tag,
 )
 
 from django.utils import timezone
