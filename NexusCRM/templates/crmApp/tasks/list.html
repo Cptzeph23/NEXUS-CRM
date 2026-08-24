@@ -1,0 +1,899 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    Tasks | NexusCRM
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- ======================================================
+         PAGE HEADER
+    ======================================================= -->
+
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-center
+                gap-3 mb-4">
+
+        <div>
+
+            <h4 class="fw-semibold mb-1">
+                Tasks
+            </h4>
+
+            <p class="text-muted mb-0">
+                Manage, track and organize your CRM tasks.
+            </p>
+
+        </div>
+
+
+        {% if request.user.profile.role == "admin"
+              or request.user.profile.role == "manager"
+              or request.user.profile.role == "sales"
+              or request.user.is_superuser %}
+
+            <a
+                href="{% url 'task_create' %}"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-plus-lg me-1"></i>
+                Create Task
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ======================================================
+         STATISTICS
+    ======================================================= -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-xl">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small mb-1">
+                        Total Tasks
+                    </div>
+
+                    <div class="fs-4 fw-semibold">
+                        {{ total_tasks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-xl">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small mb-1">
+                        Pending
+                    </div>
+
+                    <div class="fs-4 fw-semibold">
+                        {{ pending_tasks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-xl">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small mb-1">
+                        In Progress
+                    </div>
+
+                    <div class="fs-4 fw-semibold">
+                        {{ in_progress_tasks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-xl">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small mb-1">
+                        Completed
+                    </div>
+
+                    <div class="fs-4 fw-semibold">
+                        {{ completed_tasks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-xl">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small mb-1">
+                        Overdue
+                    </div>
+
+                    <div class="fs-4 fw-semibold">
+                        {{ overdue_tasks }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         SEARCH & FILTERS
+    ======================================================= -->
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Search & Filters
+            </h6>
+
+        </div>
+
+
+        <div class="crm-card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <!-- Search -->
+
+                    <div class="col-12 col-lg-4">
+
+                        <label
+                            for="task-search"
+                            class="form-label small fw-semibold"
+                        >
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            id="task-search"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search tasks..."
+                            value="{{ search }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label
+                            for="task-status"
+                            class="form-label small fw-semibold"
+                        >
+                            Status
+                        </label>
+
+                        <select
+                            id="task-status"
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All statuses
+                            </option>
+
+                            <option
+                                value="pending"
+                                {% if selected_status == "pending" %}selected{% endif %}
+                            >
+                                Pending
+                            </option>
+
+                            <option
+                                value="in_progress"
+                                {% if selected_status == "in_progress" %}selected{% endif %}
+                            >
+                                In Progress
+                            </option>
+
+                            <option
+                                value="completed"
+                                {% if selected_status == "completed" %}selected{% endif %}
+                            >
+                                Completed
+                            </option>
+
+                            <option
+                                value="cancelled"
+                                {% if selected_status == "cancelled" %}selected{% endif %}
+                            >
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Priority -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label
+                            for="task-priority"
+                            class="form-label small fw-semibold"
+                        >
+                            Priority
+                        </label>
+
+                        <select
+                            id="task-priority"
+                            name="priority"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All priorities
+                            </option>
+
+                            <option
+                                value="low"
+                                {% if selected_priority == "low" %}selected{% endif %}
+                            >
+                                Low
+                            </option>
+
+                            <option
+                                value="normal"
+                                {% if selected_priority == "normal" %}selected{% endif %}
+                            >
+                                Normal
+                            </option>
+
+                            <option
+                                value="high"
+                                {% if selected_priority == "high" %}selected{% endif %}
+                            >
+                                High
+                            </option>
+
+                            <option
+                                value="urgent"
+                                {% if selected_priority == "urgent" %}selected{% endif %}
+                            >
+                                Urgent
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Assigned To -->
+
+                    <div class="col-12 col-lg-4">
+
+                        <label
+                            for="task-assigned"
+                            class="form-label small fw-semibold"
+                        >
+                            Assigned To
+                        </label>
+
+                        <select
+                            id="task-assigned"
+                            name="assigned_to"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All users
+                            </option>
+
+                            {% for user in users %}
+
+                                <option
+                                    value="{{ user.id }}"
+                                    {% if selected_assigned_to == user.id|stringformat:"s" %}selected{% endif %}
+                                >
+
+                                    {% if user.get_full_name %}
+                                        {{ user.get_full_name }}
+                                    {% else %}
+                                        {{ user.username }}
+                                    {% endif %}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Date From -->
+
+                    <div class="col-12 col-md-6 col-lg-3">
+
+                        <label
+                            for="task-date-from"
+                            class="form-label small fw-semibold"
+                        >
+                            Due From
+                        </label>
+
+                        <input
+                            type="date"
+                            id="task-date-from"
+                            name="date_from"
+                            class="form-control"
+                            value="{{ date_from }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Date To -->
+
+                    <div class="col-12 col-md-6 col-lg-3">
+
+                        <label
+                            for="task-date-to"
+                            class="form-label small fw-semibold"
+                        >
+                            Due To
+                        </label>
+
+                        <input
+                            type="date"
+                            id="task-date-to"
+                            name="date_to"
+                            class="form-control"
+                            value="{{ date_to }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Actions -->
+
+                    <div class="col-12 col-lg-6
+                                d-flex align-items-end
+                                justify-content-lg-end
+                                gap-2">
+
+                        <a
+                            href="{% url 'tasks' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Reset
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Apply Filters
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         TASK LIST
+    ======================================================= -->
+
+    <div class="crm-card">
+
+        <div class="crm-card-header
+                    d-flex justify-content-between
+                    align-items-center">
+
+            <h6 class="mb-0 fw-semibold">
+                Task List
+            </h6>
+
+            <span class="text-muted small">
+                {{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }}
+            </span>
+
+        </div>
+
+
+        {% if tasks %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Task
+                            </th>
+
+                            <th>
+                                Related To
+                            </th>
+
+                            <th>
+                                Assigned To
+                            </th>
+
+                            <th>
+                                Due Date
+                            </th>
+
+                            <th>
+                                Priority
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for task in tasks %}
+
+                            <tr>
+
+                                <!-- Task -->
+
+                                <td>
+
+                                    <div class="fw-semibold">
+                                        {{ task.title }}
+                                    </div>
+
+                                    {% if task.description %}
+
+                                        <div
+                                            class="text-muted small text-truncate"
+                                            style="max-width:260px;"
+                                        >
+                                            {{ task.description }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Related Record -->
+
+                                <td>
+
+                                    {% if task.company %}
+
+                                        <div class="small">
+                                            <i class="bi bi-building me-1"></i>
+                                            {{ task.company.name }}
+                                        </div>
+
+                                    {% elif task.contact %}
+
+                                        <div class="small">
+                                            <i class="bi bi-person me-1"></i>
+                                            {{ task.contact.full_name }}
+                                        </div>
+
+                                    {% elif task.lead %}
+
+                                        <div class="small">
+                                            <i class="bi bi-funnel me-1"></i>
+                                            {{ task.lead.full_name }}
+                                        </div>
+
+                                    {% elif task.deal %}
+
+                                        <div class="small">
+                                            <i class="bi bi-kanban me-1"></i>
+                                            {{ task.deal.name }}
+                                        </div>
+
+                                    {% else %}
+
+                                        <span class="text-muted small">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Assigned -->
+
+                                <td>
+
+                                    {% if task.assigned_to %}
+
+                                        <span class="small">
+
+                                            {% if task.assigned_to.get_full_name %}
+
+                                                {{ task.assigned_to.get_full_name }}
+
+                                            {% else %}
+
+                                                {{ task.assigned_to.username }}
+
+                                            {% endif %}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-muted small">
+                                            Unassigned
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Due Date -->
+
+                                <td>
+
+                                    {% if task.due_date %}
+
+                                        <span class="small">
+                                            {{ task.due_date|date:"d M Y, H:i" }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-muted small">
+                                            No due date
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Priority -->
+
+                                <td>
+
+                                    {% if task.priority == "urgent" %}
+
+                                        <span class="badge bg-danger">
+                                            Urgent
+                                        </span>
+
+                                    {% elif task.priority == "high" %}
+
+                                        <span class="badge bg-warning text-dark">
+                                            High
+                                        </span>
+
+                                    {% elif task.priority == "normal" %}
+
+                                        <span class="badge bg-secondary">
+                                            Normal
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-light text-dark border">
+                                            Low
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Status -->
+
+                                <td>
+
+                                    {% if task.status == "completed" %}
+
+                                        <span class="badge bg-success">
+                                            Completed
+                                        </span>
+
+                                    {% elif task.status == "in_progress" %}
+
+                                        <span class="badge bg-primary">
+                                            In Progress
+                                        </span>
+
+                                    {% elif task.status == "cancelled" %}
+
+                                        <span class="badge bg-dark">
+                                            Cancelled
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-warning text-dark">
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Actions -->
+
+                                <td class="text-end">
+
+                                    <div class="dropdown">
+
+                                        <button
+                                            class="btn btn-sm btn-outline-secondary"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+
+
+                                        <ul class="dropdown-menu dropdown-menu-end">
+
+                                            {% if task.pk %}
+
+                                                <li>
+
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{% url 'task_detail' task.pk %}"
+                                                    >
+                                                        <i class="bi bi-eye me-2"></i>
+                                                        View
+                                                    </a>
+
+                                                </li>
+
+                                            {% endif %}
+
+                                            {% if task.pk %}
+
+                                                <li>
+
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{% url 'task_edit' task.pk %}"
+                                                    >
+                                                        <i class="bi bi-pencil me-2"></i>
+                                                        Edit
+                                                    </a>
+
+                                                </li>
+
+                                            {% endif %}
+
+                                        </ul>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- ==================================================
+                 PAGINATION
+            =================================================== -->
+
+            {% if page_obj.has_other_pages %}
+
+                <div class="crm-card-body border-top">
+
+                    <nav aria-label="Task pagination">
+
+                        <ul class="pagination
+                                   justify-content-center
+                                   mb-0">
+
+                            {% if page_obj.has_previous %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?{% if search %}search={{ search|urlencode }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}{% if selected_priority %}priority={{ selected_priority }}&{% endif %}{% if selected_assigned_to %}assigned_to={{ selected_assigned_to }}&{% endif %}{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                                    >
+                                        Previous
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+
+                            {% for number in page_obj.paginator.page_range %}
+
+                                {% if page_obj.number == number %}
+
+                                    <li class="page-item active">
+
+                                        <span class="page-link">
+                                            {{ number }}
+                                        </span>
+
+                                    </li>
+
+                                {% else %}
+
+                                    <li class="page-item">
+
+                                        <a
+                                            class="page-link"
+                                            href="?{% if search %}search={{ search|urlencode }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}{% if selected_priority %}priority={{ selected_priority }}&{% endif %}{% if selected_assigned_to %}assigned_to={{ selected_assigned_to }}&{% endif %}{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}page={{ number }}"
+                                        >
+                                            {{ number }}
+                                        </a>
+
+                                    </li>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+
+                            {% if page_obj.has_next %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?{% if search %}search={{ search|urlencode }}&{% endif %}{% if selected_status %}status={{ selected_status }}&{% endif %}{% if selected_priority %}priority={{ selected_priority }}&{% endif %}{% if selected_assigned_to %}assigned_to={{ selected_assigned_to }}&{% endif %}{% if date_from %}date_from={{ date_from }}&{% endif %}{% if date_to %}date_to={{ date_to }}&{% endif %}page={{ page_obj.next_page_number }}"
+                                    >
+                                        Next
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+
+                    </nav>
+
+                </div>
+
+            {% endif %}
+
+
+        {% else %}
+
+            <!-- ==================================================
+                 EMPTY STATE
+            =================================================== -->
+
+            <div class="crm-card-body">
+
+                <div class="empty-state py-5 text-center">
+
+                    <i class="bi bi-check2-square fs-1"></i>
+
+                    <h6 class="mt-3">
+                        No tasks found
+                    </h6>
+
+                    <p class="text-muted mb-3">
+
+                        {% if search or selected_status or selected_priority or selected_assigned_to or date_from or date_to %}
+
+                            Try changing your search criteria or filters.
+
+                        {% else %}
+
+                            No tasks have been created yet.
+
+                        {% endif %}
+
+                    </p>
+
+
+                    {% if not search and not selected_status and not selected_priority and not selected_assigned_to and not date_from and not date_to %}
+
+                        {% if request.user.profile.role == "admin"
+                              or request.user.profile.role == "manager"
+                              or request.user.profile.role == "sales"
+                              or request.user.is_superuser %}
+
+                            <a
+                                href="{% url 'task_create' %}"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-plus-lg me-1"></i>
+                                Create First Task
+                            </a>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
