@@ -13,6 +13,8 @@ from .models import (
     Contact,
     Activity,
     Task,
+    Note,
+    Tag
 )
 
 
