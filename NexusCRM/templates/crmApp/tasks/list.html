@@ -504,8 +504,13 @@
                                 <td>
 
                                     <div class="fw-semibold">
-                                        {{ task.title }}
-                                    </div>
+    <a
+        href="{% url 'task_detail' task.pk %}"
+        class="text-decoration-none"
+    >
+        {{ task.title }}
+    </a>
+</div>
 
                                     {% if task.description %}
 
