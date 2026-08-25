@@ -2612,3 +2612,213 @@ def note_delete(request, pk):
         "crmApp/notes/delete.html",
         context
     )
+
+
+# ==========================================================
+# CALENDAR
+# ==========================================================
+
+@login_required
+def calendar(request):
+
+    events = CalendarEvent.objects.select_related(
+        "company",
+        "contact",
+        "lead",
+        "deal",
+        "assigned_to",
+        "created_by",
+    )
+
+    context = {
+        "events": events,
+        "can_create_event": can_manage_calendar(
+            request.user
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/calendar/list.html",
+        context
+    )
+
+
+@login_required
+def calendar_event_create(request):
+
+    if not can_manage_calendar(request.user):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = CalendarEventForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            event = form.save(
+                commit=False
+            )
+
+            event.created_by = request.user
+
+            event.save()
+
+            messages.success(
+                request,
+                f"Event '{event.title}' was created successfully."
+            )
+
+            return redirect(
+                "calendar_event_detail",
+                pk=event.pk
+            )
+
+    else:
+
+        form = CalendarEventForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/calendar/create.html",
+        context
+    )
+
+
+@login_required
+def calendar_event_detail(request, pk):
+
+    event = get_object_or_404(
+        CalendarEvent.objects.select_related(
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+            "created_by",
+        ),
+        pk=pk
+    )
+
+    if not can_view_calendar_event(
+        request.user,
+        event
+    ):
+        raise PermissionDenied
+
+    context = {
+        "event": event,
+
+        "can_edit": can_edit_calendar_event(
+            request.user,
+            event
+        ),
+
+        "can_delete": can_delete_calendar_event(
+            request.user,
+            event
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/calendar/detail.html",
+        context
+    )
+
+
+@login_required
+def calendar_event_edit(request, pk):
+
+    event = get_object_or_404(
+        CalendarEvent,
+        pk=pk
+    )
+
+    if not can_edit_calendar_event(
+        request.user,
+        event
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = CalendarEventForm(
+            request.POST,
+            instance=event
+        )
+
+        if form.is_valid():
+
+            updated_event = form.save()
+
+            messages.success(
+                request,
+                f"Event '{updated_event.title}' was updated successfully."
+            )
+
+            return redirect(
+                "calendar_event_detail",
+                pk=updated_event.pk
+            )
+
+    else:
+
+        form = CalendarEventForm(
+            instance=event
+        )
+
+    context = {
+        "form": form,
+        "event": event,
+    }
+
+    return render(
+        request,
+        "crmApp/calendar/edit.html",
+        context
+    )
+
+
+@login_required
+def calendar_event_delete(request, pk):
+
+    event = get_object_or_404(
+        CalendarEvent,
+        pk=pk
+    )
+
+    if not can_delete_calendar_event(
+        request.user,
+        event
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        title = event.title
+
+        event.delete()
+
+        messages.success(
+            request,
+            f"Event '{title}' was deleted successfully."
+        )
+
+        return redirect("calendar")
+
+    context = {
+        "event": event,
+    }
+
+    return render(
+        request,
+        "crmApp/calendar/delete.html",
+        context
+    )
