@@ -240,9 +240,31 @@
 
                 </a>
 
+                <!-- Notes -->
+
+                <a
+                    href="{% url 'notes' %}"
+                     class="sidebar-link
+                    {% if 'note' in request.resolver_match.url_name %}
+                    active
+                    {% endif %}"
+                    >
+
+                    <i class="bi bi-journal-text"></i>
+
+                    <span>
+                        Notes
+                    </span>
+
+                </a>
+
             </nav>
 
+
+
         </div>
+
+        
 
 
         <!-- =================================================
