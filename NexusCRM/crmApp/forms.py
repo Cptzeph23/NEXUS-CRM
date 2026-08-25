@@ -16,6 +16,7 @@ from .models import (
     Note,
     Tag,
     CalendarEvent,
+    Notification,
 )
 
 
@@ -1162,3 +1163,72 @@ class CalendarEventForm(forms.ModelForm):
         self.fields["assigned_to"].required = False
         self.fields["description"].required = False
         self.fields["end_datetime"].required = False
+
+
+# ==========================================================
+# NOTIFICATION FORM
+# ==========================================================
+
+class NotificationForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Notification
+
+        fields = [
+            "recipient",
+            "title",
+            "message",
+            "notification_type",
+        ]
+
+        widgets = {
+
+            "recipient": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Notification title",
+                }
+            ),
+
+            "message": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Notification message...",
+                }
+            ),
+
+            "notification_type": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+        }
+
+        labels = {
+            "recipient": "Recipient",
+            "title": "Title",
+            "message": "Message",
+            "notification_type": "Type",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["recipient"].queryset = (
+            User.objects.filter(
+                is_active=True
+            ).order_by(
+                "first_name",
+                "last_name",
+                "username"
+            )
+        )
