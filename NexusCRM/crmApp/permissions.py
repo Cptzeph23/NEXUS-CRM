@@ -578,6 +578,75 @@ def can_delete_note(user, note):
         ROLE_MANAGER,
     }
 
+# ==========================================================
+# CALENDAR PERMISSIONS
+# ==========================================================
 
+def can_manage_calendar(user):
+    """
+    Admin, Manager and Sales can create calendar events.
+    Support and Viewer are read-only.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+    }
+
+
+def can_view_calendar_event(user, event):
+    """
+    All authenticated CRM roles can view calendar events.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+        ROLE_SUPPORT,
+        ROLE_VIEWER,
+    }
+
+
+def can_edit_calendar_event(user, event):
+    """
+    Admin and Manager can edit any calendar event.
+
+    Sales can edit events they created or are assigned to.
+    """
+
+    role = get_user_role(user)
+
+    if role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }:
+        return True
+
+    if role == ROLE_SALES:
+        return (
+            event.created_by_id == user.id
+            or event.assigned_to_id == user.id
+        )
+
+    return False
+
+
+def can_delete_calendar_event(user, event):
+    """
+    Only Admin and Manager can delete calendar events.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }
 
 
