@@ -2401,3 +2401,69 @@ def note_create(request):
         "crmApp/notes/create.html",
         context
     )
+
+@login_required
+def note_list(request):
+
+    notes = Note.objects.select_related(
+        "company",
+        "contact",
+        "lead",
+        "deal",
+        "created_by",
+    )
+
+    # ======================================================
+    # SEARCH
+    # ======================================================
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    if search:
+
+        notes = notes.filter(
+            Q(title__icontains=search)
+            | Q(content__icontains=search)
+            | Q(company__name__icontains=search)
+            | Q(contact__first_name__icontains=search)
+            | Q(contact__last_name__icontains=search)
+            | Q(lead__first_name__icontains=search)
+            | Q(lead__last_name__icontains=search)
+            | Q(deal__name__icontains=search)
+        )
+
+    # ======================================================
+    # PAGINATION
+    # ======================================================
+
+    paginator = Paginator(
+        notes,
+        10
+    )
+
+    page_number = request.GET.get(
+        "page"
+    )
+
+    page_obj = paginator.get_page(
+        page_number
+    )
+
+    context = {
+        "page_obj": page_obj,
+        "notes": page_obj.object_list,
+        "search": search,
+
+        "can_create_note": can_manage_notes(
+            request.user
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/notes/list.html",
+        context
+    )
