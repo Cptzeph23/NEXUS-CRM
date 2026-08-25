@@ -1,0 +1,318 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    {% if note.title %}
+        {{ note.title }}
+    {% else %}
+        Untitled Note
+    {% endif %}
+    | Note
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+
+        <div>
+
+            <a
+                href="{% url 'notes' %}"
+                class="text-decoration-none text-muted small"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Notes
+            </a>
+
+            <h4 class="mt-2 mb-1 fw-semibold">
+
+                {% if note.title %}
+                    {{ note.title }}
+                {% else %}
+                    Untitled Note
+                {% endif %}
+
+            </h4>
+
+            <div class="text-muted small">
+                Created {{ note.created_at|date:"d M Y, H:i" }}
+            </div>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            {% if can_edit %}
+
+                <a
+                    href="{% url 'note_edit' note.pk %}"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Edit
+                </a>
+
+            {% endif %}
+
+
+            {% if can_delete %}
+
+                <a
+                    href="{% url 'note_delete' note.pk %}"
+                    class="btn btn-outline-danger"
+                >
+                    <i class="bi bi-trash me-1"></i>
+                    Delete
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- NOTE CONTENT -->
+        <div class="col-lg-8">
+
+            <div class="crm-card mb-4">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Note
+                    </h6>
+
+                </div>
+
+
+                <div class="crm-card-body">
+
+                    {% if note.content %}
+
+                        <div>
+                            {{ note.content|linebreaks }}
+                        </div>
+
+                    {% else %}
+
+                        <div class="text-muted small">
+                            No content provided.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- RELATED RECORDS -->
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Related Records
+                    </h6>
+
+                </div>
+
+
+                <div class="crm-card-body">
+
+                    <div class="row g-3">
+
+                        {% if note.company %}
+
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Company
+                                </div>
+
+                                <a
+                                    href="{% url 'company_detail' note.company.pk %}"
+                                    class="text-decoration-none fw-semibold"
+                                >
+                                    {{ note.company.name }}
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if note.contact %}
+
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Contact
+                                </div>
+
+                                <a
+                                    href="{% url 'contact_detail' note.contact.pk %}"
+                                    class="text-decoration-none fw-semibold"
+                                >
+                                    {{ note.contact.first_name }}
+                                    {{ note.contact.last_name }}
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if note.lead %}
+
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Lead
+                                </div>
+
+                                <a
+                                    href="{% url 'lead_detail' note.lead.pk %}"
+                                    class="text-decoration-none fw-semibold"
+                                >
+                                    {{ note.lead.first_name }}
+                                    {{ note.lead.last_name }}
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if note.deal %}
+
+                            <div class="col-md-6">
+
+                                <div class="small text-muted mb-1">
+                                    Deal
+                                </div>
+
+                                <a
+                                    href="{% url 'deal_detail' note.deal.pk %}"
+                                    class="text-decoration-none fw-semibold"
+                                >
+                                    {{ note.deal.name }}
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if not note.company and not note.contact and not note.lead and not note.deal %}
+
+                            <div class="col-12">
+
+                                <div class="text-muted small">
+                                    This note is not linked to a CRM record.
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- META -->
+        <div class="col-lg-4">
+
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Note Information
+                    </h6>
+
+                </div>
+
+
+                <div class="crm-card-body">
+
+                    <div class="mb-3">
+
+                        <div class="text-muted small">
+                            Created By
+                        </div>
+
+                        <div class="fw-semibold">
+
+                            {% if note.created_by %}
+
+                                {% if note.created_by.get_full_name %}
+
+                                    {{ note.created_by.get_full_name }}
+
+                                {% else %}
+
+                                    {{ note.created_by.username }}
+
+                                {% endif %}
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Unknown
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <div class="text-muted small">
+                            Created
+                        </div>
+
+                        <div class="small">
+                            {{ note.created_at|date:"d M Y, H:i" }}
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="text-muted small">
+                            Last Updated
+                        </div>
+
+                        <div class="small">
+                            {{ note.updated_at|date:"d M Y, H:i" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
