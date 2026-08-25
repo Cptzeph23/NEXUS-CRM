@@ -81,7 +81,13 @@ urlpatterns = [
 
     path("reports/", lambda request: views.module_placeholder(request,"Reports"), name="reports"),
 
-    path("calendar/", lambda request: views.module_placeholder(request, "Calendar"), name="calendar"),
+    # Calendar
+    path("calendar/", views.calendar, name="calendar"),
+    path("calendar/create/", views.calendar_event_create,name="calendar_event_create"),
+    path("calendar/<int:pk>/",views.calendar_event_detail,name="calendar_event_detail"),
+    path("calendar/<int:pk>/edit/", views.calendar_event_edit,name="calendar_event_edit"),
+    path("calendar/<int:pk>/delete/",views.calendar_event_delete,
+    name="calendar_event_delete"),
 
     path("settings/", lambda request: views.module_placeholder(request, "Settings"), name="settings"),
 
