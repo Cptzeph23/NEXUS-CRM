@@ -804,6 +804,111 @@ class Note(models.Model):
     def __str__(self):
         return self.title or "Untitled Note"
 
+# ==========================================================
+# CALENDAR EVENT
+# ==========================================================
+
+class CalendarEvent(models.Model):
+
+    EVENT_TYPE_CHOICES = [
+        ("meeting", "Meeting"),
+        ("call", "Call"),
+        ("task", "Task"),
+        ("reminder", "Reminder"),
+        ("other", "Other"),
+    ]
+
+    title = models.CharField(
+        max_length=200
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    event_type = models.CharField(
+        max_length=20,
+        choices=EVENT_TYPE_CHOICES,
+        default="meeting"
+    )
+
+    start_datetime = models.DateTimeField()
+
+    end_datetime = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    all_day = models.BooleanField(
+        default=False
+    )
+
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="calendar_events"
+    )
+
+    contact = models.ForeignKey(
+        Contact,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="calendar_events"
+    )
+
+    lead = models.ForeignKey(
+        Lead,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="calendar_events"
+    )
+
+    deal = models.ForeignKey(
+        Deal,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="calendar_events"
+    )
+
+    assigned_to = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_calendar_events"
+    )
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="created_calendar_events"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    class Meta:
+        ordering = ["start_datetime"]
+
+        indexes = [
+            models.Index(fields=["start_datetime"]),
+            models.Index(fields=["event_type"]),
+            models.Index(fields=["assigned_to"]),
+        ]
+
+    def __str__(self):
+        return self.title
 
 # ==========================================================
 # TAG
