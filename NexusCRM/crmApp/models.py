@@ -805,6 +805,62 @@ class Note(models.Model):
         return self.title or "Untitled Note"
 
 # ==========================================================
+# NOTIFICATION
+# ==========================================================
+
+class Notification(models.Model):
+
+    TYPE_INFO = "info"
+    TYPE_SUCCESS = "success"
+    TYPE_WARNING = "warning"
+    TYPE_DANGER = "danger"
+
+    TYPE_CHOICES = [
+        (TYPE_INFO, "Info"),
+        (TYPE_SUCCESS, "Success"),
+        (TYPE_WARNING, "Warning"),
+        (TYPE_DANGER, "Danger"),
+    ]
+
+    recipient = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="notifications"
+    )
+
+    title = models.CharField(
+        max_length=200
+    )
+
+    message = models.TextField()
+
+    notification_type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES,
+        default=TYPE_INFO
+    )
+
+    is_read = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+
+        indexes = [
+            models.Index(fields=["recipient", "is_read"]),
+            models.Index(fields=["created_at"]),
+        ]
+
+    def __str__(self):
+        return f"{self.title} - {self.recipient.username}"
+
+
+# ==========================================================
 # CALENDAR EVENT
 # ==========================================================
 
