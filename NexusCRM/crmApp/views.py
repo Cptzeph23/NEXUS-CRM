@@ -2469,3 +2469,143 @@ def note_list(request):
         "crmApp/notes/list.html",
         context
     )
+
+
+@login_required
+def note_detail(request, pk):
+
+    note = get_object_or_404(
+        Note.objects.select_related(
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "created_by",
+        ),
+        pk=pk,
+    )
+
+    if not can_view_note(
+        request.user,
+        note
+    ):
+        raise PermissionDenied
+
+    context = {
+        "note": note,
+
+        "can_edit": can_edit_note(
+            request.user,
+            note
+        ),
+
+        "can_delete": can_delete_note(
+            request.user,
+            note
+        ),
+    }
+
+    return render(
+        request,
+        "crmApp/notes/detail.html",
+        context
+    )
+
+
+@login_required
+def note_edit(request, pk):
+
+    note = get_object_or_404(
+        Note.objects.select_related(
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "created_by",
+        ),
+        pk=pk,
+    )
+
+    if not can_edit_note(
+        request.user,
+        note
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        form = NoteForm(
+            request.POST,
+            instance=note
+        )
+
+        if form.is_valid():
+
+            updated_note = form.save()
+
+            messages.success(
+                request,
+                "Note was updated successfully."
+            )
+
+            return redirect(
+                "note_detail",
+                pk=updated_note.pk
+            )
+
+    else:
+
+        form = NoteForm(
+            instance=note
+        )
+
+    context = {
+        "form": form,
+        "note": note,
+    }
+
+    return render(
+        request,
+        "crmApp/notes/edit.html",
+        context
+    )
+
+
+@login_required
+def note_delete(request, pk):
+
+    note = get_object_or_404(
+        Note,
+        pk=pk
+    )
+
+    if not can_delete_note(
+        request.user,
+        note
+    ):
+        raise PermissionDenied
+
+    if request.method == "POST":
+
+        title = note.title or "Untitled Note"
+
+        note.delete()
+
+        messages.success(
+            request,
+            f"Note '{title}' was deleted successfully."
+        )
+
+        return redirect(
+            "notes"
+        )
+
+    context = {
+        "note": note,
+    }
+
+    return render(
+        request,
+        "crmApp/notes/delete.html",
+        context
+    )
