@@ -648,4 +648,34 @@ def can_delete_calendar_event(user, event):
         ROLE_MANAGER,
     }
 
+# ==========================================================
+# NOTIFICATION PERMISSIONS
+# ==========================================================
 
+def can_manage_notifications(user):
+    """
+    Admin and Manager can create notifications.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }
+
+
+def can_view_notifications(user):
+    """
+    All authenticated CRM roles can view their notifications.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+        ROLE_SALES,
+        ROLE_SUPPORT,
+        ROLE_VIEWER,
+    }
