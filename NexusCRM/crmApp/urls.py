@@ -91,9 +91,11 @@ urlpatterns = [
 
     # Notifications
     path("notifications/", views.notification_list, name="notifications"),
+    path("notifications/mark-all-read/",views.notification_mark_all_read,name="notification_mark_all_read"),
     path("notifications/<int:pk>/",views.notification_detail,name="notification_detail"),
     path("notifications/<int:pk>/read/", views.notification_mark_read,name="notification_mark_read"),
-    path("notifications/mark-all-read/",views.notification_mark_all_read,name="notification_mark_all_read"),
+
+    
 
     path("settings/", lambda request: views.module_placeholder(request, "Settings"), name="settings"),
 
