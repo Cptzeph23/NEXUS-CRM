@@ -2331,3 +2331,73 @@ def task_delete(request, pk):
         }
     )
 
+@login_required
+def note_create(request):
+
+    if not can_manage_notes(request.user):
+        raise PermissionDenied
+
+    # ------------------------------------------------------
+    # CONTEXTUAL RELATIONSHIPS
+    # ------------------------------------------------------
+
+    company_id = request.GET.get("company")
+    contact_id = request.GET.get("contact")
+    lead_id = request.GET.get("lead")
+    deal_id = request.GET.get("deal")
+
+    initial = {}
+
+    if company_id:
+        initial["company"] = company_id
+
+    if contact_id:
+        initial["contact"] = contact_id
+
+    if lead_id:
+        initial["lead"] = lead_id
+
+    if deal_id:
+        initial["deal"] = deal_id
+
+    # ------------------------------------------------------
+    # FORM
+    # ------------------------------------------------------
+
+    if request.method == "POST":
+
+        form = NoteForm(request.POST)
+
+        if form.is_valid():
+
+            note = form.save(commit=False)
+
+            note.created_by = request.user
+
+            note.save()
+
+            messages.success(
+                request,
+                "Note was created successfully."
+            )
+
+            return redirect(
+                "note_detail",
+                pk=note.pk
+            )
+
+    else:
+
+        form = NoteForm(
+            initial=initial
+        )
+
+    context = {
+        "form": form,
+    }
+
+    return render(
+        request,
+        "crmApp/notes/create.html",
+        context
+    )
