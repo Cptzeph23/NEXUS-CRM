@@ -1,0 +1,364 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    Notes
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h4 class="mb-1 fw-semibold">
+                Notes
+            </h4>
+
+            <div class="text-muted small">
+                Manage your CRM notes and related records.
+            </div>
+        </div>
+
+        {% if can_create_note %}
+
+            <a
+                href="{% url 'note_create' %}"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-plus-lg me-1"></i>
+                New Note
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- SEARCH -->
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-10">
+
+                        <input
+                            type="search"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search notes, companies, contacts, leads or deals..."
+                        >
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-primary w-100"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Search
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- NOTES -->
+    <div class="crm-card">
+
+        <div class="crm-card-header">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h6 class="mb-0 fw-semibold">
+                    All Notes
+                </h6>
+
+                <span class="text-muted small">
+                    {{ page_obj.paginator.count }} note{{ page_obj.paginator.count|pluralize }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="crm-card-body p-0">
+
+            {% if notes %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="px-3">
+                                    Note
+                                </th>
+
+                                <th>
+                                    Related To
+                                </th>
+
+                                <th>
+                                    Created By
+                                </th>
+
+                                <th>
+                                    Created
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for note in notes %}
+
+                                <tr>
+
+                                    <td class="px-3">
+
+                                        <a
+                                            href="{% url 'note_detail' note.pk %}"
+                                            class="text-decoration-none fw-semibold"
+                                        >
+                                            {% if note.title %}
+                                                {{ note.title }}
+                                            {% else %}
+                                                Untitled Note
+                                            {% endif %}
+                                        </a>
+
+                                        <div class="text-muted small mt-1">
+
+                                            {{ note.content|truncatechars:100 }}
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if note.company %}
+
+                                            <a
+                                                href="{% url 'company_detail' note.company.pk %}"
+                                                class="text-decoration-none small"
+                                            >
+                                                <i class="bi bi-building me-1"></i>
+                                                {{ note.company.name }}
+                                            </a>
+
+                                        {% elif note.contact %}
+
+                                            <a
+                                                href="{% url 'contact_detail' note.contact.pk %}"
+                                                class="text-decoration-none small"
+                                            >
+                                                <i class="bi bi-person me-1"></i>
+                                                {{ note.contact.first_name }}
+                                                {{ note.contact.last_name }}
+                                            </a>
+
+                                        {% elif note.lead %}
+
+                                            <a
+                                                href="{% url 'lead_detail' note.lead.pk %}"
+                                                class="text-decoration-none small"
+                                            >
+                                                <i class="bi bi-person-lines-fill me-1"></i>
+                                                {{ note.lead.first_name }}
+                                                {{ note.lead.last_name }}
+                                            </a>
+
+                                        {% elif note.deal %}
+
+                                            <a
+                                                href="{% url 'deal_detail' note.deal.pk %}"
+                                                class="text-decoration-none small"
+                                            >
+                                                <i class="bi bi-briefcase me-1"></i>
+                                                {{ note.deal.name }}
+                                            </a>
+
+                                        {% else %}
+
+                                            <span class="text-muted small">
+                                                No related record
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if note.created_by %}
+
+                                            {% if note.created_by.get_full_name %}
+
+                                                {{ note.created_by.get_full_name }}
+
+                                            {% else %}
+
+                                                {{ note.created_by.username }}
+
+                                            {% endif %}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                Unknown
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="small">
+
+                                            {{ note.created_at|date:"d M Y, H:i" }}
+
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-5">
+
+                    <div class="mb-3">
+
+                        <i class="bi bi-journal-text fs-1 text-muted"></i>
+
+                    </div>
+
+                    <h6 class="fw-semibold">
+                        No notes found
+                    </h6>
+
+                    <p class="text-muted small mb-3">
+
+                        {% if search %}
+                            No notes match your search.
+                        {% else %}
+                            You haven't created any notes yet.
+                        {% endif %}
+
+                    </p>
+
+                    {% if can_create_note and not search %}
+
+                        <a
+                            href="{% url 'note_create' %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Create Note
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+    {% if page_obj.has_other_pages %}
+
+        <nav class="mt-4">
+
+            <ul class="pagination justify-content-center">
+
+                {% if page_obj.has_previous %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}"
+                        >
+                            Previous
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+
+                        Page {{ page_obj.number }}
+                        of {{ page_obj.paginator.num_pages }}
+
+                    </span>
+
+                </li>
+
+
+                {% if page_obj.has_next %}
+
+                    <li class="page-item">
+
+                        <a
+                            class="page-link"
+                            href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search|urlencode }}{% endif %}"
+                        >
+                            Next
+                        </a>
+
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
