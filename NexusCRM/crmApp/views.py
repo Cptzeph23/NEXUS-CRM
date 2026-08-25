@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Company, Contact, Lead, Deal, Activity, Task, Note,Pipeline, PipelineStage, Tag, CalendarEvent    
+from .models import Company, Contact, Lead, Deal, Activity, Task, Note,Pipeline, PipelineStage, Tag, CalendarEvent, Notification    
 from .permissions import (
     can_create,
     can_edit,
@@ -42,6 +42,9 @@ from .permissions import (
     can_edit_calendar_event,
     can_view_calendar_event,
     can_manage_calendar,
+    can_manage_notifications,
+    can_view_notifications, 
+
 
 
     
@@ -2829,3 +2832,97 @@ def calendar_event_delete(request, pk):
         "crmApp/calendar/delete.html",
         context
     )
+
+
+# ==========================================================
+# NOTIFICATIONS
+# ==========================================================
+
+@login_required
+def notification_list(request):
+
+    if not can_view_notifications(request.user):
+        raise PermissionDenied
+
+    notifications = Notification.objects.filter(
+        recipient=request.user
+    )
+
+    unread_count = notifications.filter(
+        is_read=False
+    ).count()
+
+    context = {
+        "notifications": notifications,
+        "unread_count": unread_count,
+    }
+
+    return render(
+        request,
+        "crmApp/notifications/list.html",
+        context
+    )
+
+
+@login_required
+def notification_detail(request, pk):
+
+    if not can_view_notifications(request.user):
+        raise PermissionDenied
+
+    notification = get_object_or_404(
+        Notification,
+        pk=pk,
+        recipient=request.user
+    )
+
+    if not notification.is_read:
+        notification.is_read = True
+        notification.save(
+            update_fields=["is_read"]
+        )
+
+    return render(
+        request,
+        "crmApp/notifications/detail.html",
+        {
+            "notification": notification,
+        }
+    )
+
+
+@login_required
+def notification_mark_read(request, pk):
+
+    if not can_view_notifications(request.user):
+        raise PermissionDenied
+
+    notification = get_object_or_404(
+        Notification,
+        pk=pk,
+        recipient=request.user
+    )
+
+    notification.is_read = True
+
+    notification.save(
+        update_fields=["is_read"]
+    )
+
+    return redirect("notifications")
+
+
+@login_required
+def notification_mark_all_read(request):
+
+    if not can_view_notifications(request.user):
+        raise PermissionDenied
+
+    Notification.objects.filter(
+        recipient=request.user,
+        is_read=False
+    ).update(
+        is_read=True
+    )
+
+    return redirect("notifications")
