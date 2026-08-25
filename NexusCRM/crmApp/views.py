@@ -35,6 +35,9 @@ from .permissions import (
     can_edit_task,
     can_view_task,
     can_manage_notes,
+    can_view_note,
+    can_edit_note,
+    can_delete_note,
     
     )
 from django.core.exceptions import PermissionDenied
