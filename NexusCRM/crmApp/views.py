@@ -52,7 +52,7 @@ from django.db.models import Sum
 from .forms import LeadForm, TaskForm, NoteForm
 
 from django.db import transaction
-from .forms import LeadForm, LeadConversionForm
+from .forms import LeadForm, LeadConversionForm, CalendarEventForm
 
 from django.contrib.auth.models import User
 from .forms import DealForm, ActivityForm
