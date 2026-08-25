@@ -14,7 +14,8 @@ from .models import (
     Activity,
     Task,
     Note,
-    Tag
+    Tag,
+    CalendarEvent,
 )
 
 
@@ -1002,3 +1003,162 @@ class NoteForm(forms.ModelForm):
         self.fields["contact"].required = False
         self.fields["lead"].required = False
         self.fields["deal"].required = False
+
+
+# ==========================================================
+# CALENDAR EVENT FORM
+# ==========================================================
+
+class CalendarEventForm(forms.ModelForm):
+
+    class Meta:
+
+        model = CalendarEvent
+
+        fields = [
+            "title",
+            "description",
+            "event_type",
+            "start_datetime",
+            "end_datetime",
+            "all_day",
+            "company",
+            "contact",
+            "lead",
+            "deal",
+            "assigned_to",
+        ]
+
+        widgets = {
+
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Event title",
+                }
+            ),
+
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": "Add event details...",
+                }
+            ),
+
+            "event_type": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "start_datetime": forms.DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+
+            "end_datetime": forms.DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+
+            "all_day": forms.CheckboxInput(
+                attrs={
+                    "class": "form-check-input",
+                }
+            ),
+
+            "company": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "contact": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "lead": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "deal": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+
+            "assigned_to": forms.Select(
+                attrs={
+                    "class": "form-select",
+                }
+            ),
+        }
+
+        labels = {
+            "title": "Event Title",
+            "description": "Description",
+            "event_type": "Event Type",
+            "start_datetime": "Start",
+            "end_datetime": "End",
+            "all_day": "All Day",
+            "company": "Company",
+            "contact": "Contact",
+            "lead": "Lead",
+            "deal": "Deal",
+            "assigned_to": "Assigned To",
+        }
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["company"].queryset = (
+            Company.objects.order_by("name")
+        )
+
+        self.fields["contact"].queryset = (
+            Contact.objects.select_related(
+                "company"
+            ).order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["lead"].queryset = (
+            Lead.objects.order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        self.fields["deal"].queryset = (
+            Deal.objects.order_by("name")
+        )
+
+        self.fields["assigned_to"].queryset = (
+            User.objects.filter(
+                is_active=True
+            ).order_by(
+                "first_name",
+                "last_name",
+                "username"
+            )
+        )
+
+        self.fields["company"].required = False
+        self.fields["contact"].required = False
+        self.fields["lead"].required = False
+        self.fields["deal"].required = False
+        self.fields["assigned_to"].required = False
+        self.fields["description"].required = False
+        self.fields["end_datetime"].required = False
