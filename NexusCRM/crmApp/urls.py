@@ -89,6 +89,7 @@ urlpatterns = [
     path("calendar/<int:pk>/delete/",views.calendar_event_delete,
     name="calendar_event_delete"),
 
+
     path("settings/", lambda request: views.module_placeholder(request, "Settings"), name="settings"),
 
     
