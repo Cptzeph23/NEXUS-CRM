@@ -34,12 +34,13 @@ from .permissions import (
     can_delete_task,
     can_edit_task,
     can_view_task,
+    can_manage_notes,
     
     )
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Sum
-from .forms import LeadForm, TaskForm
+from .forms import LeadForm, TaskForm, NoteForm
 
 from django.db import transaction
 from .forms import LeadForm, LeadConversionForm
@@ -57,6 +58,7 @@ from .models import (
     Task,
     Note,
     Tag,
+
 )
 
 from django.utils import timezone
