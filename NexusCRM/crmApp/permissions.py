@@ -596,7 +596,6 @@ def can_manage_calendar(user):
         ROLE_SALES,
     }
 
-
 def can_view_calendar_event(user, event):
     """
     All authenticated CRM roles can view calendar events.

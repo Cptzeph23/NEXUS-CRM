@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Company, Contact, Lead, Deal, Activity, Task, Note, Pipeline, PipelineStage, Tag    
+from .models import Company, Contact, Lead, Deal, Activity, Task, Note,Pipeline, PipelineStage, Tag, CalendarEvent    
 from .permissions import (
     can_create,
     can_edit,
@@ -38,6 +38,12 @@ from .permissions import (
     can_view_note,
     can_edit_note,
     can_delete_note,
+    can_delete_calendar_event,
+    can_edit_calendar_event,
+    can_view_calendar_event,
+    can_manage_calendar,
+
+
     
     )
 from django.core.exceptions import PermissionDenied
@@ -61,6 +67,7 @@ from .models import (
     Task,
     Note,
     Tag,
+    CalendarEvent,
 
 )
 

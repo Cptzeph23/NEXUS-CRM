@@ -1,0 +1,376 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    Calendar | NexusCRM
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h4 class="mb-1 fw-semibold">
+                Calendar
+            </h4>
+
+            <div class="text-muted small">
+                Manage meetings, calls, reminders and other scheduled events.
+            </div>
+        </div>
+
+        {% if can_create_event %}
+
+            <a
+                href="{% url 'calendar_event_create' %}"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-plus-lg me-1"></i>
+                New Event
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- CALENDAR SUMMARY -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-header">
+                    <h6 class="mb-0 fw-semibold">
+                        Upcoming Events
+                    </h6>
+                </div>
+
+                <div class="crm-card-body">
+
+                    <div class="display-6 fw-semibold">
+                        {{ events|length }}
+                    </div>
+
+                    <div class="text-muted small">
+                        Scheduled events
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-header">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h6 class="mb-0 fw-semibold">
+                            Schedule
+                        </h6>
+
+                        <span class="text-muted small">
+                            All events
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- EVENT LIST -->
+    <div class="crm-card">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Events
+            </h6>
+
+        </div>
+
+
+        <div class="crm-card-body p-0">
+
+            {% if events %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    Event
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Date & Time
+                                </th>
+
+                                <th>
+                                    Assigned To
+                                </th>
+
+                                <th>
+                                    Related Record
+                                </th>
+
+                                <th class="text-end pe-4">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for event in events %}
+
+                                <tr>
+
+                                    <td class="ps-4">
+
+                                        <a
+                                            href="{% url 'calendar_event_detail' event.pk %}"
+                                            class="text-decoration-none fw-semibold"
+                                        >
+                                            {{ event.title }}
+                                        </a>
+
+                                        {% if event.description %}
+
+                                            <div class="text-muted small text-truncate"
+                                                 style="max-width: 250px;">
+                                                {{ event.description }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if event.event_type == "meeting" %}
+
+                                            <span class="badge bg-primary">
+                                                Meeting
+                                            </span>
+
+                                        {% elif event.event_type == "call" %}
+
+                                            <span class="badge bg-info text-dark">
+                                                Call
+                                            </span>
+
+                                        {% elif event.event_type == "task" %}
+
+                                            <span class="badge bg-warning text-dark">
+                                                Task
+                                            </span>
+
+                                        {% elif event.event_type == "reminder" %}
+
+                                            <span class="badge bg-success">
+                                                Reminder
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-secondary">
+                                                Other
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if event.all_day %}
+
+                                            <div class="fw-semibold">
+                                                {{ event.start_datetime|date:"d M Y" }}
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                All day
+                                            </div>
+
+                                        {% else %}
+
+                                            <div class="fw-semibold">
+                                                {{ event.start_datetime|date:"d M Y" }}
+                                            </div>
+
+                                            <div class="text-muted small">
+
+                                                {{ event.start_datetime|date:"H:i" }}
+
+                                                {% if event.end_datetime %}
+                                                    -
+                                                    {{ event.end_datetime|date:"H:i" }}
+                                                {% endif %}
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if event.assigned_to %}
+
+                                            {% if event.assigned_to.get_full_name %}
+
+                                                {{ event.assigned_to.get_full_name }}
+
+                                            {% else %}
+
+                                                {{ event.assigned_to.username }}
+
+                                            {% endif %}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                Unassigned
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if event.company %}
+
+                                            <span class="small">
+                                                Company:
+                                                {{ event.company.name }}
+                                            </span>
+
+                                        {% elif event.contact %}
+
+                                            <span class="small">
+                                                Contact:
+                                                {{ event.contact }}
+                                            </span>
+
+                                        {% elif event.lead %}
+
+                                            <span class="small">
+                                                Lead:
+                                                {{ event.lead }}
+                                            </span>
+
+                                        {% elif event.deal %}
+
+                                            <span class="small">
+                                                Deal:
+                                                {{ event.deal.name }}
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="text-muted small">
+                                                None
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td class="text-end pe-4">
+
+                                        <a
+                                            href="{% url 'calendar_event_detail' event.pk %}"
+                                            class="btn btn-sm btn-outline-primary"
+                                        >
+                                            View
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-5">
+
+                    <div class="mb-3">
+
+                        <i
+                            class="bi bi-calendar3 text-muted"
+                            style="font-size: 2.5rem;"
+                        ></i>
+
+                    </div>
+
+                    <h6 class="fw-semibold">
+                        No calendar events
+                    </h6>
+
+                    <p class="text-muted small mb-3">
+                        There are no scheduled events yet.
+                    </p>
+
+                    {% if can_create_event %}
+
+                        <a
+                            href="{% url 'calendar_event_create' %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Create Event
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
