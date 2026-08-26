@@ -987,7 +987,78 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
+# ==========================================================
+# USER PREFERENCES
+# ==========================================================
 
+class UserPreference(models.Model):
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="preferences"
+    )
+
+    # Appearance
+    theme = models.CharField(
+        max_length=20,
+        choices=[
+            ("light", "Light"),
+            ("dark", "Dark"),
+            ("system", "System Default"),
+        ],
+        default="light"
+    )
+
+    sidebar_collapsed = models.BooleanField(
+        default=False
+    )
+
+    # Dashboard
+    dashboard_layout = models.CharField(
+        max_length=30,
+        choices=[
+            ("default", "Default"),
+            ("compact", "Compact"),
+            ("comfortable", "Comfortable"),
+        ],
+        default="default"
+    )
+
+    # Notifications
+    email_notifications = models.BooleanField(
+        default=True
+    )
+
+    task_notifications = models.BooleanField(
+        default=True
+    )
+
+    activity_notifications = models.BooleanField(
+        default=True
+    )
+
+    # Display
+    items_per_page = models.PositiveIntegerField(
+        choices=[
+            (10, "10"),
+            (25, "25"),
+            (50, "50"),
+            (100, "100"),
+        ],
+        default=25
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} Preferences"
 
 
 
