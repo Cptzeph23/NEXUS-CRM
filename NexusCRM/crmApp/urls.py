@@ -65,8 +65,8 @@ urlpatterns = [
     path("notes/<int:pk>/edit/", views.note_edit, name="note_edit"),
     path("notes/<int:pk>/delete/", views.note_delete, name="note_delete"),
 
-
-    path("reports/", lambda request: views.module_placeholder(request,"Reports"), name="reports"),
+    # Reports
+    path("reports/", views.reports,name="reports"),
 
     # Calendar
     path("calendar/", views.calendar, name="calendar"),

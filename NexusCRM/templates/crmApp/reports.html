@@ -1,0 +1,382 @@
+{% extends "crmApp/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+
+    <div class="mb-4">
+
+        <h3 class="fw-bold mb-1">
+            Reports
+        </h3>
+
+        <p class="text-muted mb-0">
+            CRM performance and activity reports.
+        </p>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small">
+                        Total Leads
+                    </div>
+
+                    <h3 class="fw-bold mb-0">
+                        {{ total_leads }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small">
+                        Total Deals
+                    </div>
+
+                    <h3 class="fw-bold mb-0">
+                        {{ total_deals }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small">
+                        Deal Value
+                    </div>
+
+                    <h3 class="fw-bold mb-0">
+                        {{ total_deal_value|floatformat:2 }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="crm-card h-100">
+
+                <div class="crm-card-body">
+
+                    <div class="text-muted small">
+                        Activities — Last 30 Days
+                    </div>
+
+                    <h3 class="fw-bold mb-0">
+                        {{ activities_last_30_days }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LEADS -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-6">
+
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Leads by Status
+                    </h6>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table mb-0">
+
+                        <thead>
+
+                            <tr>
+                                <th>Status</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in lead_report %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ item.status|title }}
+                                    </td>
+
+                                    <td class="text-end fw-semibold">
+                                        {{ item.total }}
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-muted text-center py-4">
+                                        No lead data available.
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVITIES -->
+
+        <div class="col-lg-6">
+
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <h6 class="mb-0 fw-semibold">
+                        Activities by Type
+                    </h6>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table mb-0">
+
+                        <thead>
+
+                            <tr>
+                                <th>Activity</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in activity_report %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ item.activity_type|title }}
+                                    </td>
+
+                                    <td class="text-end fw-semibold">
+                                        {{ item.total }}
+                                    </td>
+
+                                </tr>
+
+                            {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-muted text-center py-4">
+                                        No activity data available.
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEALS -->
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Deals by Pipeline Stage
+            </h6>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table mb-0">
+
+                <thead>
+
+                    <tr>
+                        <th>Stage</th>
+                        <th>Total Deals</th>
+                        <th>Total Value</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in deal_report %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.stage__name }}
+                            </td>
+
+                            <td>
+                                {{ item.total }}
+                            </td>
+
+                            <td>
+                                {{ item.value|default:0|floatformat:2 }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="3"
+                                class="text-muted text-center py-4">
+
+                                No deal data available.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- TASKS -->
+
+    <div class="crm-card">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Tasks by Status
+            </h6>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table mb-0">
+
+                <thead>
+
+                    <tr>
+                        <th>Status</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in task_report %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.status|title }}
+                            </td>
+
+                            <td class="text-end fw-semibold">
+                                {{ item.total }}
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="2"
+                                class="text-muted text-center py-4">
+
+                                No task data available.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
