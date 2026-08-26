@@ -509,17 +509,34 @@
 
                 <!-- Notifications -->
 
-                <button
-                    type="button"
-                    class="topbar-icon-btn notification-button"
+                
+                <a
+                    href="{% url 'notifications' %}"
+                     class="topbar-icon-btn notification-button position-relative"
                     title="Notifications"
+                    aria-label="Notifications"
+                    class="topbar-icon-btn"
+                    type="button"
                 >
 
                     <i class="bi bi-bell"></i>
 
-                    <span class="notification-dot"></span>
+                    {% if unread_notification_count > 0 %}
 
-                </button>
+                        <span
+                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        >
+                            {% if unread_notification_count > 99 %}
+                                99+
+                            {% else %}
+                                {{ unread_notification_count }}
+                            {% endif %}
+                        </span>
+
+                    {% endif %}
+
+                </a>
+                
 
 
                 <div class="topbar-divider"></div>

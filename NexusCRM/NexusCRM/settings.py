@@ -52,6 +52,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 "crmApp.context_processors.crm_permissions",
+                "crmApp.context_processors.notification_context",
             ],
         },
     },
