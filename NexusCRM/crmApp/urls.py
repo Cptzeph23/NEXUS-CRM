@@ -82,10 +82,7 @@ urlpatterns = [
     path("notifications/<int:pk>/",views.notification_detail,name="notification_detail"),
     path("notifications/<int:pk>/read/", views.notification_mark_read,name="notification_mark_read"),
 
-    
-
-    path("settings/", lambda request: views.module_placeholder(request, "Settings"), name="settings"),
-
-    
+    # Settings
+    path("settings/",views.settings_view,name="settings"),
 
 ]

@@ -1,0 +1,223 @@
+{% extends "crmApp/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+
+        <h3 class="fw-bold mb-1">
+            Settings
+        </h3>
+
+        <p class="text-muted mb-0">
+            Manage your CRM account and preferences.
+        </p>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                Account Information
+            </h6>
+
+        </div>
+
+        <div class="crm-card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Username
+                    </div>
+
+                    <div class="fw-semibold">
+                        {{ user.username }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Email
+                    </div>
+
+                    <div class="fw-semibold">
+                        {{ user.email|default:"Not provided" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        First Name
+                    </div>
+
+                    <div class="fw-semibold">
+                        {{ user.first_name|default:"Not provided" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Last Name
+                    </div>
+
+                    <div class="fw-semibold">
+                        {{ user.last_name|default:"Not provided" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Role
+                    </div>
+
+                    <div class="fw-semibold">
+
+                        {% if profile %}
+                            {{ profile.get_role_display }}
+                        {% else %}
+                            Not assigned
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Account Created
+                    </div>
+
+                    <div class="fw-semibold">
+                        {{ user.date_joined|date:"d M Y, H:i" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PREFERENCES -->
+
+    <div class="crm-card mb-4">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                CRM Preferences
+            </h6>
+
+        </div>
+
+        <div class="crm-card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <div class="fw-semibold mb-1">
+                        Notifications
+                    </div>
+
+                    <div class="text-muted small">
+                        Manage CRM notification preferences.
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="fw-semibold mb-1">
+                        Calendar
+                    </div>
+
+                    <div class="text-muted small">
+                        Manage calendar-related preferences.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SYSTEM -->
+
+    <div class="crm-card">
+
+        <div class="crm-card-header">
+
+            <h6 class="mb-0 fw-semibold">
+                System Information
+            </h6>
+
+        </div>
+
+        <div class="crm-card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Application
+                    </div>
+
+                    <div class="fw-semibold">
+                        NexusCRM
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <div class="text-muted small mb-1">
+                        Environment
+                    </div>
+
+                    <div class="fw-semibold">
+                        Django
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

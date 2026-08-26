@@ -3207,3 +3207,17 @@ def reports(request):
         "crmApp/reports.html",
         context
     )
+
+@login_required
+def settings_view(request):
+
+    user = request.user
+
+    return render(
+        request,
+        "crmApp/settings.html",
+        {
+            "profile": getattr(user, "profile", None),
+            "user": user,
+        }
+    )
