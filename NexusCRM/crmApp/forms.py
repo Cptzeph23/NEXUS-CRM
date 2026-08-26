@@ -17,6 +17,7 @@ from .models import (
     Tag,
     CalendarEvent,
     Notification,
+    UserPreference,
 )
 
 
@@ -1267,4 +1268,69 @@ class UserSettingsForm(forms.ModelForm):
                 }
             ),
         }
+
+
+# ==========================================================
+# USER PREFERENCES FORM
+# ==========================================================
+
+class UserPreferenceForm(forms.ModelForm):
+
+    class Meta:
+        model = UserPreference
+
+        fields = [
+            "theme",
+            "sidebar_collapsed",
+            "dashboard_layout",
+            "email_notifications",
+            "task_notifications",
+            "activity_notifications",
+            "items_per_page",
+        ]
+
+        widgets = {
+            "theme": forms.Select(
+                attrs={
+                    "class": "form-select"
+                }
+            ),
+
+            "sidebar_collapsed": forms.CheckboxInput(
+                attrs={
+                    "class": "form-check-input"
+                }
+            ),
+
+            "dashboard_layout": forms.Select(
+                attrs={
+                    "class": "form-select"
+                }
+            ),
+
+            "email_notifications": forms.CheckboxInput(
+                attrs={
+                    "class": "form-check-input"
+                }
+            ),
+
+            "task_notifications": forms.CheckboxInput(
+                attrs={
+                    "class": "form-check-input"
+                }
+            ),
+
+            "activity_notifications": forms.CheckboxInput(
+                attrs={
+                    "class": "form-check-input"
+                }
+            ),
+
+            "items_per_page": forms.Select(
+                attrs={
+                    "class": "form-select"
+                }
+            ),
+        }
+
 
