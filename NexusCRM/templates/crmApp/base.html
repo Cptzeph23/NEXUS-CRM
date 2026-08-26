@@ -337,9 +337,9 @@
             <nav class="sidebar-nav">
 
                 <a
-                    href="{% url 'settings' %}"
+                        href="{% url 'preferences' %}"
                     class="sidebar-link
-                    {% if request.resolver_match.url_name == 'settings' %}
+                    {% if request.resolver_match.url_name == 'preferences' %}
                         active
                     {% endif %}"
                 >
