@@ -5,15 +5,13 @@ from crmApp import views
 
 urlpatterns = [
 
-    
+    #Dashboard and Home URLs
     path("", views.dashboard, name="dashboard"),
+    path("home/", views.home, name="home"),
 
     # Authentication URLs
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-
-    #Dashboard and Home URLs
-    path("home/", views.home, name="home"),
     
     # Leads
     path("leads/", views.lead_list, name="leads"),
@@ -24,28 +22,17 @@ urlpatterns = [
     path("leads/<int:pk>/delete/", views.lead_delete, name="lead_delete"),
 
     # Contacts
-
     path("contacts/", views.contact_list, name="contact_list"),
-
     path("contacts/create/", views.contact_create, name="contact_create"),
-
     path("contacts/<int:pk>/",views.contact_detail, name="contact_detail"),
-
     path("contacts/<int:pk>/edit/", views.contact_edit,name="contact_edit"),
-
     path("contacts/<int:pk>/delete/", views.contact_delete,name="contact_delete"),
 
    # Companies
-    path(
-        "companies/", views.company_list, name="company_list"),
-
-    path("companies/create/", views.company_create, name="company_create"
-    ),
-
+    path("companies/", views.company_list, name="company_list"),
+    path("companies/create/", views.company_create, name="company_create"),
     path("companies/<int:pk>/", views.company_detail, name="company_detail"),
-
     path("companies/<int:pk>/edit/", views.company_edit,name="company_edit"),
-
     path("companies/<int:pk>/delete/", views.company_delete,name="company_delete"),
 
     # Deals
