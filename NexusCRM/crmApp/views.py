@@ -52,7 +52,7 @@ from .permissions import (
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Sum
-from .forms import LeadForm, TaskForm, NoteForm
+from .forms import LeadForm, TaskForm, NoteForm, UserSettingsForm
 
 from django.db import transaction
 from .forms import LeadForm, LeadConversionForm, CalendarEventForm
@@ -3219,5 +3219,44 @@ def settings_view(request):
         {
             "profile": getattr(user, "profile", None),
             "user": user,
+        }
+    )
+
+@login_required
+def settings_view(request):
+
+    user = request.user
+
+    if request.method == "POST":
+
+        form = UserSettingsForm(
+            request.POST,
+            instance=user
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Your account information has been updated."
+            )
+
+            return redirect("settings")
+
+    else:
+
+        form = UserSettingsForm(
+            instance=user
+        )
+
+    return render(
+        request,
+        "crmApp/settings.html",
+        {
+            "user": user,
+            "profile": getattr(user, "profile", None),
+            "form": form,
         }
     )

@@ -1267,3 +1267,42 @@ class UserSettingsForm(forms.ModelForm):
                 }
             ),
         }
+
+@login_required
+def settings_view(request):
+
+    user = request.user
+
+    if request.method == "POST":
+
+        form = UserSettingsForm(
+            request.POST,
+            instance=user
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Your account information has been updated."
+            )
+
+            return redirect("settings")
+
+    else:
+
+        form = UserSettingsForm(
+            instance=user
+        )
+
+    return render(
+        request,
+        "crmApp/settings.html",
+        {
+            "user": user,
+            "profile": getattr(user, "profile", None),
+            "form": form,
+        }
+    )
