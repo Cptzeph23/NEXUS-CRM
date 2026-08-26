@@ -55,10 +55,9 @@ from django.db.models import Sum
 from .forms import LeadForm, TaskForm, NoteForm, UserSettingsForm
 
 from django.db import transaction
-from .forms import LeadForm, LeadConversionForm, CalendarEventForm
+from .forms import DealForm, ActivityForm, LeadForm, LeadConversionForm, CalendarEventForm, UserSettingsForm, UserPreferenceForm
 
 from django.contrib.auth.models import User
-from .forms import DealForm, ActivityForm
 from .models import (
     Lead,
     Deal,
@@ -71,6 +70,7 @@ from .models import (
     Note,
     Tag,
     CalendarEvent,
+    UserPreference,
 
 )
 
@@ -3258,5 +3258,50 @@ def settings_view(request):
             "user": user,
             "profile": getattr(user, "profile", None),
             "form": form,
+        }
+    )
+
+
+# ==========================================================
+# USER PREFERENCES
+# ==========================================================
+
+@login_required
+def preferences(request):
+
+    preference, created = UserPreference.objects.get_or_create(
+        user=request.user
+    )
+
+    if request.method == "POST":
+
+        form = UserPreferenceForm(
+            request.POST,
+            instance=preference
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Preferences updated successfully."
+            )
+
+            return redirect("preferences")
+
+    else:
+
+        form = UserPreferenceForm(
+            instance=preference
+        )
+
+    return render(
+        request,
+        "crmApp/preferences.html",
+        {
+            "form": form,
+            "preference": preference,
         }
     )

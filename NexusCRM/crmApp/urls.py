@@ -85,4 +85,7 @@ urlpatterns = [
     # Settings
     path("settings/",views.settings_view,name="settings"),
 
+    # User preference
+    path("settings/",views.preferences,name="preferences"),
+
 ]
