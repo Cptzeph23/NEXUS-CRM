@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Company, Contact, Lead, Deal, Activity, Task, Note,Pipeline, PipelineStage, Tag, CalendarEvent, Notification    
@@ -75,6 +75,7 @@ from .models import (
 )
 
 from django.utils import timezone
+from datetime import timedelta
 
 # Create your views here.
 
@@ -2926,3 +2927,186 @@ def notification_mark_all_read(request):
     )
 
     return redirect("notifications")
+
+@login_required
+def dashboard(request):
+    now = timezone.now()
+    thirty_days_ago = now - timedelta(days=30)
+
+    # --------------------------------------------------
+    # BASIC COUNTS
+    # --------------------------------------------------
+
+    total_companies = Company.objects.count()
+    total_contacts = Contact.objects.count()
+    total_leads = Lead.objects.count()
+    total_deals = Deal.objects.count()
+
+    # --------------------------------------------------
+    # LEAD STATISTICS
+    # --------------------------------------------------
+
+    leads_new = Lead.objects.filter(
+        status=Lead.STATUS_NEW
+    ).count()
+
+    leads_contacted = Lead.objects.filter(
+        status=Lead.STATUS_CONTACTED
+    ).count()
+
+    leads_qualified = Lead.objects.filter(
+        status=Lead.STATUS_QUALIFIED
+    ).count()
+
+    leads_converted = Lead.objects.filter(
+        status=Lead.STATUS_CONVERTED
+    ).count()
+
+    # --------------------------------------------------
+    # DEAL STATISTICS
+    # --------------------------------------------------
+
+    total_pipeline_value = (
+        Deal.objects.aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+    )
+
+    deals_count = Deal.objects.count()
+
+    # --------------------------------------------------
+    # TASK STATISTICS
+    # --------------------------------------------------
+
+    pending_tasks = Task.objects.filter(
+        status=Task.STATUS_PENDING
+    ).count()
+
+    in_progress_tasks = Task.objects.filter(
+        status=Task.STATUS_IN_PROGRESS
+    ).count()
+
+    completed_tasks = Task.objects.filter(
+        status=Task.STATUS_COMPLETED
+    ).count()
+
+    overdue_tasks = Task.objects.filter(
+        due_date__lt=now
+    ).exclude(
+        status__in=[
+            Task.STATUS_COMPLETED,
+            Task.STATUS_CANCELLED,
+        ]
+    ).count()
+
+    # --------------------------------------------------
+    # RECENT ACTIVITIES
+    # --------------------------------------------------
+
+    recent_activities = Activity.objects.select_related(
+        "created_by",
+        "assigned_to",
+        "company",
+        "contact",
+        "lead",
+        "deal",
+    ).order_by("-activity_date")[:10]
+
+    # --------------------------------------------------
+    # RECENT LEADS
+    # --------------------------------------------------
+
+    recent_leads = Lead.objects.select_related(
+        "owner"
+    ).order_by("-created_at")[:8]
+
+    # --------------------------------------------------
+    # UPCOMING TASKS
+    # --------------------------------------------------
+
+    upcoming_tasks = Task.objects.select_related(
+        "assigned_to",
+        "company",
+        "contact",
+        "lead",
+        "deal",
+    ).filter(
+        due_date__gte=now
+    ).exclude(
+        status__in=[
+            Task.STATUS_COMPLETED,
+            Task.STATUS_CANCELLED,
+        ]
+    ).order_by("due_date")[:8]
+
+    # --------------------------------------------------
+    # RECENT DEALS
+    # --------------------------------------------------
+
+    recent_deals = Deal.objects.select_related(
+        "company",
+        "contact",
+        "pipeline",
+        "stage",
+        "owner",
+    ).order_by("-created_at")[:8]
+
+    # --------------------------------------------------
+    # LEAD STATUS BREAKDOWN
+    # --------------------------------------------------
+
+    lead_status_data = {
+        "new": leads_new,
+        "contacted": leads_contacted,
+        "qualified": leads_qualified,
+        "converted": leads_converted,
+        "unqualified": Lead.objects.filter(
+            status=Lead.STATUS_UNQUALIFIED
+        ).count(),
+    }
+
+    # --------------------------------------------------
+    # MONTHLY ACTIVITY
+    # --------------------------------------------------
+
+    recent_activity_count = Activity.objects.filter(
+        activity_date__gte=thirty_days_ago
+    ).count()
+
+    # --------------------------------------------------
+    # CONTEXT
+    # --------------------------------------------------
+
+    context = {
+        "total_companies": total_companies,
+        "total_contacts": total_contacts,
+        "total_leads": total_leads,
+        "total_deals": total_deals,
+
+        "leads_new": leads_new,
+        "leads_contacted": leads_contacted,
+        "leads_qualified": leads_qualified,
+        "leads_converted": leads_converted,
+
+        "total_pipeline_value": total_pipeline_value,
+        "deals_count": deals_count,
+
+        "pending_tasks": pending_tasks,
+        "in_progress_tasks": in_progress_tasks,
+        "completed_tasks": completed_tasks,
+        "overdue_tasks": overdue_tasks,
+
+        "recent_activities": recent_activities,
+        "recent_leads": recent_leads,
+        "upcoming_tasks": upcoming_tasks,
+        "recent_deals": recent_deals,
+
+        "lead_status_data": lead_status_data,
+        "recent_activity_count": recent_activity_count,
+    }
+
+    return render(
+        request,
+        "crmApp/dashboard.html",
+        context
+    )
