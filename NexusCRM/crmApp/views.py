@@ -3110,3 +3110,100 @@ def dashboard(request):
         "crmApp/dashboard.html",
         context
     )
+
+@login_required
+def reports(request):
+
+    # --------------------------------------------------
+    # LEAD REPORT
+    # --------------------------------------------------
+
+    lead_report = Lead.objects.values(
+        "status"
+    ).annotate(
+        total=Count("id")
+    ).order_by("status")
+
+
+    # --------------------------------------------------
+    # DEAL REPORT
+    # --------------------------------------------------
+
+    deal_report = Deal.objects.values(
+        "stage__name"
+    ).annotate(
+        total=Count("id"),
+        value=Sum("amount")
+    ).order_by("stage__name")
+
+
+    # --------------------------------------------------
+    # ACTIVITY REPORT
+    # --------------------------------------------------
+
+    activity_report = Activity.objects.values(
+        "activity_type"
+    ).annotate(
+        total=Count("id")
+    ).order_by("activity_type")
+
+
+    # --------------------------------------------------
+    # TASK REPORT
+    # --------------------------------------------------
+
+    task_report = Task.objects.values(
+        "status"
+    ).annotate(
+        total=Count("id")
+    ).order_by("status")
+
+
+    # --------------------------------------------------
+    # SUMMARY
+    # --------------------------------------------------
+
+    total_leads = Lead.objects.count()
+    total_deals = Deal.objects.count()
+    total_activities = Activity.objects.count()
+    total_tasks = Task.objects.count()
+
+    total_deal_value = (
+        Deal.objects.aggregate(
+            total=Sum("amount")
+        )["total"] or 0
+    )
+
+
+    # --------------------------------------------------
+    # DATE-BASED ACTIVITY
+    # --------------------------------------------------
+
+    today = timezone.now()
+    thirty_days_ago = today - timedelta(days=30)
+
+    activities_last_30_days = Activity.objects.filter(
+        activity_date__gte=thirty_days_ago
+    ).count()
+
+
+    context = {
+        "lead_report": lead_report,
+        "deal_report": deal_report,
+        "activity_report": activity_report,
+        "task_report": task_report,
+
+        "total_leads": total_leads,
+        "total_deals": total_deals,
+        "total_activities": total_activities,
+        "total_tasks": total_tasks,
+        "total_deal_value": total_deal_value,
+
+        "activities_last_30_days": activities_last_30_days,
+    }
+
+    return render(
+        request,
+        "crmApp/reports.html",
+        context
+    )
