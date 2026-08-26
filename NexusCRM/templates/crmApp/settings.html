@@ -19,28 +19,54 @@
 
     <!-- ACCOUNT -->
 
-    <div class="crm-card mb-4">
+ <!-- ACCOUNT SETTINGS -->
 
-        <div class="crm-card-header">
+        <div class="crm-card mb-4">
 
-            <h6 class="mb-0 fw-semibold">
-                Account Information
-            </h6>
+    <div class="crm-card-header">
 
-        </div>
+        <h6 class="mb-0 fw-semibold">
+            Account Information
+        </h6>
 
-        <div class="crm-card-body">
+    </div>
+
+
+    <div class="crm-card-body">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="alert alert-danger">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
 
             <div class="row g-4">
 
                 <div class="col-md-6">
 
-                    <div class="text-muted small mb-1">
+                    <label class="form-label">
                         Username
-                    </div>
+                    </label>
 
-                    <div class="fw-semibold">
-                        {{ user.username }}
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ user.username }}"
+                        readonly
+                    >
+
+                    <div class="form-text">
+                        Username cannot be changed here.
                     </div>
 
                 </div>
@@ -48,57 +74,85 @@
 
                 <div class="col-md-6">
 
-                    <div class="text-muted small mb-1">
+                    <label
+                        for="{{ form.email.id_for_label }}"
+                        class="form-label"
+                    >
                         Email
-                    </div>
+                    </label>
 
-                    <div class="fw-semibold">
-                        {{ user.email|default:"Not provided" }}
-                    </div>
+                    {{ form.email }}
+
+                    {% if form.email.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.email.errors }}
+                        </div>
+
+                    {% endif %}
 
                 </div>
 
 
                 <div class="col-md-6">
 
-                    <div class="text-muted small mb-1">
+                    <label
+                        for="{{ form.first_name.id_for_label }}"
+                        class="form-label"
+                    >
                         First Name
-                    </div>
+                    </label>
 
-                    <div class="fw-semibold">
-                        {{ user.first_name|default:"Not provided" }}
-                    </div>
+                    {{ form.first_name }}
+
+                    {% if form.first_name.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.first_name.errors }}
+                        </div>
+
+                    {% endif %}
 
                 </div>
 
 
                 <div class="col-md-6">
 
-                    <div class="text-muted small mb-1">
+                    <label
+                        for="{{ form.last_name.id_for_label }}"
+                        class="form-label"
+                    >
                         Last Name
-                    </div>
+                    </label>
 
-                    <div class="fw-semibold">
-                        {{ user.last_name|default:"Not provided" }}
-                    </div>
+                    {{ form.last_name }}
+
+                    {% if form.last_name.errors %}
+
+                        <div class="text-danger small mt-1">
+                            {{ form.last_name.errors }}
+                        </div>
+
+                    {% endif %}
 
                 </div>
 
 
                 <div class="col-md-6">
 
-                    <div class="text-muted small mb-1">
+                    <label class="form-label">
                         Role
-                    </div>
+                    </label>
 
-                    <div class="fw-semibold">
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{% if profile %}{{ profile.get_role_display }}{% else %}Not assigned{% endif %}"
+                        readonly
+                    >
 
-                        {% if profile %}
-                            {{ profile.get_role_display }}
-                        {% else %}
-                            Not assigned
-                        {% endif %}
-
+                    <div class="form-text">
+                        Role can only be changed by an authorized administrator.
                     </div>
 
                 </div>
@@ -106,62 +160,163 @@
 
                 <div class="col-md-6">
 
-                    <div class="text-muted small mb-1">
+                    <label class="form-label">
                         Account Created
-                    </div>
+                    </label>
 
-                    <div class="fw-semibold">
-                        {{ user.date_joined|date:"d M Y, H:i" }}
-                    </div>
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ user.date_joined|date:'d M Y, H:i' }}"
+                        readonly
+                    >
 
                 </div>
 
             </div>
 
-        </div>
+
+            <div class="d-flex justify-content-end mt-4">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-check-lg me-1"></i>
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
 
     </div>
+
+        </div>
 
 
     <!-- PREFERENCES -->
 
-    <div class="crm-card mb-4">
+  <!-- CRM PREFERENCES -->
 
-        <div class="crm-card-header">
+<div class="crm-card mb-4">
 
-            <h6 class="mb-0 fw-semibold">
-                CRM Preferences
-            </h6>
+    <div class="crm-card-header">
 
-        </div>
+        <h6 class="mb-0 fw-semibold">
+            CRM Preferences
+        </h6>
 
-        <div class="crm-card-body">
+    </div>
 
-            <div class="row g-4">
 
-                <div class="col-md-6">
+    <div class="crm-card-body">
 
-                    <div class="fw-semibold mb-1">
-                        Notifications
-                    </div>
+        <div class="row g-4">
 
-                    <div class="text-muted small">
-                        Manage CRM notification preferences.
-                    </div>
+            <div class="col-md-6">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="emailNotifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="emailNotifications"
+                    >
+                        Email Notifications
+                    </label>
 
                 </div>
 
+                <div class="text-muted small mt-1">
+                    Receive important CRM notifications by email.
+                </div>
 
-                <div class="col-md-6">
+            </div>
 
-                    <div class="fw-semibold mb-1">
-                        Calendar
-                    </div>
 
-                    <div class="text-muted small">
-                        Manage calendar-related preferences.
-                    </div>
+            <div class="col-md-6">
 
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="taskReminders"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="taskReminders"
+                    >
+                        Task Reminders
+                    </label>
+
+                </div>
+
+                <div class="text-muted small mt-1">
+                    Receive reminders for upcoming and overdue tasks.
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="calendarReminders"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="calendarReminders"
+                    >
+                        Calendar Reminders
+                    </label>
+
+                </div>
+
+                <div class="text-muted small mt-1">
+                    Receive reminders for upcoming calendar events.
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="activityNotifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="activityNotifications"
+                    >
+                        Activity Notifications
+                    </label>
+
+                </div>
+
+                <div class="text-muted small mt-1">
+                    Receive notifications about CRM activity.
                 </div>
 
             </div>
@@ -169,6 +324,8 @@
         </div>
 
     </div>
+
+</div>
 
 
     <!-- SYSTEM -->
