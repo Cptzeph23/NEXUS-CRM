@@ -1,0 +1,147 @@
+{% extends "crmApp/base.html" %}
+
+{% block title %}
+    {{ notification.title }} | Notifications
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-2 mb-2">
+
+                <a
+                    href="{% url 'notifications' %}"
+                    class="text-decoration-none text-muted"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    Notifications
+                </a>
+
+            </div>
+
+
+            <h4 class="mb-1 fw-semibold">
+                {{ notification.title }}
+            </h4>
+
+
+            <div class="text-muted small">
+                {{ notification.created_at|date:"d M Y, H:i" }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 col-lg-10">
+
+            <div class="crm-card">
+
+                <div class="crm-card-header">
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        {% if notification.notification_type == "success" %}
+
+                            <i class="bi bi-check-circle text-success"></i>
+
+                        {% elif notification.notification_type == "warning" %}
+
+                            <i class="bi bi-exclamation-triangle text-warning"></i>
+
+                        {% elif notification.notification_type == "danger" %}
+
+                            <i class="bi bi-exclamation-circle text-danger"></i>
+
+                        {% else %}
+
+                            <i class="bi bi-info-circle text-primary"></i>
+
+                        {% endif %}
+
+                        <h6 class="mb-0 fw-semibold">
+                            Notification
+                        </h6>
+
+                    </div>
+
+                </div>
+
+
+                <div class="crm-card-body">
+
+                    <div class="mb-4">
+
+                        {% if notification.notification_type == "success" %}
+
+                            <span class="badge bg-success">
+                                Success
+                            </span>
+
+                        {% elif notification.notification_type == "warning" %}
+
+                            <span class="badge bg-warning text-dark">
+                                Warning
+                            </span>
+
+                        {% elif notification.notification_type == "danger" %}
+
+                            <span class="badge bg-danger">
+                                Alert
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-primary">
+                                Information
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <h5 class="fw-semibold mb-3">
+                        {{ notification.title }}
+                    </h5>
+
+
+                    <div class="small">
+
+                        {{ notification.message|linebreaks }}
+
+                    </div>
+
+
+                    <div class="border-top mt-4 pt-3">
+
+                        <div class="text-muted small">
+
+                            Received
+                            {{ notification.created_at|date:"d M Y, H:i" }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
