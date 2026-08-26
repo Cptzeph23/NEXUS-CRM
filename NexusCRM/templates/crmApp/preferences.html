@@ -1,0 +1,204 @@
+{% extends "crmApp/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                Preferences
+            </h4>
+
+            <div class="text-muted small">
+                Customize your NexusCRM experience.
+            </div>
+        </div>
+
+    </div>
+
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <!-- APPEARANCE -->
+
+        <div class="crm-card mb-4">
+
+            <div class="crm-card-header">
+
+                <h6 class="mb-0 fw-semibold">
+                    Appearance
+                </h6>
+
+            </div>
+
+            <div class="crm-card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Theme
+                        </label>
+
+                        {{ form.theme }}
+
+                        {% if form.theme.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.theme.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Dashboard Layout
+                        </label>
+
+                        {{ form.dashboard_layout }}
+
+                        {% if form.dashboard_layout.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.dashboard_layout.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-check mt-4">
+
+                    {{ form.sidebar_collapsed }}
+
+                    <label
+                        class="form-check-label"
+                        for="{{ form.sidebar_collapsed.id_for_label }}"
+                    >
+                        Collapse sidebar by default
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTIFICATIONS -->
+
+        <div class="crm-card mb-4">
+
+            <div class="crm-card-header">
+
+                <h6 class="mb-0 fw-semibold">
+                    Notifications
+                </h6>
+
+            </div>
+
+            <div class="crm-card-body">
+
+                <div class="form-check mb-3">
+
+                    {{ form.email_notifications }}
+
+                    <label
+                        class="form-check-label"
+                        for="{{ form.email_notifications.id_for_label }}"
+                    >
+                        Email notifications
+                    </label>
+
+                </div>
+
+
+                <div class="form-check mb-3">
+
+                    {{ form.task_notifications }}
+
+                    <label
+                        class="form-check-label"
+                        for="{{ form.task_notifications.id_for_label }}"
+                    >
+                        Task notifications
+                    </label>
+
+                </div>
+
+
+                <div class="form-check">
+
+                    {{ form.activity_notifications }}
+
+                    <label
+                        class="form-check-label"
+                        for="{{ form.activity_notifications.id_for_label }}"
+                    >
+                        Activity notifications
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DISPLAY -->
+
+        <div class="crm-card mb-4">
+
+            <div class="crm-card-header">
+
+                <h6 class="mb-0 fw-semibold">
+                    Display
+                </h6>
+
+            </div>
+
+            <div class="crm-card-body">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        Items Per Page
+                    </label>
+
+                    {{ form.items_per_page }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-check-lg me-1"></i>
+                Save Preferences
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
