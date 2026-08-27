@@ -1,0 +1,314 @@
+{% extends "crmApp/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="mb-1">
+                Global Search
+            </h2>
+
+            {% if query %}
+                <p class="text-muted mb-0">
+                    Search results for
+                    <strong>"{{ query }}"</strong>
+                </p>
+            {% else %}
+                <p class="text-muted mb-0">
+                    Search across your CRM.
+                </p>
+            {% endif %}
+        </div>
+
+        {% if query %}
+            <span class="badge bg-primary">
+                {{ total_results }} result{{ total_results|pluralize }}
+            </span>
+        {% endif %}
+
+    </div>
+
+
+    {% if not query %}
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-search fs-1 text-muted"></i>
+
+                <h5 class="mt-3">
+                    Search your CRM
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Search companies, contacts, leads, deals,
+                    activities, tasks and notes.
+                </p>
+
+            </div>
+        </div>
+
+    {% elif total_results == 0 %}
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-search fs-1 text-muted"></i>
+
+                <h5 class="mt-3">
+                    No results found
+                </h5>
+
+                <p class="text-muted mb-0">
+                    No CRM records matched
+                    "<strong>{{ query }}</strong>".
+                </p>
+
+            </div>
+        </div>
+
+    {% else %}
+
+
+        {% if companies %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-building me-2"></i>
+                    Companies
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for company in companies %}
+
+                <a
+                    href="{% url 'company_detail' company.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>{{ company.name }}</strong>
+
+                    {% if company.email %}
+                        <small class="text-muted ms-2">
+                            {{ company.email }}
+                        </small>
+                    {% endif %}
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if contacts %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-person me-2"></i>
+                    Contacts
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for contact in contacts %}
+
+                <a
+                    href="{% url 'contact_detail' contact.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>
+                        {{ contact.first_name }}
+                        {{ contact.last_name }}
+                    </strong>
+
+                    {% if contact.company %}
+                        <small class="text-muted ms-2">
+                            {{ contact.company.name }}
+                        </small>
+                    {% endif %}
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if leads %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    Leads
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for lead in leads %}
+
+                <a
+                    href="{% url 'lead_detail' lead.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>
+                        {{ lead.first_name }}
+                        {{ lead.last_name }}
+                    </strong>
+
+                    {% if lead.email %}
+                        <small class="text-muted ms-2">
+                            {{ lead.email }}
+                        </small>
+                    {% endif %}
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if deals %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-currency-dollar me-2"></i>
+                    Deals
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for deal in deals %}
+
+                <a
+                    href="{% url 'deal_detail' deal.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>{{ deal.name }}</strong>
+
+                    {% if deal.company %}
+                        <small class="text-muted ms-2">
+                            {{ deal.company.name }}
+                        </small>
+                    {% endif %}
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if activities %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-activity me-2"></i>
+                    Activities
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for activity in activities %}
+
+                <a
+                    href="{% url 'activity_detail' activity.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>{{ activity.subject }}</strong>
+
+                    <small class="text-muted ms-2">
+                        {{ activity.get_activity_type_display }}
+                    </small>
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if tasks %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-check2-square me-2"></i>
+                    Tasks
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for task in tasks %}
+
+                <a
+                    href="{% url 'task_detail' task.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>{{ task.title }}</strong>
+
+                    <small class="text-muted ms-2">
+                        {{ task.get_status_display }}
+                    </small>
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if notes %}
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-transparent">
+                <strong>
+                    <i class="bi bi-sticky me-2"></i>
+                    Notes
+                </strong>
+            </div>
+
+            <div class="list-group list-group-flush">
+
+                {% for note in notes %}
+
+                <a
+                    href="{% url 'note_detail' note.pk %}"
+                    class="list-group-item list-group-item-action"
+                >
+                    <strong>{{ note.title }}</strong>
+                </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endif %}
+
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
