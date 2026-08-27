@@ -489,21 +489,28 @@
 
                 <!-- Global search -->
 
-                <div class="topbar-search">
+                <form
+                    method="get"
+                    action="{% url 'global_search' %}"
+                     class="topbar-search"
+                >
 
                     <i class="bi bi-search"></i>
 
                     <input
-                        type="search"
-                        placeholder="Search customers, leads, deals..."
-                        aria-label="Global search"
+                            type="search"
+                            name="q"
+                            value="{{ request.GET.q|default:'' }}"
+                            placeholder="Search customers, leads, deals..."
+                            aria-label="Global search"
+                            autocomplete="off"
                     >
 
-                    <span class="search-shortcut">
-                        /
-                    </span>
+                        <span class="search-shortcut">
+                            /
+                        </span>
 
-                </div>
+                </form>
 
             </div>
 
