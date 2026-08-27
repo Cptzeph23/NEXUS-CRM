@@ -3305,3 +3305,119 @@ def preferences(request):
             "preference": preference,
         }
     )
+
+# ==========================================================
+# GLOBAL SEARCH
+# ==========================================================
+
+@login_required
+def global_search(request):
+
+    query = request.GET.get("q", "").strip()
+
+    companies = Company.objects.none()
+    contacts = Contact.objects.none()
+    leads = Lead.objects.none()
+    deals = Deal.objects.none()
+    activities = Activity.objects.none()
+    tasks = Task.objects.none()
+    notes = Note.objects.none()
+
+    if query:
+
+        companies = Company.objects.filter(
+            Q(name__icontains=query)
+            | Q(email__icontains=query)
+            | Q(phone__icontains=query)
+            | Q(website__icontains=query)
+            | Q(city__icontains=query)
+            | Q(country__icontains=query)
+        )
+
+        contacts = Contact.objects.filter(
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(email__icontains=query)
+            | Q(phone__icontains=query)
+            | Q(mobile__icontains=query)
+            | Q(job_title__icontains=query)
+            | Q(company__name__icontains=query)
+        )
+
+        leads = Lead.objects.filter(
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(email__icontains=query)
+            | Q(phone__icontains=query)
+            | Q(job_title__icontains=query)
+            | Q(description__icontains=query)
+        )
+
+        deals = Deal.objects.filter(
+            Q(name__icontains=query)
+            | Q(description__icontains=query)
+            | Q(company__name__icontains=query)
+            | Q(contact__first_name__icontains=query)
+            | Q(contact__last_name__icontains=query)
+        )
+
+        activities = Activity.objects.filter(
+            Q(subject__icontains=query)
+            | Q(description__icontains=query)
+            | Q(company__name__icontains=query)
+            | Q(contact__first_name__icontains=query)
+            | Q(contact__last_name__icontains=query)
+            | Q(lead__first_name__icontains=query)
+            | Q(lead__last_name__icontains=query)
+            | Q(deal__name__icontains=query)
+        )
+
+        tasks = Task.objects.filter(
+            Q(title__icontains=query)
+            | Q(description__icontains=query)
+            | Q(company__name__icontains=query)
+            | Q(contact__first_name__icontains=query)
+            | Q(contact__last_name__icontains=query)
+            | Q(lead__first_name__icontains=query)
+            | Q(lead__last_name__icontains=query)
+            | Q(deal__name__icontains=query)
+        )
+
+        notes = Note.objects.filter(
+            Q(title__icontains=query)
+            | Q(content__icontains=query)
+            | Q(company__name__icontains=query)
+            | Q(contact__first_name__icontains=query)
+            | Q(contact__last_name__icontains=query)
+            | Q(lead__first_name__icontains=query)
+            | Q(lead__last_name__icontains=query)
+            | Q(deal__name__icontains=query)
+        )
+
+    total_results = (
+        companies.count()
+        + contacts.count()
+        + leads.count()
+        + deals.count()
+        + activities.count()
+        + tasks.count()
+        + notes.count()
+    )
+
+    context = {
+        "query": query,
+        "companies": companies,
+        "contacts": contacts,
+        "leads": leads,
+        "deals": deals,
+        "activities": activities,
+        "tasks": tasks,
+        "notes": notes,
+        "total_results": total_results,
+    }
+
+    return render(
+        request,
+        "crmApp/search_results.html",
+        context
+    )
