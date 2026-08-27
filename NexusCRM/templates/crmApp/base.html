@@ -50,7 +50,13 @@
 </head>
 
 
-<body>
+<body
+    {% if request.user.is_authenticated and request.user.profile.theme == "dark" %}
+        data-theme="dark"
+    {% else %}
+        data-theme="light"
+    {% endif %}
+>
 
 <div class="crm-wrapper">
 
@@ -336,20 +342,25 @@
 
             <nav class="sidebar-nav">
 
-                <a
-                        href="{% url 'preferences' %}"
-                    class="sidebar-link
-                    {% if request.resolver_match.url_name == 'preferences' %}
-                        active
-                    {% endif %}"
-                >
+                <!-- Preferences -->
+                <a href="{% url 'preferences' %}"
+                 class="sidebar-link
+   {% if request.resolver_match.url_name == 'preferences' %}
+       active
+   {% endif %}">
+                <i class="bi bi-sliders"></i>
+                <span>Preferences</span>
+            </a>
 
-                    <i class="bi bi-sliders"></i>
-
-                    <span>
-                        Settings
-                    </span>
-
+                <!-- Preferences -->
+                  <!-- Settings -->
+                <a href="{% url 'settings' %}"
+                     class="sidebar-link
+   {% if request.resolver_match.url_name == 'settings' %}
+       active
+   {% endif %}">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
                 </a>
 
             </nav>

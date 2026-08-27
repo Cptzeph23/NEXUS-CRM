@@ -1044,3 +1044,118 @@ body {
         display: none;
     }
 }
+
+/* ==========================================================
+   THEME SYSTEM
+========================================================== */
+
+:root {
+    --crm-bg: #f8f9fa;
+    --crm-surface: #ffffff;
+    --crm-surface-secondary: #f1f3f5;
+    --crm-text: #212529;
+    --crm-text-muted: #6c757d;
+    --crm-border: #dee2e6;
+    --crm-input-bg: #ffffff;
+    --crm-sidebar-bg: #ffffff;
+}
+
+
+/* ==========================================================
+   DARK THEME
+========================================================== */
+
+[data-theme="dark"] {
+    --crm-bg: #121212;
+    --crm-surface: #1e1e1e;
+    --crm-surface-secondary: #252525;
+    --crm-text: #f1f1f1;
+    --crm-text-muted: #adb5bd;
+    --crm-border: #3a3a3a;
+    --crm-input-bg: #2a2a2a;
+    --crm-sidebar-bg: #181818;
+}
+
+
+/* ==========================================================
+   GLOBAL
+========================================================== */
+
+[data-theme="dark"] body {
+    background-color: var(--crm-bg);
+    color: var(--crm-text);
+}
+
+[data-theme="dark"] .crm-card,
+[data-theme="dark"] .card {
+    background-color: var(--crm-surface);
+    color: var(--crm-text);
+    border-color: var(--crm-border);
+}
+
+[data-theme="dark"] .crm-card-header,
+[data-theme="dark"] .crm-card-body {
+    border-color: var(--crm-border);
+}
+
+[data-theme="dark"] .sidebar,
+[data-theme="dark"] .crm-sidebar {
+    background-color: var(--crm-sidebar-bg);
+}
+
+[data-theme="dark"] .sidebar-link {
+    color: var(--crm-text-muted);
+}
+
+[data-theme="dark"] .sidebar-link:hover,
+[data-theme="dark"] .sidebar-link.active {
+    color: var(--crm-text);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--crm-input-bg);
+    color: var(--crm-text);
+    border-color: var(--crm-border);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--crm-text-muted);
+}
+
+[data-theme="dark"] .table {
+    color: var(--crm-text);
+}
+
+[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: var(--crm-surface);
+    color: var(--crm-text);
+    border-color: var(--crm-border);
+}
+
+[data-theme="dark"] .text-muted {
+    color: var(--crm-text-muted) !important;
+}
+
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--crm-surface);
+    border-color: var(--crm-border);
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: var(--crm-text);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+    background-color: var(--crm-surface-secondary);
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: var(--crm-surface);
+    color: var(--crm-text);
+    border-color: var(--crm-border);
+}
+
+[data-theme="dark"] hr {
+    border-color: var(--crm-border);
+}
