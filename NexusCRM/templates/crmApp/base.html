@@ -51,8 +51,14 @@
 
 
 <body
-    {% if request.user.is_authenticated and request.user.profile.theme == "dark" %}
-        data-theme="dark"
+    {% if request.user.is_authenticated %}
+        {% if request.user.preferences.theme == "dark" %}
+            data-theme="dark"
+        {% elif request.user.preferences.theme == "system" %}
+            data-theme="system"
+        {% else %}
+            data-theme="light"
+        {% endif %}
     {% else %}
         data-theme="light"
     {% endif %}
