@@ -83,7 +83,7 @@ urlpatterns = [
     path("notifications/<int:pk>/read/", views.notification_mark_read,name="notification_mark_read"),
 
     # Settings
-    path("settings/",views.settings_view,name="settings"),
+    # path("settings/",views.settings_view,name="settings"),
 
     # User preference
     path("settings/",views.preferences,name="preferences"),
