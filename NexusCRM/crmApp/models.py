@@ -804,6 +804,85 @@ class Note(models.Model):
     def __str__(self):
         return self.title or "Untitled Note"
 
+
+# ==========================================================
+# AUDIT LOG / SYSTEM ACTIVITY
+# ==========================================================
+
+class AuditLog(models.Model):
+
+    ACTION_CREATE = "create"
+    ACTION_UPDATE = "update"
+    ACTION_DELETE = "delete"
+    ACTION_LOGIN = "login"
+    ACTION_LOGOUT = "logout"
+    ACTION_OTHER = "other"
+
+    ACTION_CHOICES = [
+        (ACTION_CREATE, "Created"),
+        (ACTION_UPDATE, "Updated"),
+        (ACTION_DELETE, "Deleted"),
+        (ACTION_LOGIN, "Logged In"),
+        (ACTION_LOGOUT, "Logged Out"),
+        (ACTION_OTHER, "Other"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="audit_logs"
+    )
+
+    action = models.CharField(
+        max_length=30,
+        choices=ACTION_CHOICES
+    )
+
+    model_name = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    object_id = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+
+    object_repr = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["user"]),
+            models.Index(fields=["action"]),
+            models.Index(fields=["model_name"]),
+            models.Index(fields=["created_at"]),
+        ]
+
+    def __str__(self):
+        return self.description or f"{self.action} - {self.model_name}"
+
+
+
+
 # ==========================================================
 # NOTIFICATION
 # ==========================================================
