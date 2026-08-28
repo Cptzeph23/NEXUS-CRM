@@ -369,6 +369,30 @@
                 <span>Settings</span>
                 </a>
 
+                {% if request.user.is_authenticated %}
+
+    {% if request.user.profile.role == "admin" or request.user.profile.role == "manager" %}
+
+        <a
+            href="{% url 'audit_logs' %}"
+            class="sidebar-link
+            {% if request.resolver_match.url_name == 'audit_logs' %}
+                active
+            {% endif %}"
+        >
+
+            <i class="bi bi-shield-check"></i>
+
+            <span>
+                Audit Logs
+            </span>
+
+        </a>
+
+    {% endif %}
+
+{% endif %}
+
             </nav>
 
         </div>
