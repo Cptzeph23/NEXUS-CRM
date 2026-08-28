@@ -91,4 +91,7 @@ urlpatterns = [
     # Global Search
     path("search/", views.global_search, name="global_search"),
 
+    # Audit Logs
+    path("audit-logs/", views.audit_log_list, name="audit_logs"),
+
 ]
