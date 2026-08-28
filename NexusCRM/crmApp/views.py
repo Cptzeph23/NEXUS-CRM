@@ -3421,3 +3421,33 @@ def global_search(request):
         "crmApp/search_results.html",
         context
     )
+
+
+@login_required
+def audit_log_list(request):
+
+    if not can_view_audit_logs(request.user):
+        messages.error(
+            request,
+            "You do not have permission to view audit logs."
+        )
+        return redirect("dashboard")
+
+    logs = AuditLog.objects.select_related(
+        "user"
+    ).order_by("-created_at")
+
+    return render(
+        request,
+        "crmApp/audit_logs/list.html",
+        {
+            "audit_logs": logs,
+        }
+    )
+
+
+
+
+
+
+
