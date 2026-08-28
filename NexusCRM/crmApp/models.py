@@ -1,10 +1,10 @@
 from decimal import Decimal
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import UserManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import MinValueValidator
-
+from .models import AuditLog
 class Profile(models.Model):
 
     ROLE_ADMIN = "admin"
@@ -1140,6 +1140,43 @@ class UserPreference(models.Model):
         return f"{self.user.username} Preferences"
 
 
+@admin.register(AuditLog)
+class AuditLogAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "user",
+        "action",
+        "model_name",
+        "object_id",
+        "ip_address",
+        "created_at",
+    )
+
+    list_filter = (
+        "action",
+        "model_name",
+        "created_at",
+    )
+
+    search_fields = (
+        "description",
+        "model_name",
+        "object_id",
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+        "ip_address",
+    )
+
+    readonly_fields = (
+        "user",
+        "action",
+        "model_name",
+        "object_id",
+        "description",
+        "ip_address",
+        "created_at",
+    )
 
 
 
