@@ -679,3 +679,20 @@ def can_view_notifications(user):
         ROLE_SUPPORT,
         ROLE_VIEWER,
     }
+
+
+# ==========================================================
+# AUDIT LOG PERMISSIONS
+# ==========================================================
+
+def can_view_audit_logs(user):
+    """
+    Only Admin and Manager can view audit logs.
+    """
+
+    role = get_user_role(user)
+
+    return role in {
+        ROLE_ADMIN,
+        ROLE_MANAGER,
+    }
