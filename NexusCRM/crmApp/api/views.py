@@ -202,6 +202,38 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    filterset_fields = [
+        "status",
+        "priority",
+        "company",
+        "contact",
+        "lead",
+        "deal",
+        "assigned_to",
+    ]
+
+    search_fields = [
+        "title",
+        "description",
+    ]
+
+    ordering_fields = [
+        "title",
+        "due_date",
+        "priority",
+        "status",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering = ["due_date", "-created_at"]
+
 
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
