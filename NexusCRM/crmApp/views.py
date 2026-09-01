@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from django.contrib.postgres import search
 from django.core import paginator
 from django.http import request
 from django.http import request
@@ -3543,10 +3544,19 @@ def audit_log_list(request):
         "user"
     ).order_by("-created_at")
 
+    paginator = Paginator(logs, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        "page_obj": page_obj,
+        # Keep the template's existing loop/empty-state variable while
+        # exposing the paginated page rather than the full queryset.
+        "audit_logs": page_obj.object_list,
+    }
+
     return render(
         request,
         "crmApp/audit_logs/list.html",
-        {
-            "audit_logs": logs,
-        }
+        context
     )
