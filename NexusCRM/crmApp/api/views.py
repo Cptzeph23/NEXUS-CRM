@@ -1,4 +1,7 @@
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+
 
 from crmApp.models import (
     Company,
@@ -24,6 +27,33 @@ from .serializers import (
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    filterset_fields = [
+        "industry",
+        "owner",
+    ]
+
+    search_fields = [
+        "name",
+        "email",
+        "phone",
+        "city",
+        "country",
+    ]
+
+    ordering_fields = [
+        "name",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering = ["name"]
 
 
 class ContactViewSet(viewsets.ModelViewSet):

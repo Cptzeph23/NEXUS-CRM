@@ -3,3 +3,4 @@ crm
 .idea
 pycache
 shell.py
+__pycache__
