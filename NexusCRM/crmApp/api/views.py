@@ -136,6 +136,35 @@ class DealViewSet(viewsets.ModelViewSet):
     queryset = Deal.objects.all()
     serializer_class = DealSerializer
 
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    filterset_fields = [
+        "company",
+        "contact",
+        "pipeline",
+        "stage",
+        "owner",
+    ]
+
+    search_fields = [
+        "name",
+        "description",
+    ]
+
+    ordering_fields = [
+        "name",
+        "amount",
+        "expected_close_date",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering = ["-created_at"]
+
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
