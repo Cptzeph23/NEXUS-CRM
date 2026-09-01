@@ -1,5 +1,6 @@
 asgiref==3.12.1
 Django==6.1
+djangorestframework==3.18.0
 environ==1.0
 pillow==12.3.0
 psycopg2-binary==2.9.12
