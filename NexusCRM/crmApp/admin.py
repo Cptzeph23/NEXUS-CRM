@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
+from .models import AuditLog
 # Register your models here.
 
 from .models import (
@@ -272,4 +273,43 @@ class TagAdmin(admin.ModelAdmin):
 
     search_fields = (
         "name",
+    )
+
+
+@admin.register(AuditLog)
+class AuditLogAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "user",
+        "action",
+        "model_name",
+        "object_id",
+        "ip_address",
+        "created_at",
+    )
+
+    list_filter = (
+        "action",
+        "model_name",
+        "created_at",
+    )
+
+    search_fields = (
+        "description",
+        "model_name",
+        "object_id",
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+        "ip_address",
+    )
+
+    readonly_fields = (
+        "user",
+        "action",
+        "model_name",
+        "object_id",
+        "description",
+        "ip_address",
+        "created_at",
     )
