@@ -60,6 +60,38 @@ class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    filterset_fields = [
+        "company",
+        "owner",
+        "status",
+    ]
+
+    search_fields = [
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        "mobile",
+        "job_title",
+        "city",
+        "country",
+    ]
+
+    ordering_fields = [
+        "first_name",
+        "last_name",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering = ["first_name", "last_name"]
+
 
 class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
