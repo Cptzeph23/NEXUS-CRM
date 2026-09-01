@@ -170,6 +170,33 @@ class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    filterset_fields = [
+        "activity_type",
+        "company",
+        "contact",
+        "lead",
+        "deal",
+        "assigned_to",
+    ]
+
+    search_fields = [
+        "subject",
+        "description",
+    ]
+
+    ordering_fields = [
+        "activity_date",
+        "created_at",
+    ]
+
+    ordering = ["-activity_date"]
+
 
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
