@@ -97,6 +97,40 @@ class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all()
     serializer_class = LeadSerializer
 
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
+
+    filterset_fields = [
+        "status",
+        "source",
+        "owner",
+        "converted_company",
+        "converted_contact",
+    ]
+
+    search_fields = [
+        "first_name",
+        "last_name",
+        "company_name",
+        "email",
+        "phone",
+        "job_title",
+        "description",
+    ]
+
+    ordering_fields = [
+        "first_name",
+        "last_name",
+        "estimated_value",
+        "created_at",
+        "updated_at",
+    ]
+
+    ordering = ["-created_at"]
+
 
 class DealViewSet(viewsets.ModelViewSet):
     queryset = Deal.objects.all()
