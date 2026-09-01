@@ -48,7 +48,7 @@ from .permissions import (
     can_manage_notifications,
     can_view_notifications,
     can_view_audit_logs,
-    
+
     )
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
