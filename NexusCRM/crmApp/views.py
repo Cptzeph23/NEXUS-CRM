@@ -322,6 +322,9 @@ def company_create(request):
             owner=request.user
         )
 
+        create_audit_log(request.user, "create", "Company", company.pk,
+                         f"Created company: {company.name}", request)
+
         messages.success(
             request,
             f"{company.name} was created successfully."
@@ -415,6 +418,9 @@ def company_edit(request, pk):
 
         company.save()
 
+        create_audit_log(request.user, "update", "Company", company.pk,
+                         f"Updated company: {company.name}", request)
+
         messages.success(
             request,
             f"{company.name} was updated successfully."
@@ -446,6 +452,9 @@ def company_delete(request, pk):
     if request.method == "POST":
 
         name = company.name
+
+        create_audit_log(request.user, "delete", "Company", company.pk,
+                         f"Deleted company: {name}", request)
 
         company.delete()
 
@@ -663,6 +672,9 @@ def contact_create(request):
             owner=request.user
         )
 
+        create_audit_log(request.user, "create", "Contact", contact.pk,
+                         f"Created contact: {contact.full_name}", request)
+
         messages.success(
             request,
             f"{contact.full_name} was created successfully."
@@ -781,6 +793,9 @@ def contact_edit(request, pk):
 
         contact.save()
 
+        create_audit_log(request.user, "update", "Contact", contact.pk,
+                         f"Updated contact: {contact.full_name}", request)
+
         messages.success(
             request,
             f"{contact.full_name} was updated successfully."
@@ -816,6 +831,9 @@ def contact_delete(request, pk):
     if request.method == "POST":
 
         name = contact.full_name
+
+        create_audit_log(request.user, "delete", "Contact", contact.pk,
+                         f"Deleted contact: {name}", request)
 
         contact.delete()
 
@@ -1035,6 +1053,9 @@ def lead_create(request):
 
             form.save_m2m()
 
+            create_audit_log(request.user, "create", "Lead", lead.pk,
+                             f"Created lead: {lead.full_name}", request)
+
             messages.success(
                 request,
                 f"Lead {lead.first_name} {lead.last_name} "
@@ -1105,6 +1126,9 @@ def lead_update(request, pk):
         if form.is_valid():
 
             lead = form.save()
+
+            create_audit_log(request.user, "update", "Lead", lead.pk,
+                             f"Updated lead: {lead.full_name}", request)
 
             messages.success(
                 request,
@@ -1203,6 +1227,15 @@ def lead_convert(request, pk):
                             name=form.cleaned_data["company_name"]
                         )
 
+                        create_audit_log(
+                            request.user,
+                            "create",
+                            "Company",
+                            company.pk,
+                            f"Created company during lead conversion: {company.name}",
+                            request,
+                        )
+
                     # ==========================
                     # CREATE CONTACT
                     # ==========================
@@ -1225,6 +1258,15 @@ def lead_convert(request, pk):
                             company=company,
                         )
 
+                        create_audit_log(
+                            request.user,
+                            "create",
+                            "Contact",
+                            contact.pk,
+                            f"Created contact during lead conversion: {contact.full_name}",
+                            request,
+                        )
+
                     # ==========================
                     # UPDATE LEAD
                     # ==========================
@@ -1240,6 +1282,15 @@ def lead_convert(request, pk):
                             "status",
                             "updated_at",
                         ]
+                    )
+
+                    create_audit_log(
+                        request.user,
+                        "update",
+                        "Lead",
+                        lead.pk,
+                        f"Converted lead: {lead.full_name}",
+                        request,
                     )
 
                 messages.success(
@@ -1297,6 +1348,9 @@ def lead_delete(request, pk):
 
         lead_name = f"{lead.first_name} {lead.last_name}".strip()
 
+        create_audit_log(request.user, "delete", "Lead", lead.pk,
+                         f"Deleted lead: {lead_name}", request)
+
         lead.delete()
 
         messages.success(
@@ -1335,6 +1389,9 @@ def deal_create(request):
             deal.save()
 
             form.save_m2m()
+
+            create_audit_log(request.user, "create", "Deal", deal.pk,
+                             f"Created deal: {deal.name}", request)
 
             messages.success(
                 request,
@@ -1513,6 +1570,9 @@ def activity_create(request):
             activity.created_by = request.user
 
             activity.save()
+
+            create_audit_log(request.user, "create", "Activity", activity.pk,
+                             f"Created activity: {activity.subject}", request)
 
             messages.success(
                 request,
@@ -1742,6 +1802,9 @@ def activity_edit(request, pk):
 
             updated_activity = form.save()
 
+            create_audit_log(request.user, "update", "Activity", updated_activity.pk,
+                             f"Updated activity: {updated_activity.subject}", request)
+
             messages.success(
                 request,
                 f"Activity '{updated_activity.subject}' "
@@ -1788,6 +1851,9 @@ def activity_delete(request, pk):
     if request.method == "POST":
 
         subject = activity.subject
+
+        create_audit_log(request.user, "delete", "Activity", activity.pk,
+                         f"Deleted activity: {subject}", request)
 
         activity.delete()
 
@@ -1890,6 +1956,9 @@ def deal_edit(request, pk):
 
             form.save_m2m()
 
+            create_audit_log(request.user, "update", "Deal", updated_deal.pk,
+                             f"Updated deal: {updated_deal.name}", request)
+
             messages.success(
                 request,
                 f"Deal '{updated_deal.name}' was updated successfully."
@@ -1937,6 +2006,9 @@ def deal_delete(request, pk):
     deal_name = deal.name
 
     if request.method == "POST":
+
+        create_audit_log(request.user, "delete", "Deal", deal.pk,
+                         f"Deleted deal: {deal_name}", request)
 
         deal.delete()
 
@@ -2001,6 +2073,9 @@ def task_create(request):
             task.created_by = request.user
 
             task.save()
+
+            create_audit_log(request.user, "create", "Task", task.pk,
+                             f"Created task: {task.title}", request)
 
             messages.success(
                 request,
@@ -2282,6 +2357,9 @@ def task_edit(request, pk):
 
             updated_task = form.save()
 
+            create_audit_log(request.user, "update", "Task", updated_task.pk,
+                             f"Updated task: {updated_task.title}", request)
+
             messages.success(
                 request,
                 f"Task '{updated_task.title}' "
@@ -2328,6 +2406,9 @@ def task_delete(request, pk):
     if request.method == "POST":
 
         title = task.title
+
+        create_audit_log(request.user, "delete", "Task", task.pk,
+                         f"Deleted task: {title}", request)
 
         task.delete()
 
@@ -2392,6 +2473,9 @@ def note_create(request):
             note.created_by = request.user
 
             note.save()
+
+            create_audit_log(request.user, "create", "Note", note.pk,
+                             f"Created note: {note.title or 'Untitled Note'}", request)
 
             messages.success(
                 request,
@@ -2558,6 +2642,9 @@ def note_edit(request, pk):
 
             updated_note = form.save()
 
+            create_audit_log(request.user, "update", "Note", updated_note.pk,
+                             f"Updated note: {updated_note.title or 'Untitled Note'}", request)
+
             messages.success(
                 request,
                 "Note was updated successfully."
@@ -2603,6 +2690,9 @@ def note_delete(request, pk):
     if request.method == "POST":
 
         title = note.title or "Untitled Note"
+
+        create_audit_log(request.user, "delete", "Note", note.pk,
+                         f"Deleted note: {title}", request)
 
         note.delete()
 
@@ -2677,6 +2767,9 @@ def calendar_event_create(request):
             event.created_by = request.user
 
             event.save()
+
+            create_audit_log(request.user, "create", "CalendarEvent", event.pk,
+                             f"Created event: {event.title}", request)
 
             messages.success(
                 request,
@@ -2770,6 +2863,9 @@ def calendar_event_edit(request, pk):
 
             updated_event = form.save()
 
+            create_audit_log(request.user, "update", "CalendarEvent", updated_event.pk,
+                             f"Updated event: {updated_event.title}", request)
+
             messages.success(
                 request,
                 f"Event '{updated_event.title}' was updated successfully."
@@ -2815,6 +2911,9 @@ def calendar_event_delete(request, pk):
     if request.method == "POST":
 
         title = event.title
+
+        create_audit_log(request.user, "delete", "CalendarEvent", event.pk,
+                         f"Deleted event: {title}", request)
 
         event.delete()
 
@@ -3239,6 +3338,9 @@ def settings_view(request):
 
             form.save()
 
+            create_audit_log(request.user, "update", "User", user.pk,
+                             f"Updated user profile: {user.username}", request)
+
             messages.success(
                 request,
                 "Your account information has been updated."
@@ -3284,6 +3386,9 @@ def preferences(request):
         if form.is_valid():
 
             form.save()
+
+            create_audit_log(request.user, "update", "UserPreference", preference.pk,
+                             f"Updated preferences for: {request.user.username}", request)
 
             messages.success(
                 request,
@@ -3445,10 +3550,3 @@ def audit_log_list(request):
             "audit_logs": logs,
         }
     )
-
-
-
-
-
-
-

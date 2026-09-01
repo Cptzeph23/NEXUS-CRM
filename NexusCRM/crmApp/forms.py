@@ -578,7 +578,9 @@ class DealForm(forms.ModelForm):
             )
         else:
             self.fields["stage"].queryset = (
-                PipelineStage.objects.none()
+                PipelineStage.objects.select_related("pipeline")
+                .filter(pipeline__is_active=True)
+                .order_by("pipeline__name", "order")
             )
 
     def clean(self):
@@ -1332,5 +1334,4 @@ class UserPreferenceForm(forms.ModelForm):
                 }
             ),
         }
-
 

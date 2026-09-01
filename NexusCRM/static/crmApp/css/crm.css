@@ -1,20 +1,20 @@
 :root {
-    --crm-primary: #2563eb;
-    --crm-primary-dark: #1d4ed8;
+    --crm-primary: #0f766e;
+    --crm-primary-dark: #115e59;
 
-    --crm-sidebar: #111827;
-    --crm-sidebar-hover: #1f2937;
+    --crm-sidebar: #263238;
+    --crm-sidebar-hover: #37474f;
 
     --crm-background: #f5f7fb;
     --crm-card: #ffffff;
 
-    --crm-text: #111827;
+    --crm-text: #263238;
     --crm-muted: #6b7280;
     --crm-border: #e5e7eb;
 
-    --crm-success: #16a34a;
-    --crm-warning: #d97706;
-    --crm-danger: #dc2626;
+    --crm-success: #16805d;
+    --crm-warning: #c27a16;
+    --crm-danger: #c65353;
 }
 
 
@@ -67,6 +67,8 @@ body {
     bottom: 0;
 
     z-index: 1000;
+
+    transition: transform .25s ease;
 }
 
 
@@ -166,13 +168,13 @@ body {
 
 
 .sidebar-link.active {
-    background: rgba(37, 99, 235, .18);
+    background: rgba(20, 184, 166, .18);
     color: #ffffff;
 }
 
 
 .sidebar-link.active i {
-    color: #60a5fa;
+    color: #5eead4;
 }
 
 
@@ -193,6 +195,8 @@ body {
     width: calc(100% - 250px);
 
     min-height: 100vh;
+
+    transition: margin-left .25s ease, width .25s ease;
 }
 
 
@@ -321,7 +325,7 @@ body {
     border-radius: 50%;
 
     background: #dbeafe;
-    color: #1d4ed8;
+    color: #0f766e;
 
     display: flex;
     align-items: center;
@@ -417,10 +421,19 @@ body {
 
     border: 1px solid var(--crm-border);
 
-    border-radius: 10px;
+    border-radius: 14px;
 
     box-shadow:
-        0 1px 2px rgba(0,0,0,.03);
+        0 8px 24px rgba(38, 50, 56, .07);
+
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.crm-card:hover {
+    border-color: #b7d8d2;
+    box-shadow: 0 12px 28px rgba(38, 50, 56, .11);
+    transform: translateY(-2px);
 }
 
 
@@ -428,6 +441,8 @@ body {
     padding: 16px 20px;
 
     border-bottom: 1px solid var(--crm-border);
+
+    background: linear-gradient(135deg, #ffffff, #f5fbfa);
 }
 
 
@@ -512,8 +527,8 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: #eff6ff;
-    color: #2563eb;
+    background: #dff5ef;
+    color: #0f766e;
 
     font-size: 13px;
     font-weight: 700;
@@ -581,10 +596,10 @@ body {
 
 
 .crm-form-control:focus {
-    border-color: #93c5fd;
+    border-color: #75cfc3;
 
     box-shadow:
-        0 0 0 3px rgba(37,99,235,.08);
+        0 0 0 3px rgba(15,118,110,.12);
 }
 
 
@@ -736,7 +751,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: #eff6ff;
+    background: #dff5ef;
 
     color: var(--crm-primary);
 
@@ -884,8 +899,6 @@ body {
 
     .crm-sidebar {
         transform: translateX(-100%);
-
-        transition: transform .2s ease;
     }
 
     .crm-sidebar.open {
@@ -896,6 +909,11 @@ body {
         margin-left: 0;
 
         width: 100%;
+    }
+
+    .crm-sidebar.open ~ .crm-main {
+        margin-left: 250px;
+        width: calc(100% - 250px);
     }
 
     .mobile-sidebar-toggle {

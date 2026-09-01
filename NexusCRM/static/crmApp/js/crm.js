@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         sidebarToggle.addEventListener("click", function () {
 
-            sidebar.classList.toggle("open");
+            const isOpen = sidebar.classList.toggle("open");
+            sidebarToggle.setAttribute("aria-expanded", String(isOpen));
 
         });
 

@@ -1,10 +1,10 @@
 :root {
 
-    --primary: #5b5bd6;
-    --primary-dark: #4949bd;
+    --primary: #0f766e;
+    --primary-dark: #115e59;
 
-    --sidebar: #101522;
-    --sidebar-hover: #1b2232;
+    --sidebar: #263238;
+    --sidebar-hover: #37474f;
     --sidebar-text: #aeb7c7;
 
     --background: #f7f8fc;
@@ -827,7 +827,7 @@ body {
 
     background: #eeeeff;
 
-    color: #5b5bd6;
+    color: #0f766e;
 }
 
 .stat-icon.blue {
@@ -1170,31 +1170,31 @@ body {
 }
 
 body[data-theme="dark"] {
-    background-color: #111827;
+    background-color: #263238;
     color: #e5e7eb;
 }
 
 /* Main application area */
 body[data-theme="dark"] .crm-wrapper {
-    background-color: #111827;
+    background-color: #263238;
 }
 
 body[data-theme="dark"] .crm-main {
-    background-color: #111827;
+    background-color: #263238;
 }
 
 /* Main content/page area */
 body[data-theme="dark"] main {
-    background-color: #111827;
+    background-color: #263238;
 }
 
 body[data-theme="dark"] .crm-content {
-    background-color: #111827;
+    background-color: #263238;
 }
 
 /* Top navigation */
 body[data-theme="dark"] .crm-topbar {
-    background-color: #111827;
+    background-color: #263238;
     border-bottom-color: #374151;
 }
 
@@ -1280,5 +1280,5 @@ body[data-theme="dark"] .dropdown-item:hover {
 }
 body[data-theme="dark"] .crm-wrapper {
     min-height: 100vh;
-    background-color: #111827;
+    background-color: #263238;
 }
