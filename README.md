@@ -1,657 +1,937 @@
 # NexusCRM
 
-NexusCRM is a professional, role-based Customer Relationship Management
-(CRM) system built with Django, HTML, CSS, JavaScript, and Bootstrap.
+NexusCRM is a professional, web-based Customer Relationship Management (CRM) system built with Django. It is designed to centralize customer and sales information, manage leads and deals, coordinate activities and tasks, provide role-based access control, maintain audit trails, and expose selected CRM functionality through a REST API.
 
-The system is designed to centralize customer and sales information,
-manage leads and deals, track activities and tasks, organize notes and
-calendar events, provide notifications and user preferences, maintain
-audit history, expose protected REST API endpoints, and provide a
-foundation for production deployment and future integrations.
+The project is being developed as a production-oriented CRM rather than a simple CRUD demonstration. Development is organized into phases, with functionality tested and validated before moving to the next phase.
 
-> **Project status:** Active development\
-> **Current development stage:** Automated testing and
-> production-readiness work\
-> **Primary framework:** Django\
-> **Primary application:** `crmApp`
-
-------------------------------------------------------------------------
+---
 
 ## Table of Contents
 
-1.  [Project Overview](#project-overview)
-2.  [Project Goals](#project-goals)
-3.  [Technology Stack](#technology-stack)
-4.  [Core Features](#core-features)
-5.  [User Roles and Permissions](#user-roles-and-permissions)
-6.  [CRM Modules](#crm-modules)
-7.  [System Architecture](#system-architecture)
-8.  [Project Structure](#project-structure)
-9.  [Database and Data Model](#database-and-data-model)
-10. [Authentication and User
-    Profiles](#authentication-and-user-profiles)
-11. [Leads and Lead Conversion](#leads-and-lead-conversion)
-12. [Deals and Sales Pipeline](#deals-and-sales-pipeline)
-13. [Activities and Tasks](#activities-and-tasks)
-14. [Notes](#notes)
-15. [Calendar](#calendar)
-16. [Notifications](#notifications)
-17. [User Preferences](#user-preferences)
-18. [Audit Logging](#audit-logging)
-19. [Global Search](#global-search)
-20. [REST API](#rest-api)
-21. [Security](#security)
-22. [Automated Testing](#automated-testing)
-23. [Development Environment](#development-environment)
-24. [Installation and Setup](#installation-and-setup)
-25. [Database Migrations](#database-migrations)
-26. [Running the Application](#running-the-application)
-27. [Testing the Application](#testing-the-application)
-28. [API Authentication](#api-authentication)
-29. [Development Workflow](#development-workflow)
-30. [Development Phases](#development-phases)
-31. [Production Roadmap](#production-roadmap)
-32. [Deployment Considerations](#deployment-considerations)
-33. [Troubleshooting](#troubleshooting)
-34. [Development Conventions](#development-conventions)
-35. [Future Enhancements](#future-enhancements)
-36. [Project Principles](#project-principles)
-37. [License](#license)
+1. [Project Overview](#project-overview)
+2. [Project Goals](#project-goals)
+3. [Core Capabilities](#core-capabilities)
+4. [Technology Stack](#technology-stack)
+5. [System Architecture](#system-architecture)
+6. [Application Structure](#application-structure)
+7. [Authentication and Authorization](#authentication-and-authorization)
+8. [CRM Modules](#crm-modules)
+9. [Dashboard and Search](#dashboard-and-search)
+10. [Notifications and Preferences](#notifications-and-preferences)
+11. [Audit Logging](#audit-logging)
+12. [REST API](#rest-api)
+13. [Data Model](#data-model)
+14. [Role and Permission Model](#role-and-permission-model)
+15. [Testing](#testing)
+16. [Development Phases](#development-phases)
+17. [Local Development Setup](#local-development-setup)
+18. [Environment Configuration](#environment-configuration)
+19. [Database and Migrations](#database-and-migrations)
+20. [Running the Application](#running-the-application)
+21. [API Development](#api-development)
+22. [Security](#security)
+23. [Performance](#performance)
+24. [Production Deployment](#production-deployment)
+25. [Troubleshooting](#troubleshooting)
+26. [Development Guidelines](#development-guidelines)
+27. [Future Roadmap](#future-roadmap)
+28. [Project Status](#project-status)
+29. [License](#license)
 
-------------------------------------------------------------------------
+---
 
 # Project Overview
 
-NexusCRM is a web-based CRM intended to provide organizations with a
-centralized platform for managing relationships with customers,
-prospects, leads, and sales opportunities.
+**Project Name:** NexusCRM
 
-The application combines operational CRM functionality with role-based
-access control, activity tracking, auditability, search, notifications,
-and API access.
+**Project Type:** Customer Relationship Management System
 
-The project has been developed incrementally through defined phases.
-Each phase adds a functional part of the system and is tested before
-moving to the next stage.
+**Primary Framework:** Django
 
-The system is intended to be:
+**Primary Language:** Python
 
--   Professional enough for client demonstrations.
--   Modular and maintainable.
--   Secure and role-aware.
--   Extensible for future integrations.
--   Suitable for deployment beyond the local development environment.
--   Structured around actual business workflows rather than isolated
-    CRUD pages.
+**Frontend:** HTML5, CSS3, JavaScript, Bootstrap
 
-------------------------------------------------------------------------
+**Backend API:** Django REST Framework
+
+**Database:** Django-supported relational database; SQLite is used during local development unless another database is configured.
+
+NexusCRM provides a centralized workspace where an organization can manage its customer lifecycle from initial lead capture through sales opportunities, customer relationships, activities, follow-ups, notes, tasks, and reporting.
+
+The application also includes user roles, permissions, notifications, preferences, audit logs, global search, and a REST API foundation for integrations.
+
+---
 
 # Project Goals
 
-The primary goals of NexusCRM are to provide:
+NexusCRM is intended to provide:
 
-### Customer management
+- Centralized customer information
+- Structured lead management
+- Sales pipeline management
+- Deal/opportunity tracking
+- Company and contact management
+- Activity and task management
+- Internal notes
+- Calendar-based planning
+- Notifications
+- User preferences
+- Role-based access control
+- Auditability of important actions
+- Global CRM search
+- REST API access
+- Automated regression testing
+- A foundation suitable for production deployment
+- An extensible architecture for future integrations
 
-A centralized location for companies and contacts.
+The long-term goal is to evolve NexusCRM from a functional CRM application into a complete, secure, maintainable business platform.
 
-### Lead management
+---
 
-A structured process for capturing, assigning, qualifying, updating, and
-converting leads.
+# Core Capabilities
 
-### Sales management
+## Customer Management
 
-Pipeline, stages, deals, amounts, expected close dates, ownership, and
-sales tracking.
+NexusCRM supports management of:
 
-### Productivity management
+- Companies
+- Contacts
+- Leads
+- Deals
+- Sales pipelines
+- Pipeline stages
+- Activities
+- Tasks
+- Notes
+- Tags
 
-Tasks, activities, notes, and calendar events associated with CRM
-records.
+## Sales Management
 
-### User management
+The sales workflow supports:
 
-Authentication, profiles, roles, and role-aware functionality.
+- Lead creation
+- Lead ownership
+- Lead status management
+- Lead search and filtering
+- Lead estimated values
+- Lead conversion
+- Company/contact association
+- Deal management
+- Pipeline management
+- Pipeline stage management
+- Deal ownership
+- Deal amounts
+- Expected close dates
+- Tags
 
-### Operational visibility
+## Productivity
 
-Dashboard statistics, pipeline information, lead information, search,
-notifications, and reporting foundations.
+The system includes:
 
-### Accountability
+- Activities
+- Tasks
+- Calendar
+- Notes
+- Notifications
+- User preferences
+- Dashboard information
+- Global search
 
-Audit logs that record important system actions.
+## Administration
 
-### Integration readiness
+Administrative functionality includes:
 
-Protected REST API endpoints and serializers for core CRM resources.
+- User management
+- User profiles
+- Role assignment
+- Role-specific permissions
+- Audit logs
+- System configuration foundations
+- API access controls
 
-------------------------------------------------------------------------
+---
 
 # Technology Stack
 
+NexusCRM deliberately uses a straightforward and maintainable web stack.
+
 ## Backend
 
--   Python
--   Django
--   Django ORM
--   Django authentication
--   Django migrations
+### Python
 
-## Frontend
+Python is the primary programming language used for server-side application logic.
 
--   HTML5
--   CSS3
--   JavaScript
--   Bootstrap
--   Bootstrap Icons
+Responsibilities include:
 
-## API
+- Business logic
+- Database interaction
+- Form processing
+- Authentication
+- Authorization
+- Validation
+- API processing
+- Automated tests
+- Application configuration
 
--   Django REST Framework
--   API serializers
--   Protected API endpoints
--   Authentication-controlled API access
+### Django
 
-## Database
+Django is the primary web framework.
 
-The application uses Django's database abstraction layer and migrations.
-The development environment is configured around Django's standard
-database workflow, while production deployment can use a production
-database configuration appropriate to the hosting environment.
+Django provides:
 
-## Development Tools
+- URL routing
+- Views
+- Templates
+- ORM
+- Forms
+- Authentication
+- Sessions
+- Middleware
+- CSRF protection
+- Administration
+- Migrations
+- Testing infrastructure
 
-The project is developed using a Python virtual environment named:
+The project has been developed against the Django 5.x generation, with the current development environment using Django 5.2.8.
 
-``` text
-crm
+### Django ORM
+
+The Django ORM is used for database abstraction and relational data management.
+
+It provides the application models for entities such as:
+
+- Users
+- Profiles
+- Companies
+- Contacts
+- Leads
+- Pipelines
+- Pipeline stages
+- Deals
+- Activities
+- Tasks
+- Notes
+- Tags
+- Audit logs
+- Notifications
+- User preferences
+
+---
+
+# Frontend Stack
+
+## HTML5
+
+HTML5 provides the semantic structure of the application.
+
+It is used for:
+
+- Pages
+- Forms
+- Tables
+- Navigation
+- Dashboard components
+- Detail pages
+- Modal interfaces
+- Search interfaces
+
+## CSS3
+
+CSS3 is used for:
+
+- Application layout
+- Dashboard styling
+- Sidebar styling
+- Responsive design
+- Tables
+- Forms
+- Cards
+- Navigation
+- UI states
+- Custom CRM styling
+
+The application maintains custom styling on top of the Bootstrap component system.
+
+## JavaScript
+
+JavaScript provides client-side interaction and dynamic behavior.
+
+It is used for functionality such as:
+
+- Interactive UI elements
+- Dynamic page behavior
+- Notifications
+- Search interactions
+- Form-related behavior
+- Dashboard/UI enhancements
+
+## Bootstrap
+
+Bootstrap provides the primary frontend component framework.
+
+It is used for:
+
+- Responsive layouts
+- Grid system
+- Cards
+- Buttons
+- Forms
+- Tables
+- Navigation
+- Badges
+- Modals
+- Responsive utilities
+
+## Bootstrap Icons
+
+Bootstrap Icons are used throughout the application for interface elements such as:
+
+- Dashboard
+- Companies
+- Contacts
+- Leads
+- Deals
+- Tasks
+- Calendar
+- Notifications
+- Settings
+- Search
+
+---
+
+# API Stack
+
+## Django REST Framework
+
+Django REST Framework (DRF) provides the REST API layer.
+
+It is used for:
+
+- Serializers
+- API endpoints
+- Request/response handling
+- API authentication
+- API permissions
+- JSON responses
+- Integration-ready backend services
+
+The API is organized under the `/api/v1/` namespace.
+
+---
+
+# Development and Testing Stack
+
+The project uses Django's built-in testing framework together with Django REST Framework's testing facilities.
+
+The automated test suite is organized around:
+
+- Model tests
+- Permission tests
+- View tests
+- API tests
+
+Development also relies on:
+
+- Django management commands
+- Django migrations
+- Django system checks
+- Python virtual environments
+- Git-based source control
+
+---
+
+# System Architecture
+
+NexusCRM follows a conventional Django architecture.
+
+```text
+Browser
+   |
+   v
+HTML / CSS / JavaScript / Bootstrap
+   |
+   v
+Django URL Routing
+   |
+   v
+Django Views
+   |
+   +--------------------+
+   |                    |
+   v                    v
+Django Forms       Django REST Framework
+   |                    |
+   +----------+---------+
+              |
+              v
+          Django ORM
+              |
+              v
+        Relational Database
 ```
 
-The project is maintained from:
+The application is organized around the `crmApp` Django application.
 
-``` text
-~/Desktop/Programs/python/Nexus-CRM/NexusCRM
+The main application responsibilities are separated into:
+
+- Models
+- Forms
+- Views
+- URLs
+- Templates
+- Static assets
+- Permissions
+- API serializers/endpoints
+- Tests
+- Signals
+- Application configuration
+
+---
+
+# Application Structure
+
+The project intentionally maintains the existing architecture rather than creating duplicate applications, template directories, static directories, URL configurations, or view modules.
+
+The important structure is conceptually:
+
+```text
+NexusCRM/
+├── manage.py
+├── NexusCRM/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+│
+├── crmApp/
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── permissions.py
+│   ├── signals.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── api/
+│   │   ├── serializers.py
+│   │   └── ...
+│   ├── migrations/
+│   ├── tests/
+│   │   ├── __init__.py
+│   │   ├── test_models.py
+│   │   ├── test_permissions.py
+│   │   ├── test_views.py
+│   │   └── test_api.py
+│   └── ...
+│
+├── templates/
+│   └── crmApp/
+│       ├── base.html
+│       └── ...
+│
+├── static/
+│   └── ...
+│
+└── ...
 ```
 
-------------------------------------------------------------------------
+> The exact contents may grow as development continues. Existing project structure should always be inspected before adding new files.
 
-# Core Features
+## Primary Base Template
 
-NexusCRM currently includes the following major functionality:
+The main application base template is:
 
--   User authentication
--   User profiles
--   Role-based access control
--   Dashboard
--   Companies
--   Contacts
--   Leads
--   Lead ownership
--   Lead status management
--   Lead conversion
--   Deals
--   Sales pipelines
--   Pipeline stages
--   Activities
--   Tasks
--   Notes
--   Calendar
--   Notifications
--   User preferences
--   Global search
--   Audit logs
--   REST API
--   API serializers
--   API authentication protection
--   Database migrations
--   Automated testing foundation
+```text
+templates/crmApp/base.html
+```
 
-------------------------------------------------------------------------
+This is the primary template used for the CRM interface.
 
-# User Roles and Permissions
+The project should not introduce another competing base template when extending existing functionality.
 
-NexusCRM uses role-based access control.
+---
 
-The defined roles are:
+# Authentication and Authorization
 
-  Role        Display Name           General Responsibility
-  ----------- ---------------------- --------------------------------------
-  `admin`     Administrator          Full system administration
-  `manager`   Manager                Management and operational oversight
-  `sales`     Sales Representative   Sales and assigned CRM records
-  `support`   Support                Customer/support-oriented access
-  `viewer`    Viewer                 Read-only access
+NexusCRM uses Django's authentication system for user accounts and sessions.
+
+Users are associated with a `Profile` containing additional CRM-specific information.
+
+## User Profile
+
+The profile contains information including:
+
+- User
+- Role
+- Phone
+- Job title
+- Avatar
+- Created timestamp
+- Updated timestamp
+
+The profile is linked to Django's built-in `User` model through a one-to-one relationship.
+
+The application uses a signal-based profile creation mechanism so that profiles are automatically created when appropriate users are created.
+
+---
+
+# User Roles
+
+NexusCRM currently supports the following roles:
+
+| Internal Role | Display Name |
+|---|---|
+| `admin` | Administrator |
+| `manager` | Manager |
+| `sales` | Sales Representative |
+| `support` | Support |
+| `viewer` | Viewer |
+
+The default role for newly created profiles is Viewer unless explicitly assigned otherwise.
+
+---
+
+# Role Responsibilities
 
 ## Administrator
 
-Administrators have the broadest access to the system.
+Designed for complete system administration.
 
-Typical responsibilities include:
+Typical capabilities include:
 
--   Managing users.
--   Managing roles.
--   Managing CRM records.
--   Managing system settings.
--   Reviewing audit logs.
--   Performing administrative operations.
+- User administration
+- Full CRM management
+- Configuration
+- Audit access
+- Full record management
+- Administrative operations
 
 ## Manager
 
-Managers have broad operational access and can manage CRM data within
-the permissions implemented by the application.
+Designed for management-level CRM operations.
+
+Typical capabilities include:
+
+- Managing CRM records
+- Supervising sales activity
+- Managing notes
+- Reviewing customer information
+- Managing deals and pipeline information
+- Reviewing operational information
 
 ## Sales Representative
 
-Sales users are primarily responsible for sales-related CRM activity.
+Designed for sales staff.
 
-Depending on the module, access may be restricted to records they own or
-create.
+Typical capabilities include:
 
-For example, note permissions currently allow sales users to:
-
--   View notes.
--   Create notes.
--   Edit notes they created.
+- Managing assigned sales records
+- Creating and updating leads
+- Managing appropriate customer records
+- Creating notes
+- Managing personal/owned records
+- Working with deals and sales activities
 
 ## Support
 
-Support users have access appropriate to support operations and are
-restricted from administrative modifications where applicable.
+Designed for support-oriented access.
+
+Access is controlled according to the specific module and permission rules.
 
 ## Viewer
 
-Viewers are intended for read-only access.
+Designed for read-only access.
 
-They should not be able to perform protected modification operations
-such as creating or editing notes where role restrictions apply.
+Viewers can inspect permitted information but are restricted from destructive or management operations.
 
-------------------------------------------------------------------------
+---
 
 # CRM Modules
 
 ## Dashboard
 
-The dashboard provides an operational overview of CRM activity.
+The dashboard provides an overview of CRM activity.
 
-It includes CRM statistics such as:
+Current dashboard information includes areas such as:
 
--   Lead statistics.
--   Qualified lead information.
--   Pipeline value.
--   Other system-level CRM indicators implemented in the dashboard.
+- Lead statistics
+- New leads
+- Qualified leads
+- Pipeline value
+- CRM activity information
 
-The dashboard is designed to give users an immediate view of important
-CRM information after authentication.
+The dashboard is designed to provide an immediate overview of the state of the CRM.
 
-------------------------------------------------------------------------
+---
 
-## Companies
+# Companies
 
-Companies represent organizations stored within the CRM.
+Companies represent organizations/customers in the CRM.
 
 Company information includes fields such as:
 
--   Name
--   Industry
--   Website
--   Email
--   Phone
--   Address
--   City
--   Country
--   Description
--   Owner
--   Creation timestamp
--   Last update timestamp
+- Name
+- Industry
+- Website
+- Email
+- Phone
+- Address
+- City
+- Country
+- Description
+- Owner
+- Created timestamp
+- Updated timestamp
 
-Companies can be associated with contacts, leads, deals, activities,
-tasks, and notes.
+Supported operations include:
 
-------------------------------------------------------------------------
+- List
+- Search
+- View
+- Create
+- Edit
+- Delete
+- Ownership management
 
-## Contacts
+---
 
-Contacts represent individual people associated with CRM organizations.
+# Contacts
+
+Contacts represent individuals associated with companies or CRM relationships.
 
 Contact information includes:
 
--   First name
--   Last name
--   Company
--   Owner
--   Job title
--   Email
--   Phone
--   Mobile
--   Status
--   Address
--   City
--   Country
--   Notes
--   Creation timestamp
--   Last update timestamp
+- First name
+- Last name
+- Company
+- Owner
+- Job title
+- Email
+- Phone
+- Mobile
+- Status
+- Address
+- City
+- Country
+- Notes
+- Created timestamp
+- Updated timestamp
+
+Supported operations include:
+
+- List
+- Search
+- View
+- Create
+- Edit
+- Delete
 
 Contact statuses include:
 
--   Lead
--   Prospect
--   Customer
--   Inactive
+- Lead
+- Prospect
+- Customer
+- Inactive
 
-------------------------------------------------------------------------
+---
 
-## Leads
+# Leads
 
-Leads represent potential customers or sales opportunities before they
-become established CRM relationships.
+Leads represent potential customers entering the sales process.
 
-Lead information includes:
+Lead fields include:
 
--   First name
--   Last name
--   Company name
--   Email
--   Phone
--   Job title
--   Source
--   Status
--   Estimated value
--   Owner
--   Description
--   Tags
--   Converted company
--   Converted contact
--   Creation timestamp
--   Last update timestamp
+- First name
+- Last name
+- Company name
+- Email
+- Phone
+- Job title
+- Source
+- Status
+- Estimated value
+- Owner
+- Description
+- Tags
+- Converted company
+- Converted contact
+- Created timestamp
+- Updated timestamp
 
-The lead workflow includes:
+Lead functionality includes:
 
--   Lead creation
--   Ownership
--   Search/filtering
--   Pagination
--   Lead details
--   Lead editing
--   Lead deletion
--   Status transitions
--   Conversion into CRM records
--   Dashboard statistics
+- Lead creation
+- Lead listing
+- Lead detail pages
+- Search
+- Filtering
+- Pagination
+- Editing
+- Deletion
+- Ownership
+- Status transitions
+- Duplicate detection
+- Lead conversion
+- Company/contact conversion relationships
+- Dashboard statistics
 
-The application also contains duplicate-detection and controlled
-lead-status transition logic.
+The application uses controlled lead status transitions to prevent invalid workflow changes.
 
-------------------------------------------------------------------------
+---
 
-# Lead Conversion
+# Deals
 
-Lead conversion allows a lead to become an established CRM relationship.
-
-A converted lead can be associated with:
-
--   A company
--   A contact
-
-The `Lead` model contains:
-
-``` text
-converted_company
-converted_contact
-```
-
-This provides a connection between the original lead and the resulting
-CRM records.
-
-------------------------------------------------------------------------
-
-# Deals and Sales Pipeline
-
-NexusCRM includes sales pipeline management.
-
-## Pipeline
-
-A pipeline represents a sales workflow.
-
-## Pipeline Stage
-
-A pipeline stage represents a step within a pipeline.
-
-## Deal
-
-A deal represents a sales opportunity moving through a pipeline.
+Deals represent sales opportunities.
 
 Deal information includes:
 
--   Deal name
--   Company
--   Contact
--   Pipeline
--   Stage
--   Amount
--   Expected close date
--   Owner
--   Description
--   Tags
--   Creation timestamp
--   Last update timestamp
+- Deal name
+- Company
+- Contact
+- Pipeline
+- Pipeline stage
+- Amount
+- Expected close date
+- Owner
+- Description
+- Tags
+- Created timestamp
+- Updated timestamp
 
-The application enforces pipeline/stage integrity so that a deal's
-selected stage belongs to its selected pipeline.
+The `Deal.clean()` validation ensures that a selected stage belongs to the selected pipeline.
 
-This validation is implemented in the `Deal.clean()` model logic.
+This protects the integrity of pipeline data.
 
-------------------------------------------------------------------------
+---
 
-# Activities and Tasks
+# Pipelines
 
-## Activities
+Pipelines represent sales processes.
 
-Activities record interactions or events associated with CRM records.
+A pipeline contains stages representing progression through the sales cycle.
+
+The system supports:
+
+- Pipeline creation
+- Pipeline editing
+- Pipeline deletion
+- Stage creation
+- Stage editing
+- Stage deletion
+- Pipeline-stage relationships
+- Deal-stage validation
+
+---
+
+# Activities
+
+Activities provide a history of customer and sales interactions.
 
 Supported activity types include:
 
--   Call
--   Email
--   Meeting
--   SMS
--   Other
+- Call
+- Email
+- Meeting
+- SMS
+- Other
 
-An activity can be associated with:
+Activities can be associated with:
 
--   Company
--   Contact
--   Lead
--   Deal
+- Company
+- Contact
+- Lead
+- Deal
 
-Additional activity information includes:
+Activity information also includes:
 
--   Subject
--   Description
--   Assigned user
--   Activity date
--   Creator
--   Creation timestamp
+- Subject
+- Description
+- Assigned user
+- Activity date
+- Created by
+- Created timestamp
 
-------------------------------------------------------------------------
+---
 
-## Tasks
+# Tasks
 
-Tasks represent actionable work.
+Tasks provide follow-up and work management.
 
-Task information includes:
+A task may be associated with:
 
--   Title
--   Description
--   Company
--   Contact
--   Lead
--   Deal
--   Assigned user
--   Due date
--   Priority
--   Status
--   Creator
--   Creation timestamp
--   Last update timestamp
+- Company
+- Contact
+- Lead
+- Deal
 
-Task priorities include:
+Task fields include:
 
--   Low
--   Normal
--   High
--   Urgent
+- Title
+- Description
+- Assigned user
+- Due date
+- Priority
+- Status
+- Created by
+- Created timestamp
+- Updated timestamp
 
-Task statuses include:
+## Task Priorities
 
--   Pending
--   In progress
--   Completed
--   Cancelled
+- Low
+- Normal
+- High
+- Urgent
 
-Tasks can therefore be attached directly to CRM records while
-maintaining ownership and accountability.
+## Task Statuses
 
-------------------------------------------------------------------------
+- Pending
+- In progress
+- Completed
+- Cancelled
+
+---
 
 # Notes
 
-Notes provide a way to store additional CRM information that does not
-fit into structured fields.
+Notes provide internal CRM documentation.
 
-A note contains:
+A note can be associated with:
 
--   Title
--   Content
--   Company
--   Contact
--   Lead
--   Deal
--   Creator
--   Creation timestamp
--   Last update timestamp
+- Company
+- Contact
+- Lead
+- Deal
 
-Notes are ordered with the newest records first.
+Note fields include:
 
-## Note permissions
+- Title
+- Content
+- Created by
+- Created timestamp
+- Updated timestamp
 
-The current permission design includes:
+Notes support:
 
-  Action     Admin   Manager   Sales   Support   Viewer
-  -------- ------- --------- ------- --------- --------
-  View         Yes       Yes     Yes       Yes      Yes
-  Create       Yes       Yes     Yes        No       No
-  Edit         Yes       Yes     Own        No       No
-  Delete       Yes       Yes      No        No       No
+- Creation
+- Listing
+- Detail viewing
+- Editing
+- Deletion
+- Role-based permissions
 
-The exact enforcement is implemented in the application's permission
-functions and views.
+Current note permissions include:
 
-------------------------------------------------------------------------
+- Administrators and Managers can manage notes broadly.
+- Sales Representatives can create notes and edit notes they created.
+- Support and Viewer roles are restricted from note management operations according to the permission layer.
+- Authorized users can view permitted notes.
+
+---
 
 # Calendar
 
-The calendar module provides CRM scheduling functionality.
+The Calendar module provides a centralized view for scheduled CRM events and activities.
 
-Calendar functionality has been implemented as a working module rather
-than a placeholder.
+It is intended to help users coordinate:
 
-It supports the calendar workflow implemented in the application,
-including:
+- Meetings
+- Calls
+- Follow-ups
+- Activities
+- Scheduled work
 
--   Calendar views
--   Event creation
--   Event forms
--   Event listing
--   Event details
--   Event deletion
--   Calendar actions
+The Calendar functionality is already implemented and integrated into the primary CRM navigation.
 
-Calendar functionality is integrated into the primary CRM navigation.
-
-------------------------------------------------------------------------
+---
 
 # Notifications
 
-NexusCRM includes a notification system for communicating relevant
-system events to users.
+NexusCRM includes a notification system integrated into the main application interface.
 
-The main interface includes a notification control in the primary
-application layout.
+The main navigation contains a notification control and notification indicator.
 
-Notifications can be surfaced through the application's notification
-workflow and UI.
+The notification system provides the foundation for informing users about relevant CRM events.
 
-The notification system is designed to be extensible for additional CRM
-events.
-
-------------------------------------------------------------------------
+---
 
 # User Preferences
 
-Users can maintain configurable preferences within the application.
+Users can manage application preferences through the Settings area.
 
-Preferences are stored independently from the main authentication record
-and allow user-specific application settings to be managed.
+Preferences are stored per user and are separate from core CRM records.
 
-Preference changes are also integrated with the audit logging system
-where applicable.
+This provides a foundation for user-specific UI and notification configuration.
 
-------------------------------------------------------------------------
-
-# Audit Logging
-
-NexusCRM includes an `AuditLog` model for tracking important system
-actions.
-
-Audit logging provides accountability by recording events such as:
-
--   Record creation
--   Record updates
--   Other tracked system actions
-
-The audit log contains information associated with the user and action
-being performed.
-
-Audit logs are useful for:
-
--   Troubleshooting
--   Accountability
--   Security review
--   Administrative monitoring
--   Understanding changes made to CRM data
-
-The audit logging module has been migrated into the active database
-schema.
-
-------------------------------------------------------------------------
+---
 
 # Global Search
 
-NexusCRM provides global search functionality across the application.
+NexusCRM provides global search functionality.
 
-The search feature is designed to allow users to locate CRM information
-without navigating manually through every module.
+The purpose is to allow users to search across multiple CRM entities without having to manually navigate to each module.
 
-Search coverage includes the core CRM entities implemented by the
-application.
+Search functionality is already integrated into the application and should be extended rather than replaced as new modules are added.
 
-Global search is already integrated into the system and should be
-extended rather than duplicated when new searchable modules are
-introduced.
+---
 
-------------------------------------------------------------------------
+# Audit Logging
+
+NexusCRM includes an audit logging system for tracking important system actions.
+
+The `AuditLog` model records events such as:
+
+- Record creation
+- Record updates
+- User preference changes
+- Other important application actions
+
+Audit information can include:
+
+- User
+- Action
+- Object/type
+- Object identifier
+- Description/details
+- Timestamp
+
+Audit logging is important for:
+
+- Accountability
+- Troubleshooting
+- Security monitoring
+- Administrative review
+- Change tracking
+
+The audit system is already migrated and operational.
+
+---
 
 # REST API
 
-NexusCRM provides protected REST API functionality through Django REST
-Framework.
+NexusCRM includes a REST API under:
 
-The API exposes serializers and protected endpoints for core CRM
-resources.
+```text
+/api/v1/
+```
 
-Current serializer coverage includes:
+The API is designed to provide structured access to CRM resources and serve as the integration layer for future applications and services.
 
-``` text
+## Current API Serializer Coverage
+
+Serializers currently exist for:
+
+- Companies
+- Contacts
+- Leads
+- Deals
+- Activities
+- Tasks
+- Notes
+
+Examples:
+
+```text
 CompanySerializer
 ContactSerializer
 LeadSerializer
@@ -661,307 +941,128 @@ TaskSerializer
 NoteSerializer
 ```
 
-The API is protected against unauthenticated access.
+## API Security
 
-For example, accessing the API without authentication returns an
-authentication error rather than exposing CRM data.
+Unauthenticated requests to the protected API are rejected.
 
-## API structure
+Example:
 
-The primary API namespace is:
-
-``` text
-/api/v1/
+```bash
+curl http://127.0.0.1:8003/api/v1/
 ```
 
-The API is intended to provide a foundation for:
+Expected response:
 
--   External integrations
--   Mobile applications
--   Third-party systems
--   Future automation
--   Internal frontend/API separation
--   Reporting integrations
-
-------------------------------------------------------------------------
-
-# System Architecture
-
-The project follows a Django application architecture centered around
-the `crmApp` application.
-
-The system can broadly be divided into:
-
-``` text
-Browser
-   |
-   v
-Django URLs
-   |
-   v
-Views
-   |
-   +------ Forms
-   |
-   +------ Permissions
-   |
-   +------ Models / ORM
-   |
-   v
-Database
-
-API clients
-   |
-   v
-/api/v1/
-   |
-   v
-DRF Views / Endpoints
-   |
-   v
-Serializers
-   |
-   v
-Models / ORM
-   |
-   v
-Database
+```json
+{
+    "detail": "Authentication credentials were not provided."
+}
 ```
 
-The frontend uses Django templates together with Bootstrap, CSS, and
-JavaScript.
+This confirms that the API is protected rather than publicly exposing CRM data.
 
-The primary application base template is:
+---
 
-``` text
-templates/crmApp/base.html
-```
+# Data Model
 
-This template is the main layout foundation for the CRM interface.
+The major CRM models include:
 
-------------------------------------------------------------------------
-
-# Project Structure
-
-The project structure should be treated as the existing source of truth.
-
-A simplified representation is:
-
-``` text
-Nexus-CRM/
-└── NexusCRM/
-    ├── manage.py
-    ├── README.md
-    ├── crmApp/
-    │   ├── __init__.py
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── forms.py
-    │   ├── models.py
-    │   ├── permissions.py
-    │   ├── signals.py
-    │   ├── urls.py
-    │   ├── views.py
-    │   ├── api/
-    │   │   └── serializers.py
-    │   ├── migrations/
-    │   └── tests/
-    ├── NexusCRM/
-    │   ├── __init__.py
-    │   ├── settings.py
-    │   ├── urls.py
-    │   ├── asgi.py
-    │   └── wsgi.py
-    ├── templates/
-    │   └── crmApp/
-    │       ├── base.html
-    │       └── ...
-    └── static/
-        └── ...
-```
-
-> The exact directory contents may evolve as the project progresses.
-> Existing files should be inspected before adding new files to avoid
-> duplicate templates, static directories, URL modules, views,
-> applications, or other components.
-
-------------------------------------------------------------------------
-
-# Database and Data Model
-
-The core CRM data model includes the following entities.
-
-## Profile
-
-Extends the Django user with CRM-specific information.
-
-Important fields include:
-
--   User
--   Role
--   Phone
--   Job title
--   Avatar
--   Created timestamp
--   Updated timestamp
-
-Profiles are automatically created and maintained using Django signals.
-
-------------------------------------------------------------------------
-
-## Company
-
-Stores organization-level customer information.
-
-------------------------------------------------------------------------
-
-## Contact
-
-Stores individual customer/contact information.
-
-------------------------------------------------------------------------
-
-## Lead
-
-Stores prospective customer information before or during qualification.
-
-------------------------------------------------------------------------
-
-## Pipeline
-
-Defines a sales workflow.
-
-------------------------------------------------------------------------
-
-## PipelineStage
-
-Defines stages belonging to a pipeline.
-
-------------------------------------------------------------------------
-
-## Deal
-
-Represents a sales opportunity within a pipeline.
-
-------------------------------------------------------------------------
-
-## Activity
-
-Records customer or sales interactions.
-
-------------------------------------------------------------------------
-
-## Task
-
-Tracks actionable work.
-
-------------------------------------------------------------------------
-
-## Note
-
-Stores free-form CRM information.
-
-------------------------------------------------------------------------
-
-## Tag
-
-Provides categorization for CRM records that support tagging.
-
-------------------------------------------------------------------------
-
-## AuditLog
-
-Records tracked system actions for accountability.
-
-------------------------------------------------------------------------
-
-## UserPreference
-
-Stores user-specific application preferences.
-
-------------------------------------------------------------------------
-
-# Authentication and User Profiles
-
-NexusCRM uses Django's authentication system.
-
-The general authentication workflow is:
-
-``` text
-Login
+```text
+User
   |
-  v
-Authenticated session
+  +--- Profile
   |
-  v
-Dashboard / CRM
+  +--- Company
   |
-  v
-Logout
+  +--- Contact
   |
-  v
-Login
+  +--- Lead
+  |
+  +--- Deal
+  |
+  +--- Activity
+  |
+  +--- Task
+  |
+  +--- Note
+  |
+  +--- AuditLog
+  |
+  +--- UserPreference
 ```
 
-The application uses session-based authentication for its normal web
-interface.
+Supporting models include:
 
-Unauthenticated users are redirected to the appropriate authentication
-flow instead of being allowed to access protected CRM pages.
-
-------------------------------------------------------------------------
-
-# User Profile Creation
-
-The application uses Django signals to create a `Profile` automatically
-when a user is created.
-
-The relevant architecture is:
-
-``` text
-User created
-    |
-    v
-post_save signal
-    |
-    v
-Profile created
+```text
+Pipeline
+PipelineStage
+Tag
+Notification-related models
 ```
 
-The profile contains the user's CRM role.
+## Important Relationships
 
-Role assignment is integrated with the user administration workflow.
+### Company
 
-------------------------------------------------------------------------
+A company can have multiple contacts and CRM relationships.
 
-# Security
+### Contact
 
-Security is an ongoing development area and is addressed progressively.
+A contact can belong to a company and can be associated with CRM activities and deals.
 
-Current security-related functionality includes:
+### Lead
 
--   Django authentication
--   Session-based protected web views
--   Role-based access control
--   Protected API endpoints
--   Permission functions
--   CSRF protection through Django forms/templates
--   Password handling through Django authentication
--   Audit logging
--   Ownership-aware permissions
--   Database-level model validation where appropriate
+A lead can have an owner, tags, and eventual converted company/contact records.
 
-Production hardening is scheduled as a dedicated development phase.
+### Deal
 
-------------------------------------------------------------------------
+A deal belongs to a pipeline and stage and may be associated with a company/contact.
 
-# Automated Testing
+### Pipeline
 
-Automated testing is part of the project's development process.
+A pipeline contains pipeline stages.
 
-The testing structure is intended to cover:
+### Activity
 
-``` text
+An activity can connect multiple CRM entities through optional relationships.
+
+### Task
+
+A task can be assigned to a user and associated with CRM records.
+
+### Note
+
+A note belongs to its creator and can optionally reference a company, contact, lead, or deal.
+
+---
+
+# Role and Permission Model
+
+Permissions are implemented centrally through the CRM permission layer.
+
+Important permission concepts include:
+
+- Can view
+- Can create
+- Can edit
+- Can delete
+- Ownership-based access
+- Role-based access
+- Administrative access
+
+The application should use the existing permission functions instead of duplicating permission logic inside individual templates or views.
+
+This makes authorization easier to maintain and test.
+
+---
+
+# Testing
+
+Automated testing is a core part of NexusCRM development.
+
+The testing structure is:
+
+```text
 crmApp/tests/
 ├── __init__.py
 ├── test_models.py
@@ -970,1168 +1071,973 @@ crmApp/tests/
 └── test_api.py
 ```
 
-## Model tests
+## Model Tests
 
-Model tests verify important behavior for entities such as:
+Model tests verify important behavior of CRM models including:
 
--   Company
--   Contact
--   Lead
--   Deal
--   Activity
--   Task
--   Note
--   Tag
+- Companies
+- Contacts
+- Leads
+- Deals
+- Activities
+- Tasks
+- Notes
+- Tags
 
-## Permission tests
+## Permission Tests
 
-Permission tests verify role-specific access.
+Permission tests verify role-specific behavior.
 
-For example:
+Examples include:
 
--   Admin access
--   Manager access
--   Sales access
--   Support restrictions
--   Viewer restrictions
--   Ownership-based permissions
+- Administrator access
+- Manager access
+- Sales access
+- Support access
+- Viewer access
+- Note permissions
+- Ownership restrictions
 
-## View tests
+## View Tests
 
-View tests verify that important application pages respond correctly and
-enforce authentication.
+View tests verify:
 
-## API tests
+- Authentication requirements
+- Page accessibility
+- CRUD behavior
+- Redirects
+- Permissions
+- Important view responses
+
+## API Tests
 
 API tests verify:
 
--   API authentication
--   Endpoint behavior
--   Serialization
--   Protected access
--   CRUD behavior where implemented
+- Authentication
+- API access
+- Serializer behavior
+- Endpoint responses
+- Protected resources
 
-------------------------------------------------------------------------
+---
 
-# Development Environment
+# Running Tests
 
-The project is developed inside a Python virtual environment named:
+Run the complete test suite with:
 
-``` text
+```bash
+python3 manage.py test
+```
+
+Run specific test groups:
+
+```bash
+python3 manage.py test crmApp.tests.test_models
+```
+
+```bash
+python3 manage.py test crmApp.tests.test_permissions
+```
+
+```bash
+python3 manage.py test crmApp.tests.test_views
+```
+
+```bash
+python3 manage.py test crmApp.tests.test_api
+```
+
+Run multiple groups:
+
+```bash
+python3 manage.py test crmApp.tests.test_models crmApp.tests.test_permissions
+```
+
+Always run:
+
+```bash
+python3 manage.py check
+```
+
+before major commits or phase completion.
+
+---
+
+# Development Phases
+
+NexusCRM has been developed through structured phases.
+
+## Completed Areas
+
+The project currently includes completed implementations covering:
+
+### Phase 0–5
+
+Initial project foundation and core CRM functionality.
+
+### Phase 6
+
+Extended CRM functionality built on the established architecture.
+
+### Phase 7
+
+Lead and CRM workflow expansion, including:
+
+- Lead functionality
+- Lead statistics
+- Lead permissions
+- Lead editing
+- Lead deletion
+- Lead workflow behavior
+
+### Phase 13 — Calendar
+
+Calendar functionality completed.
+
+### Phase 14 — Notifications
+
+Notification functionality completed.
+
+### Phase 15 — Editable Preferences
+
+User preferences completed.
+
+### Phase 19 — Global Search
+
+Global search across CRM functionality completed.
+
+### Phase 20 — Audit Logs
+
+Audit logging completed and migrated.
+
+### Phase 21 — API and Integrations
+
+REST API foundation completed, including serializers and protected API access.
+
+---
+
+# Current Development Roadmap
+
+## Phase 22 — Automated Testing
+
+Focus:
+
+- Comprehensive model tests
+- Permission tests
+- View tests
+- API tests
+- Regression testing
+- Full-suite validation
+
+---
+
+## Phase 23 — Security Hardening
+
+Planned focus:
+
+- Authentication security
+- Authorization review
+- CSRF protection review
+- Session security
+- Secure headers
+- Production settings
+- Secret management
+- File upload security
+- API security
+- Permission audit
+- Input validation
+
+---
+
+## Phase 24 — Performance Optimization
+
+Planned focus:
+
+- Database query optimization
+- `select_related`
+- `prefetch_related`
+- Query-count analysis
+- Pagination
+- Static asset optimization
+- Caching where appropriate
+- API performance
+- Dashboard optimization
+- Search optimization
+
+---
+
+## Phase 25 — Production Deployment
+
+Planned focus:
+
+- Production settings
+- Environment variables
+- Production database
+- Static files
+- Media files
+- WSGI/ASGI configuration
+- HTTPS
+- Domain configuration
+- Logging
+- Error handling
+- Backups
+- Deployment verification
+
+---
+
+## Phase 26 — Final Client Acceptance Testing
+
+Final validation will cover:
+
+- Authentication
+- User roles
+- Permissions
+- Dashboard
+- Companies
+- Contacts
+- Leads
+- Deals
+- Pipelines
+- Activities
+- Tasks
+- Notes
+- Calendar
+- Notifications
+- Preferences
+- Global search
+- Audit logs
+- API
+- Security
+- Responsive UI
+- Production deployment
+- Regression testing
+
+---
+
+# Local Development Setup
+
+## Requirements
+
+Recommended development environment:
+
+- Python 3.12+
+- pip
+- Git
+- Virtual environment
+- SQLite for local development
+- Modern web browser
+
+The project is currently developed in a Python virtual environment named:
+
+```text
 crm
 ```
 
-The project directory is:
+---
 
-``` text
+# Project Location
+
+The established project location is:
+
+```text
 ~/Desktop/Programs/python/Nexus-CRM/NexusCRM
 ```
 
-Activate the environment before running Django commands.
+The virtual environment is maintained separately from the Django project source.
 
-Example:
+---
 
-``` bash
-cd ~/Desktop/Programs/python/Nexus-CRM/NexusCRM
+# Activate the Virtual Environment
+
+From the project environment:
+
+```bash
 source ../crm/bin/activate
 ```
 
-If the environment is already active, the terminal prompt should show:
+Verify Python:
 
-``` text
-(crm)
+```bash
+python3 --version
 ```
 
-------------------------------------------------------------------------
+Verify Django:
 
-# Installation and Setup
-
-## 1. Navigate to the project
-
-``` bash
-cd ~/Desktop/Programs/python/Nexus-CRM/NexusCRM
+```bash
+python3 -m django --version
 ```
 
-## 2. Activate the virtual environment
+---
 
-``` bash
-source ../crm/bin/activate
-```
+# Install Dependencies
 
-## 3. Install dependencies
+If a `requirements.txt` file exists:
 
-If a requirements file is available:
-
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 
-## 4. Check the Django project
+For a new environment, the project should maintain all production and development dependencies in the dependency file rather than relying on undocumented global packages.
 
-``` bash
+---
+
+# Database Setup
+
+Apply migrations:
+
+```bash
+python3 manage.py migrate
+```
+
+Create migrations after model changes:
+
+```bash
+python3 manage.py makemigrations
+```
+
+Apply them:
+
+```bash
+python3 manage.py migrate
+```
+
+Check migration status:
+
+```bash
+python3 manage.py showmigrations
+```
+
+---
+
+# Create a Superuser
+
+Create an administrative account with:
+
+```bash
+python3 manage.py createsuperuser
+```
+
+Follow the prompts.
+
+The resulting user can be used for administrative access and development testing.
+
+---
+
+# Run the Development Server
+
+Start the application with:
+
+```bash
+python3 manage.py runserver
+```
+
+If a different port is required:
+
+```bash
+python3 manage.py runserver 8003
+```
+
+The development server can then be accessed at:
+
+```text
+http://127.0.0.1:8003/
+```
+
+---
+
+# Django System Check
+
+Run:
+
+```bash
 python3 manage.py check
 ```
 
 A healthy project should return:
 
-``` text
+```text
 System check identified no issues (0 silenced).
 ```
 
-------------------------------------------------------------------------
+---
 
-# Database Migrations
+# Environment Configuration
 
-Whenever model changes are made, generate migrations:
+Production secrets and environment-specific settings should not be hard-coded into source code.
 
-``` bash
-python3 manage.py makemigrations crmApp
+Important configuration areas include:
+
+- `SECRET_KEY`
+- `DEBUG`
+- `ALLOWED_HOSTS`
+- Database credentials
+- Email configuration
+- API credentials
+- Storage credentials
+- External service credentials
+
+Use environment variables for secrets in production.
+
+Example concept:
+
+```text
+SECRET_KEY=<secret>
+DEBUG=False
+ALLOWED_HOSTS=<production-domain>
 ```
 
-Then apply them:
+Never commit real passwords, API keys, tokens, or secret credentials to Git.
 
-``` bash
+---
+
+# Database and Migrations
+
+Django migrations are the source-controlled mechanism for evolving the database schema.
+
+Current migrations include the project's incremental CRM schema changes.
+
+For example, the audit log implementation introduced a migration similar to:
+
+```text
+crmApp/migrations/0008_auditlog.py
+```
+
+Migration workflow:
+
+```bash
+python3 manage.py makemigrations
+```
+
+then:
+
+```bash
 python3 manage.py migrate
 ```
 
-To inspect migration status:
+Never manually modify an already-applied migration unless there is a deliberate migration-repair procedure.
 
-``` bash
-python3 manage.py showmigrations
-```
+---
 
-Migrations are part of the project's source-controlled database
-evolution.
+# API Development
 
-Do not manually recreate existing migrations unless there is a specific
-migration-repair requirement.
+The API namespace is:
 
-------------------------------------------------------------------------
-
-# Running the Application
-
-Start the development server with:
-
-``` bash
-python3 manage.py runserver
-```
-
-If a specific port is required:
-
-``` bash
-python3 manage.py runserver 8003
-```
-
-The development server will normally be available at:
-
-``` text
-http://127.0.0.1:8003/
-```
-
-The exact port can be changed as required.
-
-------------------------------------------------------------------------
-
-# Testing the Application
-
-## Django system check
-
-``` bash
-python3 manage.py check
-```
-
-## Model and permission tests
-
-``` bash
-python3 manage.py test crmApp.tests.test_models crmApp.tests.test_permissions
-```
-
-## View tests
-
-``` bash
-python3 manage.py test crmApp.tests.test_views
-```
-
-## API tests
-
-``` bash
-python3 manage.py test crmApp.tests.test_api
-```
-
-## Full test suite
-
-``` bash
-python3 manage.py test
-```
-
-A normal development checkpoint should include:
-
-``` bash
-python3 manage.py check
-python3 manage.py test
-```
-
-------------------------------------------------------------------------
-
-# API Authentication
-
-The API is protected.
-
-An unauthenticated request to:
-
-``` text
+```text
 /api/v1/
 ```
 
-should not expose protected CRM information.
+API development should follow these principles:
 
-Example:
+1. Keep serializers focused on representation and validation.
+2. Keep authorization enforced server-side.
+3. Never trust frontend permissions as security.
+4. Require authentication for protected CRM resources.
+5. Use consistent JSON responses.
+6. Preserve backwards compatibility for existing API consumers where possible.
+7. Version future breaking API changes.
 
-``` bash
-curl http://127.0.0.1:8003/api/v1/
-```
+---
 
-Expected behavior is an authentication response similar to:
+# Security
 
-``` json
-{
-    "detail": "Authentication credentials were not provided."
-}
-```
+Security is a continuing development requirement.
 
-The exact authentication mechanism used by the project's current Django
-REST Framework configuration should be treated as authoritative. API
-clients must use the configured authentication method rather than
-assuming a different authentication backend.
-
-------------------------------------------------------------------------
-
-# Development Workflow
-
-NexusCRM is developed incrementally.
-
-The recommended workflow for future changes is:
-
-``` text
-1. Inspect the existing implementation
-2. Identify the exact module being changed
-3. Reuse existing architecture
-4. Make the smallest required change
-5. Create migrations if models changed
-6. Run Django system checks
-7. Run targeted tests
-8. Run the full test suite
-9. Manually verify the affected UI/API
-10. Proceed to the next phase
-```
-
-This prevents accidental duplication and protects previously completed
-functionality.
-
-------------------------------------------------------------------------
-
-# Important Architecture Rule
-
-The existing project structure is the source of truth.
-
-Before creating a new:
-
--   Template
--   Static directory
--   CSS file
--   JavaScript file
--   URL file
--   View
--   Form
--   Model
--   Application
--   API module
--   Test module
-
-inspect the existing implementation first.
-
-Do not assume the project has a fresh Django structure.
-
-Do not duplicate functionality that has already been implemented.
-
-The primary CRM template is:
-
-``` text
-templates/crmApp/base.html
-```
-
-Changes to the global interface should normally build on this existing
-template.
-
-------------------------------------------------------------------------
-
-# Development Phases
-
-The project has been developed through a phased roadmap.
-
-## Phase 0 --- Project Foundation
-
-Established the initial Django CRM project and development architecture.
-
-------------------------------------------------------------------------
-
-## Phase 1--5 --- Core CRM Foundation
-
-Established the initial CRM structure and core modules.
-
-These phases form the architectural foundation on which later phases
-were built.
-
-------------------------------------------------------------------------
-
-## Phase 6 --- CRM Expansion
-
-Expanded the CRM functionality beyond the initial foundation.
-
-------------------------------------------------------------------------
-
-## Phase 7 --- Leads and Related CRM Workflows
-
-Implemented and refined lead management, ownership, permissions, status
-transitions, conversion, dashboard statistics, and lead UI workflows.
-
-------------------------------------------------------------------------
-
-## Phase 13 --- Calendar
-
-Implemented the working calendar module, including:
-
--   Views
--   Forms
--   Lists
--   Details
--   Creation
--   Deletion
--   Calendar actions
-
-------------------------------------------------------------------------
-
-## Phase 14 --- Notifications
-
-Implemented the notification system and associated UI.
-
-------------------------------------------------------------------------
-
-## Phase 15 --- Editable Preferences
-
-Implemented user-editable preferences.
-
-------------------------------------------------------------------------
-
-## Phase 19 --- Global Search
-
-Implemented global CRM search across the application's major modules.
-
-------------------------------------------------------------------------
-
-## Phase 20 --- Audit Logs
-
-Implemented audit logging.
-
-The audit log migration was created and applied successfully.
-
-The system has demonstrated recorded audit events for actions such as:
-
--   Lead creation
--   Lead updates
--   Task creation
--   Preference updates
--   System events
-
-------------------------------------------------------------------------
-
-## Phase 21 --- API and Integrations
-
-Implemented the REST API foundation.
-
-Serializer coverage includes:
-
-``` text
-CompanySerializer
-ContactSerializer
-LeadSerializer
-DealSerializer
-ActivitySerializer
-TaskSerializer
-NoteSerializer
-```
-
-API authentication protection was verified.
-
-------------------------------------------------------------------------
-
-## Phase 22 --- Automated Testing
-
-The next development focus is comprehensive automated testing.
-
-Testing areas include:
-
--   Models
--   Permissions
--   Views
--   APIs
--   Full application regression testing
-
-------------------------------------------------------------------------
-
-## Phase 23 --- Security Hardening
-
-Planned security work includes:
-
--   Production security settings
--   Secure cookies
--   HTTPS enforcement
--   Security headers
--   Secret management
--   Allowed hosts
--   CSRF configuration
--   Authentication review
--   Authorization review
--   API security review
--   File upload security
--   Input validation
--   Error handling
--   Dependency security
-
-------------------------------------------------------------------------
-
-## Phase 24 --- Performance Optimization
-
-Planned performance work includes:
-
--   Query optimization
--   `select_related`
--   `prefetch_related`
--   Database indexing
--   Pagination review
--   Caching where appropriate
--   Static asset optimization
--   API optimization
--   Dashboard query optimization
--   Search optimization
-
-------------------------------------------------------------------------
-
-## Phase 25 --- Production Deployment
-
-Planned deployment work includes:
-
--   Production settings
--   Environment variables
--   Production database
--   Static files
--   Media files
--   WSGI/ASGI configuration
--   HTTPS
--   Domain configuration
--   Logging
--   Monitoring
--   Backups
--   Deployment documentation
-
-------------------------------------------------------------------------
-
-## Phase 26 --- Final Client Acceptance Testing
-
-The final phase is intended to validate the complete system from a
-client's perspective.
-
-Testing should cover:
-
--   Authentication
--   User roles
--   Dashboard
--   Companies
--   Contacts
--   Leads
--   Lead conversion
--   Deals
--   Pipelines
--   Activities
--   Tasks
--   Notes
--   Calendar
--   Notifications
--   Preferences
--   Search
--   Audit logs
--   API
--   Security
--   Performance
--   Production deployment
-
-------------------------------------------------------------------------
-
-# Production Roadmap
-
-The intended path to production is:
-
-``` text
-Phase 22
-Automated Testing
-        |
-        v
-Phase 23
-Security Hardening
-        |
-        v
-Phase 24
-Performance Optimization
-        |
-        v
-Phase 25
-Production Deployment
-        |
-        v
-Phase 26
-Client Acceptance Testing
-```
-
-A feature should not be considered production-ready merely because its
-UI works locally.
-
-Production readiness requires:
-
--   Functional correctness
--   Permission correctness
--   Security
--   Testing
--   Performance
--   Error handling
--   Deployment configuration
--   Data protection
--   Operational monitoring
-
-------------------------------------------------------------------------
-
-# Deployment Considerations
-
-Production deployment should use environment-specific configuration.
-
-Sensitive values should not be hardcoded into source code.
-
-Examples of values that should be environment-controlled include:
-
-``` text
-SECRET_KEY
-DEBUG
-ALLOWED_HOSTS
-DATABASE_URL
-Database credentials
-Email credentials
-API credentials
-Third-party integration credentials
-```
-
-Production deployment should also use:
-
--   HTTPS
--   Secure cookies
--   Production database
--   Proper static-file serving
--   Proper media-file storage
--   Application logging
--   Database backups
--   Error monitoring
--   Restricted administrative access
-
-------------------------------------------------------------------------
-
-# Troubleshooting
-
-## Django reports configuration errors
-
-Run:
-
-``` bash
-python3 manage.py check
-```
-
-Resolve configuration errors before continuing.
-
-------------------------------------------------------------------------
-
-## Migration problems
-
-Check:
-
-``` bash
-python3 manage.py showmigrations
-```
-
-Then:
-
-``` bash
-python3 manage.py makemigrations crmApp
-python3 manage.py migrate
-```
-
-Avoid deleting migration history as a first response to a migration
-problem.
-
-------------------------------------------------------------------------
-
-## Authentication appears to behave unexpectedly
-
-First verify:
-
-1.  The correct browser session is being used.
-2.  The user has logged out and logged back in.
-3.  The correct account is being tested.
-4.  The user's Profile role is correct.
-5.  Django authentication configuration is unchanged.
-
-Browser cookies/session state can sometimes make an old login state
-appear to be an application bug.
-
-------------------------------------------------------------------------
-
-## Role appears incorrect
-
-Inspect the user's profile from the Django shell:
-
-``` bash
-python3 manage.py shell
-```
-
-Then inspect the relevant user/profile.
-
-The application uses the `Profile.role` value for CRM role behavior.
-
-------------------------------------------------------------------------
-
-## API returns authentication errors
-
-This is expected for protected endpoints when no valid credentials are
-supplied.
-
-Check the current Django REST Framework configuration in settings before
-changing API authentication code.
-
-------------------------------------------------------------------------
-
-## Template errors
-
-When a template raises an attribute error, verify the actual model
-fields/properties.
-
-For example, the `Contact` model uses:
-
-``` text
-first_name
-last_name
-```
-
-and its string representation is available through:
-
-``` python
-str(contact)
-```
-
-Do not assume a field such as `full_name` exists unless it is actually
-defined.
-
-------------------------------------------------------------------------
-
-## NoReverseMatch errors
-
-Check:
-
-``` text
-crmApp/urls.py
-```
-
-and verify that:
-
--   The URL name exists.
--   The template uses the correct URL name.
--   Required parameters are supplied.
--   The corresponding view exists.
-
-Do not create a duplicate URL when the correct existing endpoint already
-exists under a different name.
-
-------------------------------------------------------------------------
-
-# Development Conventions
-
-## Reuse existing functionality
-
-Before implementing something new, inspect the existing code.
-
-If functionality already exists, extend it rather than creating a second
-implementation.
-
-------------------------------------------------------------------------
-
-## Preserve the primary template
-
-Use:
-
-``` text
-templates/crmApp/base.html
-```
-
-as the primary CRM layout.
-
-Do not introduce another base template unless the architecture genuinely
-requires one.
-
-------------------------------------------------------------------------
-
-## Preserve URL architecture
-
-Existing URL names are part of the application's internal contract.
-
-Changing URL names can break:
-
--   Templates
--   Redirects
--   Tests
--   Navigation
--   JavaScript
--   API consumers
-
-------------------------------------------------------------------------
-
-## Keep permissions centralized
-
-Role logic should use the application's permission architecture rather
-than scattering role checks unnecessarily throughout templates and
-views.
-
-------------------------------------------------------------------------
-
-## Use Django forms
-
-Form validation should remain centralized in Django forms and model
-validation where appropriate.
-
-------------------------------------------------------------------------
-
-## Use migrations for schema changes
-
-Never rely on manual database edits for normal development model
-changes.
-
-------------------------------------------------------------------------
-
-## Test after changes
-
-At minimum:
-
-``` bash
-python3 manage.py check
-python3 manage.py test
-```
-
-For a targeted change, run the relevant test module first.
-
-------------------------------------------------------------------------
-
-# Future Enhancements
-
-Potential future functionality includes:
-
-## Advanced reporting
-
--   Sales reports
--   Revenue reports
--   Lead conversion reports
--   Activity reports
--   User performance reports
--   Pipeline analytics
--   Date-based reporting
--   Exportable reports
-
-## Communication integrations
-
-Potential integrations include:
-
--   Email
--   SMS
--   WhatsApp
--   Calendar providers
-
-## Payment and billing integrations
-
-Where required by a deployment, the system could be integrated with
-relevant payment services.
-
-## Advanced API integrations
-
-The REST API can be extended for:
-
--   Mobile applications
--   External business applications
--   Data synchronization
--   Automation services
-
-## Advanced search
-
-Future search improvements could include:
-
--   Full-text search
--   Search ranking
--   Advanced filters
--   Saved searches
--   Search suggestions
-
-## Reporting dashboards
-
-Future dashboards could include:
-
--   Sales funnels
--   Revenue trends
--   Pipeline charts
--   Lead source analysis
--   Activity trends
--   Team performance
-
-## File and document management
-
-CRM records can be extended with more comprehensive document handling,
-storage, permissions, and attachment workflows.
-
-------------------------------------------------------------------------
-
-# Project Principles
-
-NexusCRM follows several core principles.
-
-## 1. Build incrementally
-
-Each major capability is developed as a phase.
-
-## 2. Do not duplicate working functionality
-
-Existing code is reused whenever possible.
-
-## 3. Protect data
-
-Authentication and authorization are fundamental parts of the CRM.
-
-## 4. Make permissions explicit
-
-Users should only be able to perform actions appropriate to their role.
-
-## 5. Keep business logic maintainable
-
-Business rules should be implemented in appropriate Django models,
-forms, permissions, and services rather than duplicated across
-templates.
-
-## 6. Test before progressing
-
-A completed feature should be verified before depending on it in later
-phases.
-
-## 7. Preserve the existing architecture
-
-The project should evolve from its established structure instead of
-repeatedly recreating the Django application.
-
-## 8. Design for production
-
-Even during prototype development, the application should be structured
-so that it can progress toward a production deployment.
-
-------------------------------------------------------------------------
-
-# Current Project Verification
-
-The project has successfully passed Django's system check at the current
-development stage:
-
-``` bash
-python3 manage.py check
-```
-
-Expected result:
-
-``` text
-System check identified no issues (0 silenced).
-```
-
-The API serializer layer has also been verified for the current core
-serializers.
-
-Audit logging has been migrated and has recorded system events.
-
-The API root has been verified as protected against unauthenticated
-access.
-
-------------------------------------------------------------------------
-
-# Useful Django Commands
-
-## Start server
-
-``` bash
-python3 manage.py runserver
-```
-
-## Start on port 8003
-
-``` bash
-python3 manage.py runserver 8003
-```
-
-## System check
-
-``` bash
-python3 manage.py check
-```
-
-## Make migrations
-
-``` bash
-python3 manage.py makemigrations crmApp
-```
-
-## Apply migrations
-
-``` bash
-python3 manage.py migrate
-```
-
-## Show migrations
-
-``` bash
-python3 manage.py showmigrations
-```
-
-## Open Django shell
-
-``` bash
-python3 manage.py shell
-```
-
-## Create superuser
-
-``` bash
-python3 manage.py createsuperuser
-```
-
-## Run all tests
-
-``` bash
-python3 manage.py test
-```
-
-------------------------------------------------------------------------
-
-# Project Maintenance Checklist
-
-Before declaring a development phase complete:
-
--   [ ] Existing architecture inspected
--   [ ] No duplicate files created
--   [ ] Models validated
--   [ ] Forms validated
--   [ ] URLs validated
--   [ ] Views validated
--   [ ] Permissions validated
--   [ ] Templates validated
--   [ ] JavaScript validated where applicable
--   [ ] Migrations created where required
--   [ ] Migrations applied
--   [ ] `manage.py check` passes
--   [ ] Targeted tests pass
--   [ ] Full test suite passes
--   [ ] Manual UI testing completed
--   [ ] API testing completed where applicable
--   [ ] Existing functionality regression-tested
-
-------------------------------------------------------------------------
-
-# Client Acceptance Checklist
-
-Before final delivery, verify the following end-to-end workflows.
+Important security areas include:
 
 ## Authentication
 
--   [ ] Login works
--   [ ] Logout works
--   [ ] Protected pages require authentication
--   [ ] User roles are correctly applied
+All protected CRM functionality must require authentication.
 
-## Companies
+## Authorization
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Permissions
+Users must only access operations permitted by their role and ownership rules.
 
-## Contacts
+## CSRF
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Permissions
+Django's CSRF protection should remain enabled for browser-based form operations.
 
-## Leads
+## Passwords
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Search
--   [ ] Filtering
--   [ ] Pagination
--   [ ] Ownership
--   [ ] Status transitions
--   [ ] Conversion
+Passwords should always be handled by Django's secure password hashing system.
 
-## Deals
+Plain-text passwords must never be stored.
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Pipeline assignment
--   [ ] Stage integrity
--   [ ] Ownership
+## Secrets
 
-## Activities
+Secrets must be stored outside source code in production.
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Record associations
+## Input Validation
 
-## Tasks
+All user input should be validated through Django forms, serializers, model validation, or appropriate application-level validation.
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Assignment
--   [ ] Priority
--   [ ] Status
--   [ ] Due dates
+## API Protection
 
-## Notes
+CRM API endpoints must enforce authentication and permissions.
 
--   [ ] Create
--   [ ] View
--   [ ] Edit
--   [ ] Delete
--   [ ] Role permissions
--   [ ] Ownership restrictions
+## Auditability
 
-## Calendar
+Important state-changing actions should be logged where appropriate.
 
--   [ ] Create events
--   [ ] View events
--   [ ] Edit where supported
--   [ ] Delete
--   [ ] Calendar navigation
+---
 
-## Notifications
+# Performance
 
--   [ ] Notification display
--   [ ] Notification state
--   [ ] User-specific behavior
+The application is designed to support future optimization as data volume grows.
 
-## Preferences
+Potential performance strategies include:
 
--   [ ] View preferences
--   [ ] Edit preferences
--   [ ] Persist changes
+- Database indexes
+- `select_related`
+- `prefetch_related`
+- Query optimization
+- Pagination
+- Caching
+- Efficient search queries
+- Static file optimization
+- API response optimization
+- Dashboard query optimization
 
-## Search
+Performance work should be measured rather than based only on assumptions.
 
--   [ ] Global search
--   [ ] Results
--   [ ] Links to records
--   [ ] Permission-aware results
+---
 
-## Audit Logs
+# Production Deployment
 
--   [ ] Actions are logged
--   [ ] User attribution works
--   [ ] Audit history can be reviewed
+Before production deployment:
 
-## API
+```bash
+python3 manage.py check --deploy
+```
 
--   [ ] Authentication
--   [ ] Serialization
--   [ ] Endpoint access
--   [ ] CRUD operations where implemented
--   [ ] Unauthorized access blocked
+Production deployment should include:
 
-------------------------------------------------------------------------
+- `DEBUG=False`
+- Secure `SECRET_KEY`
+- Correct `ALLOWED_HOSTS`
+- Production database
+- HTTPS
+- Secure cookies
+- CSRF configuration
+- Static file collection
+- Media storage configuration
+- Error logging
+- Backup strategy
+- Database backup
+- Monitoring
+- Appropriate WSGI/ASGI server
+- Reverse proxy configuration where applicable
+
+Collect static files with:
+
+```bash
+python3 manage.py collectstatic
+```
+
+The exact production infrastructure may be selected during Phase 25.
+
+---
+
+# Troubleshooting
+
+## Check Django Configuration
+
+```bash
+python3 manage.py check
+```
+
+## Check Migrations
+
+```bash
+python3 manage.py showmigrations
+```
+
+## Create Missing Migrations
+
+```bash
+python3 manage.py makemigrations
+```
+
+## Apply Migrations
+
+```bash
+python3 manage.py migrate
+```
+
+## Run Tests
+
+```bash
+python3 manage.py test
+```
+
+## Inspect Database from Django Shell
+
+```bash
+python3 manage.py shell
+```
+
+Example:
+
+```python
+from crmApp.models import AuditLog
+AuditLog.objects.count()
+```
+
+---
+
+# Common Development Rules
+
+## Do Not Duplicate Existing Components
+
+Before creating a new:
+
+- Template
+- Static directory
+- URL file
+- View
+- Form
+- Model
+- App
+- Base template
+- Permission helper
+- API module
+
+inspect the existing project first.
+
+The existing Phase 0–21 architecture is the source of truth.
+
+## Preserve Existing Functionality
+
+New phases should extend the current application rather than replacing working modules.
+
+## Reuse Existing Base Template
+
+The primary base template is:
+
+```text
+templates/crmApp/base.html
+```
+
+Do not introduce a second competing base layout.
+
+## Reuse Existing Permissions
+
+Use the central permission system in:
+
+```text
+crmApp/permissions.py
+```
+
+instead of creating inconsistent role checks throughout the project.
+
+## Test Every Change
+
+After significant changes:
+
+```bash
+python3 manage.py check
+```
+
+Then run the relevant tests.
+
+Finally:
+
+```bash
+python3 manage.py test
+```
+
+---
+
+# Development Workflow
+
+Recommended workflow:
+
+```text
+1. Inspect existing implementation
+        |
+        v
+2. Identify the exact feature/change
+        |
+        v
+3. Reuse existing architecture
+        |
+        v
+4. Implement backend logic
+        |
+        v
+5. Implement/update frontend
+        |
+        v
+6. Add/update tests
+        |
+        v
+7. Run Django checks
+        |
+        v
+8. Run relevant tests
+        |
+        v
+9. Run full test suite
+        |
+        v
+10. Manually verify UI
+        |
+        v
+11. Commit changes
+```
+
+---
+
+# Git and Source Control
+
+The project should be maintained using Git.
+
+Recommended workflow:
+
+```bash
+git status
+```
+
+Review changes:
+
+```bash
+git diff
+```
+
+Stage changes:
+
+```bash
+git add .
+```
+
+Commit:
+
+```bash
+git commit -m "Describe the change"
+```
+
+Push:
+
+```bash
+git push
+```
+
+Do not commit:
+
+- Virtual environments
+- `.env` files
+- Database secrets
+- API tokens
+- Passwords
+- Generated cache files
+- Unnecessary IDE metadata
+- Local-only files
+
+A suitable `.gitignore` should cover these items.
+
+---
+
+# Project Quality Standards
+
+NexusCRM should maintain the following qualities:
+
+- Clear architecture
+- Consistent naming
+- Reusable components
+- Server-side authorization
+- Input validation
+- Automated tests
+- Responsive UI
+- Maintainable code
+- Minimal duplication
+- Secure configuration
+- Documented APIs
+- Reliable database migrations
+- Production-ready configuration
+
+---
+
+# Extensibility
+
+The current architecture is intended to support future expansion.
+
+Potential extensions include:
+
+- Email integration
+- SMS integration
+- WhatsApp integration
+- M-Pesa/payment integration
+- Calendar synchronization
+- Google/Microsoft integrations
+- Advanced reporting
+- Sales forecasting
+- Customer support/ticketing
+- Document management
+- Workflow automation
+- Marketing automation
+- Webhooks
+- Third-party APIs
+- Mobile applications
+- Advanced analytics
+- AI-assisted CRM functionality
+
+These should be introduced incrementally without compromising the existing architecture.
+
+---
+
+# Future Roadmap
+
+Beyond the current Phase 26 acceptance milestone, possible product evolution includes:
+
+## Advanced Sales Automation
+
+- Automated lead assignment
+- Follow-up reminders
+- Sales sequences
+- Automated deal progression
+- Workflow rules
+
+## Communication
+
+- Email integration
+- SMS
+- WhatsApp
+- Communication history
+- Message templates
+
+## Reporting
+
+- Custom reports
+- Exportable reports
+- Sales forecasting
+- Team performance reports
+- Conversion analytics
+
+## Customer Support
+
+- Support tickets
+- Ticket assignment
+- SLA tracking
+- Customer communication history
+
+## Integrations
+
+- Payment providers
+- Accounting systems
+- Calendar providers
+- Email providers
+- Messaging providers
+- External business systems
+
+## Mobile
+
+A future mobile client can consume the existing REST API rather than duplicating backend business logic.
+
+---
+
+# Project Status
+
+## Current Status
+
+NexusCRM has progressed through the core CRM implementation and integration stages.
+
+Completed areas include:
+
+- Core CRM foundation
+- Authentication
+- User profiles
+- Role-based permissions
+- Companies
+- Contacts
+- Leads
+- Lead workflows
+- Deals
+- Pipelines
+- Pipeline stages
+- Activities
+- Tasks
+- Notes
+- Calendar
+- Notifications
+- User preferences
+- Global search
+- Audit logging
+- REST API foundation
+
+The API layer has protected endpoints and serializers for major CRM resources.
+
+Automated testing is being expanded as part of the Phase 22 quality stage.
+
+---
+
+# Verification Commands
+
+The following commands provide a quick health check:
+
+```bash
+python3 manage.py check
+```
+
+```bash
+python3 manage.py test
+```
+
+```bash
+python3 manage.py showmigrations
+```
+
+```bash
+python3 manage.py makemigrations --check
+```
+
+A clean project should pass the Django system check and the automated test suite.
+
+---
+
+# Documentation Philosophy
+
+This README documents the NexusCRM project as an evolving system.
+
+When new phases are completed, this document should be updated to reflect:
+
+- New modules
+- New technologies
+- New dependencies
+- New API endpoints
+- New permissions
+- New models
+- New integrations
+- New deployment requirements
+- New testing requirements
+
+Documentation should describe the actual implementation rather than an intended future architecture.
+
+---
 
 # License
 
-No final open-source license has been specified for NexusCRM at this
-stage.
+This project is currently developed as a proprietary CRM project.
 
-Until a license is explicitly selected, the project should be treated as
-proprietary project code.
+Unless a separate license is added to the repository, the source code should not be assumed to be freely licensed for redistribution, modification, or commercial use.
 
-A production/client release should define the applicable:
+---
 
--   Ownership
--   Usage rights
--   Distribution rights
--   Modification rights
--   Third-party dependency licenses
--   Client licensing terms
+# NexusCRM
 
-------------------------------------------------------------------------
+**A centralized CRM platform for managing customers, sales, activities, tasks, relationships, and business operations.**
 
-# Conclusion
+Built with:
 
-NexusCRM is being developed as a complete CRM platform rather than a
-collection of isolated CRUD pages.
-
-Its current architecture combines:
-
-``` text
-Authentication
-      +
-Role-Based Access
-      +
-Companies & Contacts
-      +
-Leads & Conversion
-      +
-Deals & Pipelines
-      +
-Activities & Tasks
-      +
-Notes & Calendar
-      +
-Notifications & Preferences
-      +
-Global Search
-      +
-Audit Logging
-      +
-REST API
-      +
-Automated Testing
-      +
-Security & Performance Hardening
-      +
-Production Deployment
+```text
+Python
+Django
+Django REST Framework
+HTML5
+CSS3
+JavaScript
+Bootstrap
+Bootstrap Icons
+Django ORM
+SQLite (local development)
+Git
 ```
 
-The immediate development path is to complete automated testing, then
-proceed through security hardening, performance optimization, production
-deployment, and final client acceptance testing.
-
-The existing implementation should remain the source of truth throughout
-the remaining phases. Future development should extend the established
-architecture without duplicating already-completed modules or
-restructuring the project unnecessarily.
